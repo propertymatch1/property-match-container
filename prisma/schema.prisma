@@ -1,20 +1,314 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
-    provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-    provider = "postgresql"
-    url      = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
-model Post {
-    id        Int      @id @default(autoincrement())
-    name      String
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+model User {
+  id                   String            @id @default(cuid())
+  email                String            @unique
+  name                 String?
+  userType             UserType
+  companyName          String?
+  onboardingCompleted  Boolean           @default(false)
+  emailVerified        Boolean           @default(false)
+  createdAt            DateTime          @default(now())
+  updatedAt            DateTime          @updatedAt
+  image                String?
+  documents            Document[]
+  landlordProfile      LandlordProfile?
+  landlordMatches      Match[]           @relation("LandlordMatches")
+  tenantMatches        Match[]           @relation("TenantMatches")
+  messages             Message[]
+  landlordNegotiations NegotiationRoom[] @relation("LandlordNegotiations")
+  tenantNegotiations   NegotiationRoom[] @relation("TenantNegotiations")
+  properties           Property[]
+  tenantProfile        TenantProfile?
+  accounts             Account[]
+  sessions             Session[]
 
-    @@index([name])
+  @@index([email])
+  @@index([userType])
+  @@map("user")
+}
+
+model TenantProfile {
+  id               String     @id @default(cuid())
+  userEmail        String     @unique
+  mode             TenantMode
+  brandName        String
+  logoUrl          String?
+  industry         String
+  hqCity           String
+  foundedYear      Int
+  storyText        String?
+  signals          Json?
+  numStores        Int?
+  revenueRange     String?
+  avgUnitSales     Float?
+  expansion        Json
+  spaceNeed        Json
+  readiness        Json
+  aiReadinessScore Float      @default(0)
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
+  user             User       @relation(fields: [userEmail], references: [email], onDelete: Cascade)
+
+  @@index([userEmail])
+  @@index([industry])
+  @@index([hqCity])
+  @@index([aiReadinessScore])
+}
+
+model LandlordProfile {
+  id                 String             @id @default(cuid())
+  userEmail          String             @unique
+  companyName        String
+  contactName        String?
+  phoneNumber        String?
+  portfolioSize      Int                @default(0)
+  verificationStatus VerificationStatus @default(PENDING)
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+  user               User               @relation(fields: [userEmail], references: [email], onDelete: Cascade)
+
+  @@index([userEmail])
+  @@index([verificationStatus])
+}
+
+model Property {
+  id                 String            @id @default(cuid())
+  landlordEmail      String
+  name               String
+  tagline            String?
+  city               String
+  state              String
+  neighborhood       String?
+  propertyType       PropertyType
+  squareFootage      Int
+  rentPerSqft        Float
+  leaseTermMinYears  Int?
+  leaseTermMaxYears  Int?
+  leaseType          LeaseType
+  images             String[]          @default([])
+  floorPlanUrl       String?
+  features           String[]          @default([])
+  description        String?
+  availabilityDate   DateTime
+  contactPreference  ContactPreference @default(CHAT)
+  desiredTenantTypes String[]          @default([])
+  status             PropertyStatus    @default(AVAILABLE)
+  isPremium          Boolean           @default(false)
+  createdAt          DateTime          @default(now())
+  updatedAt          DateTime          @updatedAt
+  matches            Match[]
+  negotiationRooms   NegotiationRoom[]
+  landlord           User              @relation(fields: [landlordEmail], references: [email], onDelete: Cascade)
+
+  @@index([landlordEmail])
+  @@index([city, state])
+  @@index([propertyType])
+  @@index([status])
+  @@index([squareFootage])
+  @@index([rentPerSqft])
+}
+
+model Match {
+  id                 String           @id @default(cuid())
+  tenantEmail        String
+  propertyId         String
+  landlordEmail      String
+  tenantInterested   Boolean          @default(false)
+  landlordInterested Boolean          @default(false)
+  fitScore           Float
+  status             MatchStatus      @default(PENDING)
+  notes              String?
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
+  landlord           User             @relation("LandlordMatches", fields: [landlordEmail], references: [email], onDelete: Cascade)
+  property           Property         @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  tenant             User             @relation("TenantMatches", fields: [tenantEmail], references: [email], onDelete: Cascade)
+  negotiationRoom    NegotiationRoom?
+
+  @@unique([tenantEmail, propertyId])
+  @@index([tenantEmail])
+  @@index([landlordEmail])
+  @@index([propertyId])
+  @@index([status])
+  @@index([fitScore])
+}
+
+model NegotiationRoom {
+  id            String     @id @default(cuid())
+  matchId       String     @unique
+  tenantEmail   String
+  landlordEmail String
+  propertyId    String
+  status        RoomStatus @default(ACTIVE)
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+  documents     Document[]
+  messages      Message[]
+  landlord      User       @relation("LandlordNegotiations", fields: [landlordEmail], references: [email], onDelete: Cascade)
+  match         Match      @relation(fields: [matchId], references: [id], onDelete: Cascade)
+  property      Property   @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  tenant        User       @relation("TenantNegotiations", fields: [tenantEmail], references: [email], onDelete: Cascade)
+
+  @@index([tenantEmail])
+  @@index([landlordEmail])
+  @@index([propertyId])
+  @@index([status])
+}
+
+model Message {
+  id          String          @id @default(cuid())
+  roomId      String
+  senderEmail String
+  senderName  String
+  content     String
+  messageType MessageType     @default(TEXT)
+  documentUrl String?
+  createdAt   DateTime        @default(now())
+  room        NegotiationRoom @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  sender      User            @relation(fields: [senderEmail], references: [email], onDelete: Cascade)
+
+  @@index([roomId])
+  @@index([senderEmail])
+  @@index([createdAt])
+}
+
+model Document {
+  id            String          @id @default(cuid())
+  roomId        String
+  uploaderEmail String
+  fileName      String
+  fileUrl       String
+  fileSize      Int
+  documentType  DocumentType
+  description   String?
+  createdAt     DateTime        @default(now())
+  room          NegotiationRoom @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  uploader      User            @relation(fields: [uploaderEmail], references: [email], onDelete: Cascade)
+
+  @@index([roomId])
+  @@index([uploaderEmail])
+  @@index([documentType])
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @default(now()) @updatedAt
+
+  @@map("verification")
+}
+
+enum UserType {
+  TENANT
+  LANDLORD
+}
+
+enum TenantMode {
+  FOUNDER
+  BRAND
+}
+
+enum VerificationStatus {
+  PENDING
+  VERIFIED
+  REJECTED
+}
+
+enum PropertyType {
+  RETAIL
+  OFFICE
+  RESTAURANT
+  MIXED_USE
+  INDUSTRIAL
+}
+
+enum LeaseType {
+  GROSS
+  NNN
+  MODIFIED
+}
+
+enum ContactPreference {
+  CHAT
+  EMAIL
+  CALL
+}
+
+enum PropertyStatus {
+  AVAILABLE
+  PENDING
+  LEASED
+}
+
+enum MatchStatus {
+  PENDING
+  MUTUAL_INTEREST
+  IN_DISCUSSION
+  LOI_SENT
+  SIGNED
+  REJECTED
+}
+
+enum RoomStatus {
+  ACTIVE
+  ARCHIVED
+}
+
+enum MessageType {
+  TEXT
+  DOCUMENT
+  SYSTEM
+}
+
+enum DocumentType {
+  LEASE
+  LOI
+  FINANCIAL
+  FLOOR_PLAN
+  PHOTO
+  OTHER
 }
