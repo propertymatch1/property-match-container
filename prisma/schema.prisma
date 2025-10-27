@@ -88,32 +88,39 @@ model Property {
   state              String
   neighborhood       String?
   propertyType       PropertyType
-  squareFootage      Int
   rentPerSqft        Float
   leaseTermMinYears  Int?
   leaseTermMaxYears  Int?
   leaseType          LeaseType
   images             String[]          @default([])
-  floorPlanUrl       String?
   features           String[]          @default([])
-  description        String?
-  availabilityDate   DateTime
+  description        String
   contactPreference  ContactPreference @default(CHAT)
   desiredTenantTypes String[]          @default([])
-  status             PropertyStatus    @default(AVAILABLE)
   isPremium          Boolean           @default(false)
   createdAt          DateTime          @default(now())
   updatedAt          DateTime          @updatedAt
   matches            Match[]
   negotiationRooms   NegotiationRoom[]
+  propertySpaces     PropertySpace[]
   landlord           User              @relation(fields: [landlordEmail], references: [email], onDelete: Cascade)
 
-  @@index([landlordEmail])
   @@index([city, state])
   @@index([propertyType])
-  @@index([status])
-  @@index([squareFootage])
   @@index([rentPerSqft])
+}
+
+model PropertySpace {
+  id                 String            @id @default(cuid())
+  propertyId         String
+  floorPlanUrl       String?
+  squareFootage      Int
+  availabilityDate   DateTime
+  status             PropertyStatus    @default(AVAILABLE)
+  property           Property          @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+
+  @@index([squareFootage])
+  @@index([status])
 }
 
 model Match {
