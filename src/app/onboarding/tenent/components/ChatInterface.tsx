@@ -56,8 +56,9 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
         </p>
       </div>
 
-      {/* Conversation area - scrollable */}
-      <Conversation>
+      {/* Conversation area - scrollable with mobile bottom padding */}
+      <div className="flex-1 overflow-hidden pb-32 lg:pb-0">
+        <Conversation>
         <ConversationContent>
           {messages.length === 0 ? (
             <ConversationEmptyState
@@ -102,10 +103,11 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
             </>
           )}
         </ConversationContent>
-      </Conversation>
+        </Conversation>
+      </div>
 
-      {/* Input area - fixed at bottom */}
-      <div className="w-full px-4 pb-4">
+      {/* Input area - fixed at bottom with mobile bottom padding */}
+      <div className="w-full px-4 pb-32 lg:pb-4">
         <PromptInputProvider>
           <PromptInput onSubmit={onSubmit}>
             <PromptInputBody>

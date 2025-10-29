@@ -263,17 +263,22 @@ function TenantOnboarding() {
 
   return (
     <div className="bg-background flex h-screen">
-      <ChatInterface
-        messages={messages}
-        isLoading={isLoading}
-        chatError={chatError}
-        showRetryPrompt={showRetryPrompt}
-        submitStatus={submitStatus}
-        onSubmit={handleSubmit}
-        onRetry={handleRetry}
-        onCancelRetry={handleCancelRetry}
-        onShowRetryPrompt={handleShowRetryPrompt}
-      />
+      {/* Mobile: Full width chat, Desktop: Flex layout */}
+      <div className="flex-1 lg:flex-2 flex flex-col">
+        <ChatInterface
+          messages={messages}
+          isLoading={isLoading}
+          chatError={chatError}
+          showRetryPrompt={showRetryPrompt}
+          submitStatus={submitStatus}
+          onSubmit={handleSubmit}
+          onRetry={handleRetry}
+          onCancelRetry={handleCancelRetry}
+          onShowRetryPrompt={handleShowRetryPrompt}
+        />
+      </div>
+      
+      {/* Desktop: Side panel, Mobile: Bottom sheet */}
       <ProgressPanel
         conversationContext={conversationContext}
         isProcessingSkip={isProcessingSkip}
@@ -281,6 +286,8 @@ function TenantOnboarding() {
         onSkip={handleSkipWrapper}
         onSubmitProfile={handleSubmitProfileWrapper}
       />
+
+
     </div>
   );
 }
