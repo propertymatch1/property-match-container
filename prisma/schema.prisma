@@ -36,31 +36,33 @@ model User {
 }
 
 model TenantProfile {
-  id               String     @id @default(cuid())
-  userEmail        String     @unique
-  mode             TenantMode
-  brandName        String
-  logoUrl          String?
-  industry         String
-  hqCity           String
-  foundedYear      Int
-  storyText        String?
-  signals          Json?
-  numStores        Int?
-  revenueRange     String?
-  avgUnitSales     Float?
-  expansion        Json
-  spaceNeed        Json
-  readiness        Json
-  aiReadinessScore Float      @default(0)
-  createdAt        DateTime   @default(now())
-  updatedAt        DateTime   @updatedAt
-  user             User       @relation(fields: [userEmail], references: [email], onDelete: Cascade)
+  id                   String     @id @default(cuid())
+  userId               String     @unique
+  mode                 TenantMode
+  brandName            String?
+  industry             String?
+  tennentExperience    String?
+  spaceLooking         String[]   @default([])
+  spaceNeed            Int?
+  rentRangeDesire      Int?
+  cityNext             String[]   @default([])
+  whenNextOpen         String?
+  typcialCustomer      String[]   @default([])
+  typcialCustomerSpend String?
+  personalityTags      String[]   @default([])
+  brandKeywords        String[]   @default([])
+  toneTags             String[]   @default([])
+  logoUrl              String?
+  notes                String?
+  createdAt            DateTime   @default(now())
+  updatedAt            DateTime   @updatedAt
+  user                 User       @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@index([userEmail])
+  @@index([userId])
+  @@index([brandName])
   @@index([industry])
-  @@index([hqCity])
-  @@index([aiReadinessScore])
+  @@index([spaceNeed])
+  @@index([rentRangeDesire])
 }
 
 model LandlordProfile {
@@ -102,8 +104,8 @@ model Property {
   updatedAt          DateTime          @updatedAt
   matches            Match[]
   negotiationRooms   NegotiationRoom[]
-  propertySpaces     PropertySpace[]
   landlord           User              @relation(fields: [landlordEmail], references: [email], onDelete: Cascade)
+  propertySpaces     PropertySpace[]
 
   @@index([city, state])
   @@index([propertyType])
@@ -111,13 +113,13 @@ model Property {
 }
 
 model PropertySpace {
-  id                 String            @id @default(cuid())
-  propertyId         String
-  floorPlanUrl       String?
-  squareFootage      Int
-  availabilityDate   DateTime
-  status             PropertyStatus    @default(AVAILABLE)
-  property           Property          @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  id               String         @id @default(cuid())
+  propertyId       String
+  floorPlanUrl     String?
+  squareFootage    Int
+  availabilityDate DateTime
+  status           PropertyStatus @default(AVAILABLE)
+  property         Property       @relation(fields: [propertyId], references: [id], onDelete: Cascade)
 
   @@index([squareFootage])
   @@index([status])
