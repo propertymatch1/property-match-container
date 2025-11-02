@@ -37,25 +37,25 @@ model User {
 
 model TenantProfile {
   id                   String     @id @default(cuid())
-  userId               String     @unique
   mode                 TenantMode
   brandName            String?
-  industry             String?
-  tennentExperience    String?
-  spaceLooking         String[]   @default([])
-  spaceNeed            Int?
-  rentRangeDesire      Int?
-  cityNext             String[]   @default([])
-  whenNextOpen         String?
-  typcialCustomer      String[]   @default([])
-  typcialCustomerSpend String?
-  personalityTags      String[]   @default([])
-  brandKeywords        String[]   @default([])
-  toneTags             String[]   @default([])
   logoUrl              String?
-  notes                String?
+  industry             String?
   createdAt            DateTime   @default(now())
   updatedAt            DateTime   @updatedAt
+  brandKeywords        String[]   @default([])
+  cityNext             String[]   @default([])
+  notes                String?
+  personalityTags      String[]   @default([])
+  rentRangeDesire      Int?
+  spaceLooking         String[]   @default([])
+  tennentExperience    String?
+  toneTags             String[]   @default([])
+  typcialCustomer      String[]   @default([])
+  typcialCustomerSpend String?
+  whenNextOpen         String?
+  spaceNeed            Int?
+  userId               String     @unique
   user                 User       @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
@@ -102,6 +102,7 @@ model Property {
   isPremium          Boolean           @default(false)
   createdAt          DateTime          @default(now())
   updatedAt          DateTime          @updatedAt
+  isDummy            Boolean           @default(false)
   matches            Match[]
   negotiationRooms   NegotiationRoom[]
   landlord           User              @relation(fields: [landlordEmail], references: [email], onDelete: Cascade)
