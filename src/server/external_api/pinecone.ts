@@ -1,5 +1,6 @@
 import { Pinecone } from "@pinecone-database/pinecone";
-import { env } from "~/env";
+import { nullthrows } from "~/lib/utils";
+// import { env } from "~/env";
 
 export type IndexConfig = {
   name: string;
@@ -13,6 +14,6 @@ export const INDEX_TEST: IndexConfig = {
 
 export function getPCClient(): Pinecone {
   return new Pinecone({
-    apiKey: env.PINECONE_API_KEY,
+    apiKey: nullthrows(process.env.PINECONE_API_KEY),
   });
 }
