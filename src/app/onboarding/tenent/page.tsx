@@ -13,6 +13,7 @@ import {
   useChat,
   useProfileOperations,
   parseAIResponse,
+  INTRO_MESSAGE,
   WELCOME_MESSAGE,
   TOAST_MESSAGES,
   ONBOARDING_CONFIG,
@@ -21,25 +22,30 @@ import {
   type ProfileData,
   type SubmitStatus,
 } from "./";
+import { ProfileSummaryModal } from "./components/ProfileSummaryModal";
 
 function TenantOnboarding() {
-  const [messages, setMessages] = useState<ChatMessage[]>([WELCOME_MESSAGE]);
+  const [messages, setMessages] = useState<ChatMessage[]>([INTRO_MESSAGE, WELCOME_MESSAGE]);
   const [isLoading, setIsLoading] = useState(false);
 
   // Error handling state
   const [chatError, setChatError] = useState<string | null>(null);
   const [showRetryPrompt, setShowRetryPrompt] = useState(false);
-  const [lastFailedMessage, setLastFailedMessage] = useState<ChatMessage | null>(null);
+  const [lastFailedMessage, setLastFailedMessage] =
+    useState<ChatMessage | null>(null);
 
   // Conversation state management for data aggregation
   const [aggregatedData, setAggregatedData] = useState<ProfileData>({});
-  const [conversationContext, setConversationContext] = useState<ConversationContext>({
-    questionCount: 0,
-    completedQuestions: [],
-  });
+  const [conversationContext, setConversationContext] =
+    useState<ConversationContext>({
+      questionCount: 0,
+      completedQuestions: [],
+    });
 
   // Raw conversation storage for skip functionality
-  const [rawConversationStorage, setRawConversationStorage] = useState<ChatMessage[]>([]);
+  const [rawConversationStorage, setRawConversationStorage] = useState<
+    ChatMessage[]
+  >([]);
 
   // Loading states for Skip and Submit buttons
   const [isProcessingSkip, setIsProcessingSkip] = useState(false);
@@ -48,14 +54,24 @@ function TenantOnboarding() {
   // Status for the submit button
   const [submitStatus, setSubmitStatus] = useState<SubmitStatus>("ready");
 
+  // Modal state for profile summary
+  const [showProfileModal, setShowProfileModal] = useState(false);
+  const [finalProfileData, setFinalProfileData] = useState<ProfileData | null>(
+    null,
+  );
+  const [modalClosedWithoutCompletion, setModalClosedWithoutCompletion] =
+    useState(false);
+
   // Error handling utilities
   const { getErrorMessage } = useApiErrorHandler();
 
   // Custom hooks
-  const { sendChatMessage } = useChat({ messages, conversationContext, aggregatedData });
+  const { sendChatMessage } = useChat({
+    messages,
+    conversationContext,
+    aggregatedData,
+  });
   const { handleSkip, handleSubmitProfile } = useProfileOperations();
-
-
 
   // Setup retry mechanism for chat
   const chatRetry = useNetworkRetry(
@@ -107,14 +123,29 @@ function TenantOnboarding() {
 
       try {
         const assistantMessage = await sendChatMessage(userMessage);
-        const { displayContent, profileData } = parseAIResponse(assistantMessage);
+        const { displayContent, profileData } =
+          parseAIResponse(assistantMessage);
 
-        // Only try to parse JSON if we're at the end of onboarding
-        if (conversationContext.questionCount >= 9 && profileData) {
+        // Handle final response - show modal when we have profile data
+        console.log("🔍 Profile data check:", !!profileData, profileData);
+        if (profileData) {
           setAggregatedData(profileData);
+          setFinalProfileData(profileData);
+          setShowProfileModal(true);
+
+          // Update conversation context for final response
+          setConversationContext((prev) => ({
+            ...prev,
+            questionCount: prev.questionCount + 1,
+            currentQuestion: displayContent,
+            completedQuestions: [...prev.completedQuestions, displayContent],
+          }));
+
+          // Don't add the assistant message to chat for final response
+          return;
         }
 
-        // Update conversation context
+        // Update conversation context for regular responses
         setConversationContext((prev) => ({
           ...prev,
           questionCount: prev.questionCount + 1,
@@ -153,7 +184,12 @@ function TenantOnboarding() {
         }
       }
     },
-    [isLoading, sendChatMessage, getErrorMessage, conversationContext.questionCount],
+    [
+      isLoading,
+      sendChatMessage,
+      getErrorMessage,
+      conversationContext.questionCount,
+    ],
   );
 
   // Handle retry from retry prompt
@@ -239,11 +275,35 @@ function TenantOnboarding() {
   }, [handleSkip, rawConversationStorage]);
 
   const handleSubmitProfileWrapper = useCallback(() => {
-    handleSubmitProfile(aggregatedData, setIsSubmitting);
-  }, [handleSubmitProfile, aggregatedData]);
+    // Safeguard: If we have aggregated data (from JSON response), use it
+    // Otherwise, process raw conversation data (safeguard for when 10 questions completed but no JSON)
+    if (Object.keys(aggregatedData).length > 0) {
+      handleSubmitProfile(aggregatedData, setIsSubmitting);
+    } else {
+      // Safeguard: Use raw conversation processing (same as skip functionality)
+      handleSkip(rawConversationStorage, setIsSubmitting);
+    }
+  }, [handleSubmitProfile, handleSkip, aggregatedData, rawConversationStorage]);
+
+  // Handle profile completion from modal
+  const handleCompleteProfile = useCallback(() => {
+    if (finalProfileData) {
+      handleSubmitProfile(finalProfileData, setIsSubmitting);
+      setShowProfileModal(false);
+    }
+  }, [finalProfileData, handleSubmitProfile]);
+
+  // Handle modal close without completion
+  const handleModalClose = useCallback((open: boolean) => {
+    if (!open) {
+      setShowProfileModal(false);
+      setModalClosedWithoutCompletion(true);
+    }
+  }, []);
 
   // Track if welcome toast has been shown to prevent duplicates
   const welcomeToastShown = React.useRef(false);
+  const safeguardToastShown = React.useRef(false);
 
   // Show welcome toast on mount (only once)
   React.useEffect(() => {
@@ -261,33 +321,58 @@ function TenantOnboarding() {
     }
   }, [rawConversationStorage.length]);
 
+  // Safeguard: Show hint when 10 questions completed but no modal (no JSON response)
+  React.useEffect(() => {
+    if (
+      conversationContext.questionCount >= ONBOARDING_CONFIG.TOTAL_QUESTIONS &&
+      !showProfileModal &&
+      Object.keys(aggregatedData).length === 0 &&
+      !safeguardToastShown.current
+    ) {
+      toast.info(TOAST_MESSAGES.SAFEGUARD_HINT, { duration: 5000 });
+      safeguardToastShown.current = true;
+    }
+  }, [conversationContext.questionCount, showProfileModal, aggregatedData]);
+
   return (
     <div className="bg-background flex h-screen">
       {/* Mobile: Full width chat, Desktop: Flex layout */}
-      <div className="flex-1 lg:flex-2 flex flex-col">
+      <div className="flex flex-1 flex-col lg:flex-2">
         <ChatInterface
           messages={messages}
           isLoading={isLoading}
           chatError={chatError}
           showRetryPrompt={showRetryPrompt}
           submitStatus={submitStatus}
+          currentQuestionCount={conversationContext.questionCount}
+          modalClosedWithoutCompletion={modalClosedWithoutCompletion}
           onSubmit={handleSubmit}
           onRetry={handleRetry}
           onCancelRetry={handleCancelRetry}
           onShowRetryPrompt={handleShowRetryPrompt}
         />
       </div>
-      
+
       {/* Desktop: Side panel, Mobile: Bottom sheet */}
       <ProgressPanel
         conversationContext={conversationContext}
         isProcessingSkip={isProcessingSkip}
         isSubmitting={isSubmitting}
+        modalClosedWithoutCompletion={modalClosedWithoutCompletion}
         onSkip={handleSkipWrapper}
         onSubmitProfile={handleSubmitProfileWrapper}
       />
 
-
+      {/* Profile Summary Modal */}
+      {showProfileModal && finalProfileData && (
+        <ProfileSummaryModal
+          isOpen={showProfileModal}
+          profileData={finalProfileData}
+          isSubmitting={isSubmitting}
+          onComplete={handleCompleteProfile}
+          onClose={handleModalClose}
+        />
+      )}
     </div>
   );
 }

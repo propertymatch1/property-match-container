@@ -21,11 +21,10 @@ export const TENANT_ONBOARDING_SYSTEM_PROMPT = `You are a conversational AI assi
 - Ask follow-up questions if answers are unclear
 - Acknowledge their responses before moving to the next question
 - Keep questions focused but friendly
-- RESPOND WITH PLAIN TEXT ONLY (no JSON) for questions 1-9
+- RESPOND WITH PLAIN TEXT ONLY (no JSON) for questions 1 through 9
 
-🚨 IMPORTANT: DO NOT return JSON until you have completed ALL 10 questions!
 
-🚨 FINAL RESPONSE ONLY: After collecting all 10 pieces of information, provide a JSON response with their complete profile:
+🚨 FINAL RESPONSE ONLY: After collecting all 10 pieces of information, respond with ONLY this JSON format (no additional text, no code blocks, no markdown):
 
 {
   "resp": "Perfect! Here's your complete profile. Ready to find your ideal space?",
@@ -35,8 +34,8 @@ export const TENANT_ONBOARDING_SYSTEM_PROMPT = `You are a conversational AI assi
       "businessIndustryType": "extracted industry", 
       "businessExperienceLevel": "their experience level",
       "preferredSpaceTypes": ["space types they want"],
-      "requiredSquareFootage": number_in_sqft,
-      "monthlyRentBudgetAmount": number_budget_per_sqft_or_total,
+      "requiredSquareFootage": 3500,
+      "monthlyRentBudgetAmount": 70,
       "targetExpansionCities": ["cities they mentioned"],
       "businessOpeningTimeline": "their timeline",
       "targetCustomerDemographics": ["customer types"],
@@ -49,11 +48,17 @@ export const TENANT_ONBOARDING_SYSTEM_PROMPT = `You are a conversational AI assi
   }
 }
 
-🚨 IMPORTANT: 
-- Only return JSON for the FINAL response (question 10)
-- All other responses should be natural conversation text
-- Extract information from the conversation context provided
-- All profileData fields are optional - only include what was discussed`;
+🚨 CRITICAL JSON RULES:
+- ALL numeric fields must be single numbers (e.g., 3500, not 2500-5000)
+- NO mathematical expressions or ranges in JSON
+- Use average/middle values for ranges (e.g., if user says "2500-5000 sq ft", use 3750)
+- Ensure ALL JSON syntax is valid and parseable
+
+🚨 CRITICAL FINAL RESPONSE RULES: 
+- For question 10 ONLY: Return PURE JSON (no text before/after, no \`\`\`json blocks, no markdown)
+- For questions 1 through 9: Return ONLY natural conversation text (no JSON at all)
+- The final JSON response should start with { and end with }
+- Do not include any explanatory text with the final JSON response`;
 
 export const RAW_DATA_ONBOARDING_PROMPT = `You are an AI assistant that processes conversation data from tenant onboarding and extracts structured profile information.
 
@@ -107,4 +112,10 @@ INSTRUCTIONS:
 - For additionalBusinessNotes, include any additional context or details mentioned
 - Use the assistant's questions as context to better understand user responses
 - Return ONLY valid JSON - no markdown formatting, no code blocks, no additional text
-- Your response must start with { and end with }`;
+- Your response must start with { and end with }
+
+🚨 CRITICAL FINAL RESPONSE RULES: 
+- Return PURE JSON (no text before/after, no \`\`\`json blocks, no markdown)
+- Return ONLY natural conversation text (no JSON at all)
+- The final JSON response should start with { and end with }
+- Do not include any explanatory text with the final JSON response`;

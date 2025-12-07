@@ -7,6 +7,7 @@ interface ProgressPanelProps {
   conversationContext: ConversationContext;
   isProcessingSkip: boolean;
   isSubmitting: boolean;
+  modalClosedWithoutCompletion: boolean;
   onSkip: () => void;
   onSubmitProfile: () => void;
 }
@@ -15,6 +16,7 @@ export const ProgressPanel: React.FC<ProgressPanelProps> = ({
   conversationContext,
   isProcessingSkip,
   isSubmitting,
+  modalClosedWithoutCompletion,
   onSkip,
   onSubmitProfile,
 }) => {
@@ -32,7 +34,7 @@ export const ProgressPanel: React.FC<ProgressPanelProps> = ({
   const questionsRemaining =
     ONBOARDING_CONFIG.TOTAL_QUESTIONS - conversationContext.questionCount;
   const isComplete =
-    conversationContext.questionCount >= ONBOARDING_CONFIG.TOTAL_QUESTIONS;
+    conversationContext.questionCount >= ONBOARDING_CONFIG.TOTAL_QUESTIONS || modalClosedWithoutCompletion;
 
   return (
     <>
@@ -153,7 +155,9 @@ export const ProgressPanel: React.FC<ProgressPanelProps> = ({
 
             {/* Helper text */}
             <p className="text-muted-foreground text-center text-xs">
-              {isComplete
+              {modalClosedWithoutCompletion
+                ? "Profile ready! Click Submit Profile to complete your onboarding."
+                : isComplete
                 ? "All questions completed! You can now submit your profile."
                 : `Complete ${questionsRemaining} more questions to submit, or skip to finish early.`}
             </p>

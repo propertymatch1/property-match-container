@@ -54,46 +54,137 @@ export const mapAIResponseToProfileData = (aiResponse: any): ProfileData => {
 };
 
 // Clean and parse AI response
+// Repair common JSON syntax errors
+const repairJSON = (jsonString: string): string => {
+  let repaired = jsonString;
+  
+  // Fix common range expressions like "2500-5000" to middle value
+  repaired = repaired.replace(/:\s*(\d+)-(\d+)/g, (match, start, end) => {
+    const middle = Math.round((parseInt(start) + parseInt(end)) / 2);
+    console.log(`🔧 Repaired range ${start}-${end} to ${middle}`);
+    return `: ${middle}`;
+  });
+  
+  // Fix unquoted property names (though this shouldn't happen with our prompt)
+  repaired = repaired.replace(/([{,]\s*)([a-zA-Z_$][a-zA-Z0-9_$]*)\s*:/g, '$1"$2":');
+  
+  return repaired;
+};
+
+// Extract JSON objects from text using balanced bracket matching
+const extractJSONObjects = (text: string): string[] => {
+  const jsonObjects: string[] = [];
+  let braceCount = 0;
+  let startIndex = -1;
+  
+  for (let i = 0; i < text.length; i++) {
+    const char = text[i];
+    
+    if (char === '{') {
+      if (braceCount === 0) {
+        startIndex = i;
+      }
+      braceCount++;
+    } else if (char === '}') {
+      braceCount--;
+      if (braceCount === 0 && startIndex !== -1) {
+        const jsonCandidate = text.substring(startIndex, i + 1);
+        try {
+          // Try to parse as-is first
+          JSON.parse(jsonCandidate);
+          jsonObjects.push(jsonCandidate);
+        } catch {
+          // Try to repair and parse
+          try {
+            const repaired = repairJSON(jsonCandidate);
+            JSON.parse(repaired);
+            jsonObjects.push(repaired);
+            console.log("🔧 JSON repaired successfully");
+          } catch {
+            // Still not valid JSON, continue
+          }
+        }
+        startIndex = -1;
+      }
+    }
+  }
+  
+  return jsonObjects;
+};
+
 export const parseAIResponse = (
   response: string,
 ): { displayContent: string; profileData?: ProfileData } => {
-  let displayContent = response;
+  const trimmedResponse = response.trim();
+  let displayContent = trimmedResponse;
   let profileData: ProfileData | undefined;
 
   try {
-    // Clean up potential markdown code blocks
-    let cleanedMessage = response.trim();
-    if (cleanedMessage.startsWith("```json")) {
-      cleanedMessage = cleanedMessage
-        .replace(/^```json\s*/, "")
-        .replace(/\s*```$/, "");
-    }
-
-    // Try to extract JSON from the response
-    const jsonMatch = cleanedMessage.match(/\{[\s\S]*\}/);
-    if (jsonMatch) {
-      const parsed = JSON.parse(jsonMatch[0]) as AIResponse;
-
-      // Handle both old and new response formats
-      const aiProfileData =
-        parsed.data?.tenantProfile ||
-        parsed.data?.profileData ||
-        parsed.tenantProfile ||
-        parsed.profileData;
+    // Check if the entire response is pure JSON
+    if (trimmedResponse.startsWith("{") && trimmedResponse.endsWith("}")) {
+      const parsed = JSON.parse(trimmedResponse) as AIResponse;
+      const aiProfileData = parsed.data?.tenantProfile || parsed.tenantProfile;
 
       if (aiProfileData) {
-        // Map AI response to our database format
         profileData = mapAIResponseToProfileData(aiProfileData);
-        console.log("✅ Final profile data extracted and mapped:", profileData);
+        displayContent =
+          parsed.resp ||
+          "Perfect! Here's your complete profile. Ready to find your ideal space?";
+        return { displayContent, profileData };
       }
+    }
 
-      if (parsed.resp) {
+    // Check for JSON in code blocks first
+    const codeBlockMatch = trimmedResponse.match(/```json\s*([\s\S]*?)\s*```/);
+    let jsonToProcess = null;
+    let textBeforeJson = "";
+
+    if (codeBlockMatch) {
+      jsonToProcess = codeBlockMatch[1];
+      textBeforeJson = trimmedResponse.substring(0, codeBlockMatch.index).trim();
+    } else {
+      // Use improved JSON extraction for mixed content
+      const jsonObjects = extractJSONObjects(trimmedResponse);
+      
+      if (jsonObjects.length > 0) {
+        // Use the last (most complete) JSON object found
+        jsonToProcess = jsonObjects[jsonObjects.length - 1];
+        const jsonIndex = trimmedResponse.lastIndexOf(jsonToProcess!);
+        textBeforeJson = trimmedResponse.substring(0, jsonIndex).trim();
+      }
+    }
+
+    if (jsonToProcess) {
+      let parsed: AIResponse;
+      
+      try {
+        // Try to parse as-is first
+        parsed = JSON.parse(jsonToProcess) as AIResponse;
+      } catch (parseError) {
+        // Try to repair and parse
+        console.log("🔧 JSON parse failed, attempting repair");
+        const repaired = repairJSON(jsonToProcess);
+        parsed = JSON.parse(repaired) as AIResponse;
+        console.log("✅ JSON repaired and parsed successfully");
+      }
+      
+      const aiProfileData = parsed.data?.tenantProfile || parsed.tenantProfile;
+
+      if (aiProfileData) {
+        profileData = mapAIResponseToProfileData(aiProfileData);
+
+        // Priority: resp field from JSON > text before JSON > default message
+        displayContent =
+          parsed.resp ||
+          textBeforeJson ||
+          "Perfect! Here's your complete profile. Ready to find your ideal space?";
+      } else if (parsed.resp) {
         displayContent = parsed.resp;
       }
     }
   } catch (parseError) {
-    console.log("Could not parse final JSON, using text response");
-    // Just use the text response as-is
+    // If parsing fails, use the original response
+    displayContent = trimmedResponse;
   }
 
   return { displayContent, profileData };
