@@ -1,21 +1,155 @@
 "use client";
 
+import Link from "next/link";
+import { AlertCircle, Building } from "lucide-react";
 import { withAuth } from "~/lib/auth-context";
+import { useTenantProfile } from "./hooks/use-tenant-profile";
+import { Alert, AlertDescription } from "~/components/ui/alert";
+import { Button } from "~/components/ui/button";
+import { TooltipProvider } from "~/components/ui/tooltip";
+import { DashboardHeroCard } from "./components/DashboardHeroCard";
+import { BrandStoryCard } from "./components/BrandStoryCard";
+import { CustomerPricingCard } from "./components/CustomerPricingCard";
+import { OperationsMaturityCard } from "./components/OperationsMaturityCard";
+import { ExpansionIntentCard } from "./components/ExpansionIntentCard";
+import { FinancialReadinessCard } from "./components/FinancialReadinessCard";
+import { MediaSocialCard } from "./components/MediaSocialCard";
+import Footer from "./components/Footer";
+import MobileCTA from "./components/MobileCTA";
 
 function TenantDashboard() {
-  return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl font-bold text-gray-900 mb-6">
-          Tenant Dashboard
-        </h1>
-        <div className="bg-white rounded-lg shadow-sm border p-6">
-          <p className="text-gray-600">
-            Welcome to your tenant dashboard. Here you can manage your rental search and applications.
-          </p>
+  const { profile, isLoading, error, retry } = useTenantProfile();
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-[#FAF9F7] flex items-center justify-center">
+        <div className="max-w-4xl mx-auto px-4 py-8">
+          <div className="space-y-4">
+            <div className="bg-white/50 rounded-lg p-6 animate-pulse">
+              <div className="h-4 bg-gray-200 rounded w-1/4 mb-2"></div>
+              <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+            </div>
+            <div className="bg-white/50 rounded-lg p-6 animate-pulse">
+              <div className="h-4 bg-gray-200 rounded w-1/3"></div>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-[#FAF9F7] flex items-center justify-center">
+        <div className="max-w-4xl mx-auto px-4 py-8">
+          <Alert variant="destructive">
+            <AlertCircle className="h-4 w-4" />
+            <AlertDescription className="flex items-center justify-between">
+              <span>{error}</span>
+              <Button
+                onClick={retry}
+                variant="outline"
+                size="sm"
+                className="ml-4"
+              >
+                Retry
+              </Button>
+            </AlertDescription>
+          </Alert>
+        </div>
+      </div>
+    );
+  }
+
+  if (!profile) {
+    return (
+      <div className="min-h-screen bg-[#FAF9F7] flex items-center justify-center">
+        <div className="max-w-4xl mx-auto px-4 py-8">
+          <Alert>
+            <Building className="h-4 w-4" />
+            <AlertDescription className="flex items-center justify-between">
+              <div>
+                <p className="font-semibold mb-1">Complete Your Profile</p>
+                <p className="text-sm">
+                  Get started by completing your tenant onboarding to create
+                  your business profile.
+                </p>
+              </div>
+              <Button asChild size="sm" className="ml-4">
+                <Link href="/onboarding/tenent">Start Onboarding</Link>
+              </Button>
+            </AlertDescription>
+          </Alert>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <TooltipProvider>
+      <div className="min-h-screen bg-[#FAF9F7]">
+        <main className="pb-24 md:pb-8">
+          {/* Hero Section */}
+          <DashboardHeroCard
+            brandName={profile.brandName}
+            logoUrl={profile.logoUrl}
+            industry={profile.industry}
+            typcialCustomer={profile.typcialCustomer}
+            typcialCustomerSpend={profile.typcialCustomerSpend}
+            spaceLooking={profile.spaceLooking}
+            cityNext={profile.cityNext}
+            whenNextOpen={profile.whenNextOpen}
+            notes={profile.notes}
+          />
+
+          {/* Content Sections */}
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 space-y-4 sm:space-y-6 mt-6">
+            {/* Brand Story Section */}
+            <BrandStoryCard
+              brandKeywords={profile.brandKeywords}
+              personalityTags={profile.personalityTags}
+              toneTags={profile.toneTags}
+              notes={profile.notes}
+            />
+
+            {/* Customer & Pricing Section */}
+            <CustomerPricingCard
+              typcialCustomer={profile.typcialCustomer}
+              typcialCustomerSpend={profile.typcialCustomerSpend}
+              rentRangeDesire={profile.rentRangeDesire}
+            />
+
+            {/* Operations & Maturity Section */}
+            <OperationsMaturityCard
+              tennentExperience={profile.tennentExperience}
+              spaceLooking={profile.spaceLooking}
+              mode={profile.mode}
+            />
+
+            {/* Expansion Intent Section */}
+            <ExpansionIntentCard
+              cityNext={profile.cityNext}
+              whenNextOpen={profile.whenNextOpen}
+              spaceNeed={profile.spaceNeed}
+            />
+
+            {/* Financial Readiness Section */}
+            <FinancialReadinessCard
+              rentRangeDesire={profile.rentRangeDesire}
+            />
+
+            {/* Media & Social Section */}
+            <MediaSocialCard logoUrl={profile.logoUrl} />
+          </div>
+        </main>
+
+        {/* Footer */}
+        <Footer />
+
+        {/* Mobile CTA */}
+        <MobileCTA />
+      </div>
+    </TooltipProvider>
   );
 }
 
