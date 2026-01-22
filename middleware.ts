@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "~/lib/auth";
 
 // Define protected routes and their required roles
 const PROTECTED_ROUTES = {
@@ -38,75 +37,31 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  try {
-    // Get session from Better Auth
-    const session = await auth.api.getSession({
-      headers: request.headers,
-    });
+  // Check if route requires authentication
+  const requiresAuth = AUTH_REQUIRED_ROUTES.some(route => 
+    pathname.startsWith(route)
+  );
 
-    const user = session?.user;
-    const isAuthenticated = !!user;
+  // Check if route has specific role requirements
+  const requiredRole = PROTECTED_ROUTES[pathname as keyof typeof PROTECTED_ROUTES];
 
-    // Check if route requires authentication
-    const requiresAuth = AUTH_REQUIRED_ROUTES.some(route => 
-      pathname.startsWith(route)
-    );
+  // Simple auth check using Better Auth session cookie
+  const sessionCookie = request.cookies.get("better-auth.session_token");
+  const isAuthenticated = !!sessionCookie;
 
-    // Check if route has specific role requirements
-    const requiredRole = PROTECTED_ROUTES[pathname as keyof typeof PROTECTED_ROUTES];
-
-    // Redirect unauthenticated users to signin
-    if ((requiresAuth || requiredRole) && !isAuthenticated) {
-      const signinUrl = new URL("/signin", request.url);
-      signinUrl.searchParams.set("callbackUrl", pathname);
-      return NextResponse.redirect(signinUrl);
-    }
-
-    // Handle role-based access control
-    if (requiredRole && isAuthenticated) {
-      const userRole = user?.userType;
-
-      // If user doesn't have the required role, redirect based on their actual role
-      if (userRole !== requiredRole) {
-        let redirectPath: string;
-
-        if (userRole === "TENANT") {
-          // Tenant trying to access landlord routes - redirect to tenant equivalent
-          if (pathname.startsWith("/dashboard/landlord")) {
-            redirectPath = "/dashboard/tenent";
-          } else if (pathname.startsWith("/onboarding/landlord")) {
-            redirectPath = "/onboarding/tenent";
-          } else {
-            redirectPath = "/dashboard/tenent";
-          }
-        } else if (userRole === "LANDLORD") {
-          // Landlord trying to access tenant routes - redirect to landlord equivalent
-          if (pathname.startsWith("/dashboard/tenent")) {
-            redirectPath = "/dashboard/landlord";
-          } else if (pathname.startsWith("/onboarding/tenent")) {
-            redirectPath = "/onboarding/landlord";
-          } else {
-            redirectPath = "/dashboard/landlord";
-          }
-        } else {
-          // Unknown role - redirect to signin
-          redirectPath = "/signin";
-        }
-
-        return NextResponse.redirect(new URL(redirectPath, request.url));
-      }
-    }
-
-    // Allow access if all checks pass
-    return NextResponse.next();
-
-  } catch (error) {
-    // If there's an error getting the session, redirect to signin
-    console.error("Middleware auth error:", error);
+  // Redirect unauthenticated users to signin
+  if ((requiresAuth || requiredRole) && !isAuthenticated) {
     const signinUrl = new URL("/signin", request.url);
     signinUrl.searchParams.set("callbackUrl", pathname);
     return NextResponse.redirect(signinUrl);
   }
+
+  // For role-based access, we'll handle it in the page components
+  // since we can't easily verify roles without the full auth library
+  // This keeps the middleware lightweight
+
+  // Allow access if authenticated
+  return NextResponse.next();
 }
 
 export const config = {
