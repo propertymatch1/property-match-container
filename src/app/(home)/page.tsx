@@ -533,10 +533,10 @@ export default function HomePage() {
           {/* Author attribution */}
           <div className="mt-8">
             <p className="font-[var(--font-inter)] text-base font-semibold text-[var(--warm-900)]">
-              Sarah Chen
+              Ethan Chen
             </p>
             <p className="mt-1 font-[var(--font-inter)] text-sm text-[var(--sage-500)]">
-              Founder & Creative Director, Bloom Botanicals
+              Founder & Creative Director, Identia
             </p>
           </div>
         </div>
