@@ -110,102 +110,106 @@ export default function HomePage() {
           isScrolled ? "border-b border-[rgba(0,0,0,0.08)]" : "border-b border-transparent"
         }`}
       >
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 sm:py-4">
           {/* Brand name with distinctive Playfair Display typography */}
-          <h1 className="font-[var(--font-playfair)] text-2xl font-semibold tracking-tight text-[var(--warm-900)]">
+          <h1 className="font-[var(--font-playfair)] text-xl font-semibold tracking-tight text-[var(--warm-900)] sm:text-2xl">
             Identia
           </h1>
-          <nav className="flex items-center gap-8">
-            {/* Nav links with underline hover animation */}
-            <a 
-              href="#brands" 
-              className="nav-link relative text-sm text-gray-600 transition-colors hover:text-gray-900"
-            >
-              For Brands
-            </a>
-            <a 
-              href="#landlords" 
-              className="nav-link relative text-sm text-gray-600 transition-colors hover:text-gray-900"
-            >
-              For Landlords
-            </a>
-            <a 
-              href="#how-it-works" 
-              className="nav-link relative text-sm text-gray-600 transition-colors hover:text-gray-900"
-            >
-              How It Works
-            </a>
-            <a 
-              href="#about" 
-              className="nav-link relative text-sm text-gray-600 transition-colors hover:text-gray-900"
-            >
-              About
-            </a>
+          <nav className="flex items-center gap-2 sm:gap-4 md:gap-8">
+            {/* Nav links with underline hover animation - hidden on mobile, shown on md+ */}
+            <div className="hidden md:flex md:items-center md:gap-8">
+              <a 
+                href="#brands" 
+                className="nav-link relative text-sm text-gray-600 transition-colors hover:text-gray-900"
+              >
+                For Brands
+              </a>
+              <a 
+                href="#landlords" 
+                className="nav-link relative text-sm text-gray-600 transition-colors hover:text-gray-900"
+              >
+                For Landlords
+              </a>
+              <a 
+                href="#how-it-works" 
+                className="nav-link relative text-sm text-gray-600 transition-colors hover:text-gray-900"
+              >
+                How It Works
+              </a>
+              <a 
+                href="#about" 
+                className="nav-link relative text-sm text-gray-600 transition-colors hover:text-gray-900"
+              >
+                About
+              </a>
+            </div>
             <Button
               onClick={() => handleNavigation("/onboarding/tenent", "generate passport button")}
-              className="min-h-[44px] bg-[var(--sage-500)] px-6 text-sm text-white transition-colors hover:bg-[var(--sage-600)]"
+              className="min-h-[40px] bg-[var(--sage-500)] px-3 text-xs text-white transition-colors hover:bg-[var(--sage-600)] sm:min-h-[44px] sm:px-6 sm:text-sm"
               aria-label="Generate your brand passport"
             >
-              Generate Passport
+              <span className="hidden sm:inline">Generate Passport</span>
+              <span className="sm:hidden">Generate</span>
             </Button>
           </nav>
         </div>
       </header>
 
       {/* Hero Section - Redesigned with layered background and visual accents */}
-      <section className="relative min-h-[90vh] overflow-hidden bg-gradient-to-br from-[var(--warm-50)] via-[var(--sage-50)] to-[var(--warm-100)]">
-        {/* Decorative circle elements with absolute positioning */}
+      <section className="relative min-h-[80vh] overflow-hidden bg-gradient-to-br from-[var(--warm-50)] via-[var(--sage-50)] to-[var(--warm-100)] sm:min-h-[90vh]">
+        {/* Decorative circle elements with absolute positioning - scaled for mobile */}
         <div 
-          className="absolute -left-32 -top-32 h-96 w-96 rounded-full bg-gradient-to-br from-[rgba(107,124,110,0.08)] to-[rgba(107,124,110,0.02)]"
+          className="absolute -left-16 -top-16 h-48 w-48 rounded-full bg-gradient-to-br from-[rgba(107,124,110,0.08)] to-[rgba(107,124,110,0.02)] sm:-left-32 sm:-top-32 sm:h-96 sm:w-96"
           aria-hidden="true"
         />
         <div 
-          className="absolute -right-20 top-1/4 h-72 w-72 rounded-full bg-gradient-to-br from-[rgba(107,124,110,0.06)] to-[rgba(107,124,110,0.01)]"
+          className="absolute -right-10 top-1/4 h-36 w-36 rounded-full bg-gradient-to-br from-[rgba(107,124,110,0.06)] to-[rgba(107,124,110,0.01)] sm:-right-20 sm:h-72 sm:w-72"
           aria-hidden="true"
         />
         <div 
-          className="absolute bottom-20 left-1/4 h-48 w-48 rounded-full bg-gradient-to-br from-[rgba(212,165,116,0.08)] to-[rgba(212,165,116,0.02)]"
+          className="absolute bottom-20 left-1/4 h-24 w-24 rounded-full bg-gradient-to-br from-[rgba(212,165,116,0.08)] to-[rgba(212,165,116,0.02)] sm:h-48 sm:w-48"
           aria-hidden="true"
         />
         <div 
-          className="absolute -bottom-16 right-1/3 h-64 w-64 rounded-full bg-gradient-to-br from-[rgba(107,124,110,0.05)] to-transparent"
+          className="absolute -bottom-8 right-1/3 h-32 w-32 rounded-full bg-gradient-to-br from-[rgba(107,124,110,0.05)] to-transparent sm:-bottom-16 sm:h-64 sm:w-64"
           aria-hidden="true"
         />
 
         {/* Hero content container */}
-        <div className="relative mx-auto flex min-h-[90vh] max-w-7xl items-center px-6 py-20">
-          <div className="grid w-full gap-12 lg:grid-cols-2 lg:gap-16">
+        <div className="relative mx-auto flex min-h-[80vh] max-w-7xl items-center px-4 py-12 sm:min-h-[90vh] sm:px-6 sm:py-20">
+          <div className="grid w-full gap-8 lg:grid-cols-2 lg:gap-16">
             {/* Left side - Content */}
-            <div className="flex flex-col justify-center">
+            <div className="flex flex-col justify-center text-center lg:text-left">
               {/* Label */}
-              <p className="label mb-6 text-[var(--sage-500)]">
+              <p className="label mb-4 text-[var(--sage-500)] sm:mb-6">
                 Brand Identity Platform
               </p>
               
-              {/* Hero headline with Playfair Display */}
-              <h2 className="hero-title text-[var(--warm-900)]">
+              {/* Hero headline with Playfair Display - responsive sizing */}
+              <h2 className="font-[var(--font-playfair)] text-4xl font-semibold leading-tight tracking-tight text-[var(--warm-900)] sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl">
                 Where Brands
                 <br />
                 <span className="text-[var(--sage-500)]">Find Their Space</span>
               </h2>
               
-              {/* Subheadline with Inter */}
-              <p className="body-text mt-6 max-w-lg text-[#4a5568]">
+              {/* Subheadline with Inter - responsive sizing */}
+              <p className="mx-auto mt-4 max-w-lg text-base leading-relaxed text-[#4a5568] sm:mt-6 sm:text-lg lg:mx-0 lg:text-xl">
                 Create your professional brand passport and connect with premium retail spaces that align with your vision.
               </p>
               
-              {/* CTA buttons with enhanced styling */}
-              <div className="mt-10 flex flex-wrap items-center gap-4">
+              {/* CTA buttons with enhanced styling - responsive layout */}
+              <div className="mt-8 flex flex-col items-center gap-3 sm:mt-10 sm:flex-row sm:gap-4 lg:justify-start">
                 <Button
                   onClick={() => handleNavigation("/onboarding/tenent", "generate passport CTA")}
-                  className="btn-primary min-h-[52px] rounded-xl bg-[var(--sage-500)] px-8 text-base font-medium text-white shadow-lg shadow-[var(--sage-500)]/20 transition-all duration-300 hover:bg-[var(--sage-600)] hover:shadow-xl hover:shadow-[var(--sage-500)]/30"
+                  className="btn-primary w-full min-h-[48px] rounded-xl bg-[var(--sage-500)] px-6 text-sm font-medium text-white shadow-lg shadow-[var(--sage-500)]/20 transition-all duration-300 hover:bg-[var(--sage-600)] hover:shadow-xl hover:shadow-[var(--sage-500)]/30 sm:w-auto sm:min-h-[52px] sm:px-8 sm:text-base"
                   aria-label="Generate your brand passport"
                 >
-                  Generate Your Brand Passport
+                  <span className="sm:hidden">Generate Passport</span>
+                  <span className="hidden sm:inline">Generate Your Brand Passport</span>
                 </Button>
                 <button
                   onClick={() => handleNavigation("#how-it-works", "learn more link")}
-                  className="btn-primary group flex min-h-[52px] items-center gap-2 rounded-xl border border-[var(--warm-300)] bg-white/50 px-6 text-base font-medium text-[var(--sage-800)] backdrop-blur-sm transition-all duration-300 hover:border-[var(--sage-500)] hover:bg-white hover:text-[var(--sage-500)]"
+                  className="btn-primary group flex w-full min-h-[48px] items-center justify-center gap-2 rounded-xl border border-[var(--warm-300)] bg-white/50 px-6 text-sm font-medium text-[var(--sage-800)] backdrop-blur-sm transition-all duration-300 hover:border-[var(--sage-500)] hover:bg-white hover:text-[var(--sage-500)] sm:w-auto sm:min-h-[52px] sm:text-base"
                 >
                   Learn how it works
                   <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
@@ -309,18 +313,18 @@ export default function HomePage() {
       <section 
         id="brands" 
         ref={featuresRef}
-        className={`bg-white mx-auto max-w-7xl px-6 py-20 fade-in-section ${visibleElements.has('features') ? 'is-visible' : ''}`}
+        className={`bg-white mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-16 md:py-20 fade-in-section ${visibleElements.has('features') ? 'is-visible' : ''}`}
       >
         {/* Section header */}
-        <div className="mb-12 text-center">
+        <div className="mb-8 text-center sm:mb-12">
           <p className="label mb-4 text-[var(--sage-500)]">Our Platform</p>
-          <h2 className="section-title text-[var(--warm-900)]">Built for Connection</h2>
-          <p className="body-text mx-auto mt-4 max-w-2xl">
+          <h2 className="font-[var(--font-playfair)] text-2xl font-medium leading-tight tracking-tight text-[var(--warm-900)] sm:text-3xl md:text-4xl">Built for Connection</h2>
+          <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-[var(--warm-800)] sm:text-lg">
             Whether you&apos;re a brand seeking the perfect space or a landlord looking for ideal tenants, Identia bridges the gap.
           </p>
         </div>
 
-        <div className="grid gap-8 md:grid-cols-3">
+        <div className="grid gap-6 sm:gap-8 md:grid-cols-3">
           {/* For Brands Card */}
           <div 
             className={`feature-card group cursor-pointer fade-in-section stagger-1 ${visibleElements.has('features') ? 'is-visible' : ''}`}
@@ -335,19 +339,19 @@ export default function HomePage() {
             aria-label="Generate your brand passport"
           >
             {/* Icon container with sage background */}
-            <div className="feature-icon mb-6">
-              <Store className="h-6 w-6" aria-hidden="true" />
+            <div className="feature-icon mb-4 sm:mb-6">
+              <Store className="h-5 w-5 sm:h-6 sm:w-6" aria-hidden="true" />
             </div>
             <p className="label mb-2 text-[var(--sage-500)]">For Brands</p>
-            <h3 className="font-[var(--font-playfair)] text-2xl font-semibold tracking-tight text-[var(--warm-900)]">
+            <h3 className="font-[var(--font-playfair)] text-xl font-semibold tracking-tight text-[var(--warm-900)] sm:text-2xl">
               Create Your Identity
             </h3>
-            <p className="mt-4 text-base leading-relaxed text-[var(--warm-800)]">
+            <p className="mt-3 text-sm leading-relaxed text-[var(--warm-800)] sm:mt-4 sm:text-base">
               Build a professional brand passport that showcases your story, values, and vision — ready to share when opportunity knocks.
             </p>
-            <div className="mt-8 flex items-center gap-2 text-sm font-semibold text-[var(--sage-500)] transition-colors group-hover:text-[var(--sage-700)]">
+            <div className="mt-6 flex items-center gap-2 text-xs font-semibold text-[var(--sage-500)] transition-colors group-hover:text-[var(--sage-700)] sm:mt-8 sm:text-sm">
               Generate Passport
-              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden="true" />
+              <ArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-1 sm:h-4 sm:w-4" aria-hidden="true" />
             </div>
           </div>
 
@@ -365,19 +369,19 @@ export default function HomePage() {
             aria-label="Learn about AI-powered matching"
           >
             {/* Icon container with sage background */}
-            <div className="feature-icon mb-6">
-              <Sparkles className="h-6 w-6" aria-hidden="true" />
+            <div className="feature-icon mb-4 sm:mb-6">
+              <Sparkles className="h-5 w-5 sm:h-6 sm:w-6" aria-hidden="true" />
             </div>
             <p className="label mb-2 text-[var(--sage-500)]">Smart Technology</p>
-            <h3 className="font-[var(--font-playfair)] text-2xl font-semibold tracking-tight text-[var(--warm-900)]">
+            <h3 className="font-[var(--font-playfair)] text-xl font-semibold tracking-tight text-[var(--warm-900)] sm:text-2xl">
               AI-Powered Matching
             </h3>
-            <p className="mt-4 text-base leading-relaxed text-[var(--warm-800)]">
+            <p className="mt-3 text-sm leading-relaxed text-[var(--warm-800)] sm:mt-4 sm:text-base">
               Our intelligent algorithm analyzes brand profiles and space requirements to create perfect matches based on values, aesthetics, and goals.
             </p>
-            <div className="mt-8 flex items-center gap-2 text-sm font-semibold text-[var(--sage-500)] transition-colors group-hover:text-[var(--sage-700)]">
+            <div className="mt-6 flex items-center gap-2 text-xs font-semibold text-[var(--sage-500)] transition-colors group-hover:text-[var(--sage-700)] sm:mt-8 sm:text-sm">
               Learn How It Works
-              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden="true" />
+              <ArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-1 sm:h-4 sm:w-4" aria-hidden="true" />
             </div>
           </div>
 
@@ -396,19 +400,19 @@ export default function HomePage() {
             aria-label="Explore landlord features"
           >
             {/* Icon container with sage background */}
-            <div className="feature-icon mb-6">
-              <Building className="h-6 w-6" aria-hidden="true" />
+            <div className="feature-icon mb-4 sm:mb-6">
+              <Building className="h-5 w-5 sm:h-6 sm:w-6" aria-hidden="true" />
             </div>
             <p className="label mb-2 text-[var(--sage-500)]">For Landlords</p>
-            <h3 className="font-[var(--font-playfair)] text-2xl font-semibold tracking-tight text-[var(--warm-900)]">
+            <h3 className="font-[var(--font-playfair)] text-xl font-semibold tracking-tight text-[var(--warm-900)] sm:text-2xl">
               Find Ideal Tenants
             </h3>
-            <p className="mt-4 text-base leading-relaxed text-[var(--warm-800)]">
+            <p className="mt-3 text-sm leading-relaxed text-[var(--warm-800)] sm:mt-4 sm:text-base">
               Discover and evaluate brands through comprehensive, structured profiles — making informed decisions beyond traditional listings.
             </p>
-            <div className="mt-8 flex items-center gap-2 text-sm font-semibold text-[var(--sage-500)] transition-colors group-hover:text-[var(--sage-700)]">
+            <div className="mt-6 flex items-center gap-2 text-xs font-semibold text-[var(--sage-500)] transition-colors group-hover:text-[var(--sage-700)] sm:mt-8 sm:text-sm">
               Learn More
-              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden="true" />
+              <ArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-1 sm:h-4 sm:w-4" aria-hidden="true" />
             </div>
           </div>
         </div>
@@ -418,14 +422,14 @@ export default function HomePage() {
       <section 
         id="how-it-works" 
         ref={howItWorksRef}
-        className={`bg-white py-20 fade-in-section ${visibleElements.has('howItWorks') ? 'is-visible' : ''}`}
+        className={`bg-white py-12 sm:py-16 md:py-20 fade-in-section ${visibleElements.has('howItWorks') ? 'is-visible' : ''}`}
       >
-        <div className="mx-auto max-w-7xl px-6">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6">
           {/* Section header */}
-          <div className="mb-16 text-center">
+          <div className="mb-12 text-center sm:mb-16">
             <p className="label mb-4 text-[var(--sage-500)]">Simple Process</p>
-            <h2 className="section-title text-[var(--warm-900)]">How It Works</h2>
-            <p className="body-text mx-auto mt-4 max-w-2xl">
+            <h2 className="font-[var(--font-playfair)] text-2xl font-medium leading-tight tracking-tight text-[var(--warm-900)] sm:text-3xl md:text-4xl">How It Works</h2>
+            <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-[var(--warm-800)] sm:text-lg">
               Get matched with your perfect space in three simple steps
             </p>
           </div>
@@ -434,64 +438,64 @@ export default function HomePage() {
           <div className="relative">
             {/* Connecting line - hidden on mobile, visible on md+ */}
             <div 
-              className="absolute left-1/2 top-8 hidden h-0.5 w-[calc(66.666%-4rem)] -translate-x-1/2 bg-gradient-to-r from-[var(--sage-200)] via-[var(--sage-500)] to-[var(--sage-200)] md:block"
+              className="absolute left-1/2 top-6 hidden h-0.5 w-[calc(66.666%-4rem)] -translate-x-1/2 bg-gradient-to-r from-[var(--sage-200)] via-[var(--sage-500)] to-[var(--sage-200)] md:top-8 md:block"
               aria-hidden="true"
             />
             
             {/* Vertical connecting line for mobile */}
             <div 
-              className="absolute left-8 top-16 h-[calc(100%-8rem)] w-0.5 bg-gradient-to-b from-[var(--sage-200)] via-[var(--sage-500)] to-[var(--sage-200)] md:hidden"
+              className="absolute left-6 top-12 h-[calc(100%-6rem)] w-0.5 bg-gradient-to-b from-[var(--sage-200)] via-[var(--sage-500)] to-[var(--sage-200)] sm:left-8 sm:top-16 sm:h-[calc(100%-8rem)] md:hidden"
               aria-hidden="true"
             />
 
             {/* Steps container */}
-            <div className="relative grid gap-12 md:grid-cols-3 md:gap-8">
+            <div className="relative grid gap-8 sm:gap-12 md:grid-cols-3 md:gap-8">
               {/* Step 1 */}
-              <div className={`flex gap-6 md:flex-col md:items-center md:text-center fade-in-section stagger-1 ${visibleElements.has('howItWorks') ? 'is-visible' : ''}`}>
+              <div className={`flex gap-4 sm:gap-6 md:flex-col md:items-center md:text-center fade-in-section stagger-1 ${visibleElements.has('howItWorks') ? 'is-visible' : ''}`}>
                 {/* Step circle */}
-                <div className="relative z-10 flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[var(--sage-500)] to-[var(--sage-600)] shadow-lg shadow-[var(--sage-500)]/20">
-                  <span className="font-[var(--font-playfair)] text-2xl font-semibold text-white">1</span>
+                <div className="relative z-10 flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[var(--sage-500)] to-[var(--sage-600)] shadow-lg shadow-[var(--sage-500)]/20 sm:h-16 sm:w-16">
+                  <span className="font-[var(--font-playfair)] text-lg font-semibold text-white sm:text-2xl">1</span>
                 </div>
                 {/* Step content */}
                 <div className="flex-1">
-                  <h3 className="font-[var(--font-playfair)] text-xl font-semibold tracking-tight text-[var(--warm-900)] md:mt-6">
+                  <h3 className="font-[var(--font-playfair)] text-lg font-semibold tracking-tight text-[var(--warm-900)] sm:text-xl md:mt-6">
                     Create Your Profile
                   </h3>
-                  <p className="mt-3 text-base leading-relaxed text-[var(--warm-800)]">
+                  <p className="mt-2 text-sm leading-relaxed text-[var(--warm-800)] sm:mt-3 sm:text-base">
                     Answer a few questions about your brand&apos;s story, values, and vision. Our AI-powered system builds your comprehensive brand passport.
                   </p>
                 </div>
               </div>
 
               {/* Step 2 */}
-              <div className={`flex gap-6 md:flex-col md:items-center md:text-center fade-in-section stagger-2 ${visibleElements.has('howItWorks') ? 'is-visible' : ''}`}>
+              <div className={`flex gap-4 sm:gap-6 md:flex-col md:items-center md:text-center fade-in-section stagger-2 ${visibleElements.has('howItWorks') ? 'is-visible' : ''}`}>
                 {/* Step circle */}
-                <div className="relative z-10 flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[var(--sage-500)] to-[var(--sage-600)] shadow-lg shadow-[var(--sage-500)]/20">
-                  <span className="font-[var(--font-playfair)] text-2xl font-semibold text-white">2</span>
+                <div className="relative z-10 flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[var(--sage-500)] to-[var(--sage-600)] shadow-lg shadow-[var(--sage-500)]/20 sm:h-16 sm:w-16">
+                  <span className="font-[var(--font-playfair)] text-lg font-semibold text-white sm:text-2xl">2</span>
                 </div>
                 {/* Step content */}
                 <div className="flex-1">
-                  <h3 className="font-[var(--font-playfair)] text-xl font-semibold tracking-tight text-[var(--warm-900)] md:mt-6">
+                  <h3 className="font-[var(--font-playfair)] text-lg font-semibold tracking-tight text-[var(--warm-900)] sm:text-xl md:mt-6">
                     Get Matched
                   </h3>
-                  <p className="mt-3 text-base leading-relaxed text-[var(--warm-800)]">
+                  <p className="mt-2 text-sm leading-relaxed text-[var(--warm-800)] sm:mt-3 sm:text-base">
                     Our intelligent algorithm analyzes your profile and matches you with premium retail spaces that align with your brand identity and goals.
                   </p>
                 </div>
               </div>
 
               {/* Step 3 */}
-              <div className={`flex gap-6 md:flex-col md:items-center md:text-center fade-in-section stagger-3 ${visibleElements.has('howItWorks') ? 'is-visible' : ''}`}>
+              <div className={`flex gap-4 sm:gap-6 md:flex-col md:items-center md:text-center fade-in-section stagger-3 ${visibleElements.has('howItWorks') ? 'is-visible' : ''}`}>
                 {/* Step circle */}
-                <div className="relative z-10 flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[var(--sage-500)] to-[var(--sage-600)] shadow-lg shadow-[var(--sage-500)]/20">
-                  <span className="font-[var(--font-playfair)] text-2xl font-semibold text-white">3</span>
+                <div className="relative z-10 flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[var(--sage-500)] to-[var(--sage-600)] shadow-lg shadow-[var(--sage-500)]/20 sm:h-16 sm:w-16">
+                  <span className="font-[var(--font-playfair)] text-lg font-semibold text-white sm:text-2xl">3</span>
                 </div>
                 {/* Step content */}
                 <div className="flex-1">
-                  <h3 className="font-[var(--font-playfair)] text-xl font-semibold tracking-tight text-[var(--warm-900)] md:mt-6">
+                  <h3 className="font-[var(--font-playfair)] text-lg font-semibold tracking-tight text-[var(--warm-900)] sm:text-xl md:mt-6">
                     Connect & Grow
                   </h3>
-                  <p className="mt-3 text-base leading-relaxed text-[var(--warm-800)]">
+                  <p className="mt-2 text-sm leading-relaxed text-[var(--warm-800)] sm:mt-3 sm:text-base">
                     Review your matches, connect with landlords directly, and find the perfect space to bring your brand vision to life.
                   </p>
                 </div>
@@ -504,12 +508,12 @@ export default function HomePage() {
       {/* Testimonial Section */}
       <section 
         ref={testimonialRef}
-        className={`bg-[var(--sage-50)] py-20 md:py-24 fade-in-section ${visibleElements.has('testimonial') ? 'is-visible' : ''}`}
+        className={`bg-[var(--sage-50)] py-12 sm:py-16 md:py-20 lg:py-24 fade-in-section ${visibleElements.has('testimonial') ? 'is-visible' : ''}`}
       >
-        <div className="mx-auto max-w-4xl px-6 text-center">
+        <div className="mx-auto max-w-4xl px-4 text-center sm:px-6">
           {/* Large decorative quote mark - opening */}
           <div 
-            className="mb-6 font-[var(--font-playfair)] text-7xl leading-none text-[var(--sage-200)] md:text-8xl"
+            className="mb-4 font-[var(--font-playfair)] text-5xl leading-none text-[var(--sage-200)] sm:mb-6 sm:text-7xl md:text-8xl"
             aria-hidden="true"
           >
             &ldquo;
@@ -517,25 +521,25 @@ export default function HomePage() {
           
           {/* Quote text with Playfair Display italic */}
           <blockquote>
-            <p className="font-[var(--font-playfair)] text-xl font-normal italic leading-relaxed text-[var(--warm-800)] md:text-2xl lg:text-3xl">
+            <p className="font-[var(--font-playfair)] text-lg font-normal italic leading-relaxed text-[var(--warm-800)] sm:text-xl md:text-2xl lg:text-3xl">
               Identia transformed how we present our brand to potential landlords. Within weeks of creating our passport, we connected with three premium spaces that perfectly aligned with our vision.
             </p>
           </blockquote>
           
           {/* Large decorative quote mark - closing */}
           <div 
-            className="mt-6 font-[var(--font-playfair)] text-7xl leading-none text-[var(--sage-200)] md:text-8xl"
+            className="mt-4 font-[var(--font-playfair)] text-5xl leading-none text-[var(--sage-200)] sm:mt-6 sm:text-7xl md:text-8xl"
             aria-hidden="true"
           >
             &rdquo;
           </div>
           
           {/* Author attribution */}
-          <div className="mt-8">
-            <p className="font-[var(--font-inter)] text-base font-semibold text-[var(--warm-900)]">
+          <div className="mt-6 sm:mt-8">
+            <p className="font-[var(--font-inter)] text-sm font-semibold text-[var(--warm-900)] sm:text-base">
               Ethan Chen
             </p>
-            <p className="mt-1 font-[var(--font-inter)] text-sm text-[var(--sage-500)]">
+            <p className="mt-1 font-[var(--font-inter)] text-xs text-[var(--sage-500)] sm:text-sm">
               Founder & Creative Director, Identia
             </p>
           </div>
@@ -545,23 +549,23 @@ export default function HomePage() {
       {/* Secondary CTA Section - Gradient Banner */}
       <section 
         ref={ctaRef}
-        className={`bg-gradient-to-br from-[var(--sage-500)] to-[var(--sage-600)] py-16 md:py-20 fade-in-section ${visibleElements.has('cta') ? 'is-visible' : ''}`}
+        className={`bg-gradient-to-br from-[var(--sage-500)] to-[var(--sage-600)] py-12 sm:py-16 md:py-20 fade-in-section ${visibleElements.has('cta') ? 'is-visible' : ''}`}
       >
-        <div className="mx-auto max-w-4xl px-6 text-center">
+        <div className="mx-auto max-w-4xl px-4 text-center sm:px-6">
           {/* Compelling headline */}
-          <h2 className="font-[var(--font-playfair)] text-3xl font-semibold tracking-tight text-white md:text-4xl lg:text-5xl">
+          <h2 className="font-[var(--font-playfair)] text-2xl font-semibold tracking-tight text-white sm:text-3xl md:text-4xl lg:text-5xl">
             Ready to Find Your Perfect Space?
           </h2>
           
           {/* Subtext */}
-          <p className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-white/80 md:text-lg">
+          <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-white/80 sm:mt-6 sm:text-base md:text-lg">
             Join hundreds of brands who have already discovered their ideal retail locations through Identia. Your brand passport is just minutes away.
           </p>
           
           {/* CTA Button - White on sage for contrast */}
           <Button
             onClick={() => handleNavigation("/onboarding/tenent", "secondary CTA button")}
-            className="btn-primary mt-10 min-h-[52px] rounded-xl bg-white px-10 text-base font-semibold text-[var(--sage-500)] shadow-lg shadow-black/10 transition-all duration-300 hover:bg-[var(--warm-100)] hover:shadow-xl"
+            className="btn-primary mt-8 min-h-[48px] w-full rounded-xl bg-white px-8 text-sm font-semibold text-[var(--sage-500)] shadow-lg shadow-black/10 transition-all duration-300 hover:bg-[var(--warm-100)] hover:shadow-xl sm:mt-10 sm:w-auto sm:min-h-[52px] sm:px-10 sm:text-base"
             aria-label="Start creating your brand passport"
           >
             Get Started Today
@@ -573,75 +577,75 @@ export default function HomePage() {
       <section 
         id="about"
         ref={missionRef}
-        className={`bg-white mx-auto max-w-7xl px-6 py-20 fade-in-section ${visibleElements.has('mission') ? 'is-visible' : ''}`}
+        className={`bg-white mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-16 md:py-20 fade-in-section ${visibleElements.has('mission') ? 'is-visible' : ''}`}
       >
-        <p className="text-center text-sm italic text-[var(--sage-500)]">
+        <p className="text-center text-xs italic text-[var(--sage-500)] sm:text-sm">
           Identia is building the foundation for how commercial brands are understood and evaluated.
         </p>
       </section>
 
       {/* Enhanced Footer - Multi-column layout */}
       <footer className="border-t border-[var(--warm-200)] bg-white">
-        <div className="mx-auto max-w-7xl px-6 py-16">
+        <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-16">
           {/* Main footer content - Multi-column grid */}
-          <div className="grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-5">
+          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 sm:gap-12 lg:grid-cols-5">
             {/* Brand column with tagline */}
-            <div className="lg:col-span-2">
-              <h4 className="font-[var(--font-playfair)] text-2xl font-semibold tracking-tight text-[var(--warm-900)]">
+            <div className="sm:col-span-2 lg:col-span-2">
+              <h4 className="font-[var(--font-playfair)] text-xl font-semibold tracking-tight text-[var(--warm-900)] sm:text-2xl">
                 Identia
               </h4>
-              <p className="mt-4 max-w-sm text-base leading-relaxed text-[var(--warm-800)]">
+              <p className="mt-3 max-w-sm text-sm leading-relaxed text-[var(--warm-800)] sm:mt-4 sm:text-base">
                 A modern identity layer for commercial brands. Building the foundation for how brands are understood and evaluated.
               </p>
               {/* Social links section */}
-              <div className="mt-6 flex items-center gap-4">
+              <div className="mt-4 flex items-center gap-3 sm:mt-6 sm:gap-4">
                 <a 
                   href="https://twitter.com/identia" 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="social-icon flex h-10 w-10 items-center justify-center rounded-full bg-[var(--sage-50)] text-[var(--sage-500)] hover:bg-[var(--sage-500)] hover:text-white"
+                  className="social-icon flex h-8 w-8 items-center justify-center rounded-full bg-[var(--sage-50)] text-[var(--sage-500)] hover:bg-[var(--sage-500)] hover:text-white sm:h-10 sm:w-10"
                   aria-label="Follow us on Twitter"
                 >
-                  <Twitter className="h-5 w-5" aria-hidden="true" />
+                  <Twitter className="h-4 w-4 sm:h-5 sm:w-5" aria-hidden="true" />
                 </a>
                 <a 
                   href="https://linkedin.com/company/identia" 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="social-icon flex h-10 w-10 items-center justify-center rounded-full bg-[var(--sage-50)] text-[var(--sage-500)] hover:bg-[var(--sage-500)] hover:text-white"
+                  className="social-icon flex h-8 w-8 items-center justify-center rounded-full bg-[var(--sage-50)] text-[var(--sage-500)] hover:bg-[var(--sage-500)] hover:text-white sm:h-10 sm:w-10"
                   aria-label="Connect with us on LinkedIn"
                 >
-                  <Linkedin className="h-5 w-5" aria-hidden="true" />
+                  <Linkedin className="h-4 w-4 sm:h-5 sm:w-5" aria-hidden="true" />
                 </a>
                 <a 
                   href="mailto:hello@identia.com"
-                  className="social-icon flex h-10 w-10 items-center justify-center rounded-full bg-[var(--sage-50)] text-[var(--sage-500)] hover:bg-[var(--sage-500)] hover:text-white"
+                  className="social-icon flex h-8 w-8 items-center justify-center rounded-full bg-[var(--sage-50)] text-[var(--sage-500)] hover:bg-[var(--sage-500)] hover:text-white sm:h-10 sm:w-10"
                   aria-label="Email us"
                 >
-                  <Mail className="h-5 w-5" aria-hidden="true" />
+                  <Mail className="h-4 w-4 sm:h-5 sm:w-5" aria-hidden="true" />
                 </a>
               </div>
             </div>
 
             {/* For Brands column */}
             <div>
-              <h5 className="label mb-4 text-[var(--warm-900)]">For Brands</h5>
-              <nav className="flex flex-col gap-3">
+              <h5 className="label mb-3 text-[var(--warm-900)] sm:mb-4">For Brands</h5>
+              <nav className="flex flex-col gap-2 sm:gap-3">
                 <a 
                   href="#brands" 
-                  className="text-sm text-[var(--warm-800)] transition-colors hover:text-[var(--sage-500)]"
+                  className="text-xs text-[var(--warm-800)] transition-colors hover:text-[var(--sage-500)] sm:text-sm"
                 >
                   Features
                 </a>
                 <a 
                   href="#how-it-works" 
-                  className="text-sm text-[var(--warm-800)] transition-colors hover:text-[var(--sage-500)]"
+                  className="text-xs text-[var(--warm-800)] transition-colors hover:text-[var(--sage-500)] sm:text-sm"
                 >
                   How It Works
                 </a>
                 <button
                   onClick={() => handleNavigation("/onboarding/tenent", "footer get started")}
-                  className="text-left text-sm text-[var(--warm-800)] transition-colors hover:text-[var(--sage-500)]"
+                  className="text-left text-xs text-[var(--warm-800)] transition-colors hover:text-[var(--sage-500)] sm:text-sm"
                 >
                   Get Started
                 </button>
@@ -650,29 +654,29 @@ export default function HomePage() {
 
             {/* Resources column */}
             <div>
-              <h5 className="label mb-4 text-[var(--warm-900)]">Resources</h5>
-              <nav className="flex flex-col gap-3">
+              <h5 className="label mb-3 text-[var(--warm-900)] sm:mb-4">Resources</h5>
+              <nav className="flex flex-col gap-2 sm:gap-3">
                 <a 
                   href="#about" 
-                  className="text-sm text-[var(--warm-800)] transition-colors hover:text-[var(--sage-500)]"
+                  className="text-xs text-[var(--warm-800)] transition-colors hover:text-[var(--sage-500)] sm:text-sm"
                 >
                   About Us
                 </a>
                 <a 
                   href="#" 
-                  className="text-sm text-[var(--warm-800)] transition-colors hover:text-[var(--sage-500)]"
+                  className="text-xs text-[var(--warm-800)] transition-colors hover:text-[var(--sage-500)] sm:text-sm"
                 >
                   Blog
                 </a>
                 <a 
                   href="#" 
-                  className="text-sm text-[var(--warm-800)] transition-colors hover:text-[var(--sage-500)]"
+                  className="text-xs text-[var(--warm-800)] transition-colors hover:text-[var(--sage-500)] sm:text-sm"
                 >
                   Help Center
                 </a>
                 <a 
                   href="mailto:support@identia.com" 
-                  className="text-sm text-[var(--warm-800)] transition-colors hover:text-[var(--sage-500)]"
+                  className="text-xs text-[var(--warm-800)] transition-colors hover:text-[var(--sage-500)] sm:text-sm"
                 >
                   Contact
                 </a>
@@ -681,13 +685,13 @@ export default function HomePage() {
 
             {/* Connect column */}
             <div>
-              <h5 className="label mb-4 text-[var(--warm-900)]">Connect</h5>
-              <nav className="flex flex-col gap-3">
+              <h5 className="label mb-3 text-[var(--warm-900)] sm:mb-4">Connect</h5>
+              <nav className="flex flex-col gap-2 sm:gap-3">
                 <a 
                   href="https://twitter.com/identia" 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="text-sm text-[var(--warm-800)] transition-colors hover:text-[var(--sage-500)]"
+                  className="text-xs text-[var(--warm-800)] transition-colors hover:text-[var(--sage-500)] sm:text-sm"
                 >
                   Twitter
                 </a>
@@ -695,13 +699,13 @@ export default function HomePage() {
                   href="https://linkedin.com/company/identia" 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="text-sm text-[var(--warm-800)] transition-colors hover:text-[var(--sage-500)]"
+                  className="text-xs text-[var(--warm-800)] transition-colors hover:text-[var(--sage-500)] sm:text-sm"
                 >
                   LinkedIn
                 </a>
                 <a 
                   href="mailto:hello@identia.com"
-                  className="text-sm text-[var(--warm-800)] transition-colors hover:text-[var(--sage-500)]"
+                  className="text-xs text-[var(--warm-800)] transition-colors hover:text-[var(--sage-500)] sm:text-sm"
                 >
                   Email
                 </a>
@@ -710,20 +714,20 @@ export default function HomePage() {
           </div>
 
           {/* Copyright bar with legal links */}
-          <div className="mt-16 flex flex-col items-center justify-between gap-4 border-t border-[var(--warm-200)] pt-8 md:flex-row">
-            <p className="text-sm text-[var(--sage-500)]">
+          <div className="mt-12 flex flex-col items-center justify-between gap-3 border-t border-[var(--warm-200)] pt-6 sm:mt-16 sm:flex-row sm:gap-4 sm:pt-8">
+            <p className="text-xs text-[var(--sage-500)] sm:text-sm">
               © {new Date().getFullYear()} Identia. All rights reserved.
             </p>
-            <nav className="flex items-center gap-6">
+            <nav className="flex items-center gap-4 sm:gap-6">
               <a 
                 href="#" 
-                className="text-sm text-[var(--sage-500)] transition-colors hover:text-[var(--sage-700)]"
+                className="text-xs text-[var(--sage-500)] transition-colors hover:text-[var(--sage-700)] sm:text-sm"
               >
                 Privacy Policy
               </a>
               <a 
                 href="#" 
-                className="text-sm text-[var(--sage-500)] transition-colors hover:text-[var(--sage-700)]"
+                className="text-xs text-[var(--sage-500)] transition-colors hover:text-[var(--sage-700)] sm:text-sm"
               >
                 Terms of Service
               </a>

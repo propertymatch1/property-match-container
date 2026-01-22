@@ -156,28 +156,28 @@
 
 /* Typography Utility Classes */
 @layer components {
-  /* Hero headline - Playfair Display, dramatic size */
+  /* Hero headline - Playfair Display, responsive size */
   .hero-title {
     font-family: var(--font-playfair);
-    font-size: clamp(3rem, 8vw, 5.5rem);
+    font-size: clamp(2.5rem, 8vw, 5.5rem);
     font-weight: 600;
     letter-spacing: -0.02em;
     line-height: 1.1;
   }
 
-  /* Section headlines - Playfair Display */
+  /* Section headlines - Playfair Display, responsive */
   .section-title {
     font-family: var(--font-playfair);
-    font-size: clamp(2rem, 4vw, 3rem);
+    font-size: clamp(1.75rem, 5vw, 3rem);
     font-weight: 500;
     letter-spacing: -0.01em;
     line-height: 1.2;
   }
 
-  /* Body text - Inter, optimal readability */
+  /* Body text - Inter, responsive sizing */
   .body-text {
     font-family: var(--font-inter);
-    font-size: 1.125rem;
+    font-size: clamp(1rem, 2.5vw, 1.125rem);
     line-height: 1.7;
     color: var(--warm-800, #292524);
   }
@@ -211,11 +211,11 @@
     width: 100%;
   }
 
-  /* Feature card with elevation and hover effects */
+  /* Feature card with elevation and hover effects - mobile optimized */
   .feature-card {
     background: white;
     border-radius: 16px;
-    padding: 2rem;
+    padding: 1.5rem;
     border: 1px solid rgba(231, 229, 228, 0.8);
     box-shadow: 
       0 1px 2px rgba(0, 0, 0, 0.02),
@@ -227,8 +227,14 @@
                 border-color 0.3s ease;
   }
 
+  @media (min-width: 640px) {
+    .feature-card {
+      padding: 2rem;
+    }
+  }
+
   .feature-card:hover {
-    transform: translateY(-6px);
+    transform: translateY(-4px);
     border-color: rgba(107, 124, 110, 0.2);
     box-shadow: 
       0 2px 4px rgba(0, 0, 0, 0.02),
@@ -238,35 +244,49 @@
       0 24px 48px rgba(107, 124, 110, 0.08);
   }
 
+  @media (min-width: 768px) {
+    .feature-card:hover {
+      transform: translateY(-6px);
+    }
+  }
+
   .feature-card:focus-visible {
     outline: 2px solid var(--sage-500, #6b7c6e);
     outline-offset: 2px;
   }
 
-  /* Feature card icon container with sage background */
+  /* Feature card icon container with sage background - responsive */
   .feature-icon {
-    width: 56px;
-    height: 56px;
-    border-radius: 16px;
-    background: linear-gradient(135deg, var(--sage-100, #e3e7e4) 0%, var(--sage-200, #c7d0c9) 100%);
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--sage-500, #6b7c6e), var(--sage-600, #556259));
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--sage-600, #556259);
-    transition: background 0.3s ease, transform 0.3s ease;
+    color: white;
+    box-shadow: 0 4px 12px rgba(107, 124, 110, 0.2);
   }
 
-  .feature-card:hover .feature-icon {
-    background: linear-gradient(135deg, var(--sage-200, #c7d0c9) 0%, var(--sage-300, #a3b1a6) 100%);
-    transform: scale(1.05);
+  @media (min-width: 640px) {
+    .feature-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 16px;
+    }
   }
 
   /* Scroll-triggered fade-in animations */
   .fade-in-section {
     opacity: 0;
-    transform: translateY(24px);
-    transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), 
-                transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: translateY(30px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  }
+
+  @media (min-width: 768px) {
+    .fade-in-section {
+      transform: translateY(50px);
+    }
   }
 
   .fade-in-section.is-visible {
@@ -278,16 +298,22 @@
   .stagger-1 { transition-delay: 0.1s; }
   .stagger-2 { transition-delay: 0.2s; }
   .stagger-3 { transition-delay: 0.3s; }
-  .stagger-4 { transition-delay: 0.4s; }
-  .stagger-5 { transition-delay: 0.5s; }
+
+  @media (min-width: 768px) {
+    .stagger-1 { transition-delay: 0.2s; }
+    .stagger-2 { transition-delay: 0.4s; }
+    .stagger-3 { transition-delay: 0.6s; }
+  }
 
   /* Button hover states */
   .btn-primary {
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  .btn-primary:hover {
-    transform: translateY(-2px);
+  @media (hover: hover) {
+    .btn-primary:hover {
+      transform: translateY(-2px);
+    }
   }
 
   .btn-primary:active {
@@ -296,13 +322,13 @@
 
   /* Social icon hover animation */
   .social-icon {
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-                background-color 0.3s ease,
-                color 0.3s ease;
+    transition: all 0.2s ease;
   }
 
-  .social-icon:hover {
-    transform: translateY(-2px) scale(1.05);
+  @media (hover: hover) {
+    .social-icon:hover {
+      transform: translateY(-2px);
+    }
   }
 
   /* Footer link hover animation */
@@ -354,10 +380,6 @@ html {
   }
 
   .feature-card:hover {
-    transform: none;
-  }
-
-  .feature-card:hover .feature-icon {
     transform: none;
   }
 
