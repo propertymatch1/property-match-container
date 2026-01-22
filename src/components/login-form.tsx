@@ -33,9 +33,7 @@ import {
 const loginSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
   password: z.string().min(1, "Password is required"),
-  userType: z.enum(["TENANT", "LANDLORD"], {
-    required_error: "Please select whether you are a tenant or landlord",
-  }),
+  userType: z.literal("TENANT"), // Landlord login disabled
 });
 
 type LoginFormData = z.infer<typeof loginSchema>;
@@ -176,24 +174,8 @@ export function LoginForm({
                 </div>
               )}
 
-              <Field>
-                <FieldLabel>I am a</FieldLabel>
-                <Tabs
-                  value={formData.userType === "TENANT" ? "tenant" : "landlord"}
-                  onValueChange={handleUserTypeChange}
-                  className="w-full"
-                >
-                  <TabsList className="grid w-full grid-cols-2">
-                    <TabsTrigger value="tenant">Tenant</TabsTrigger>
-                    <TabsTrigger value="landlord">Landlord</TabsTrigger>
-                  </TabsList>
-                </Tabs>
-                {errors.userType && (
-                  <FieldDescription className="text-red-600">
-                    {errors.userType}
-                  </FieldDescription>
-                )}
-              </Field>
+              {/* Hidden field - Landlord login disabled */}
+              <input type="hidden" name="userType" value="TENANT" />
 
               <Field>
                 <FieldLabel htmlFor="email">Email</FieldLabel>

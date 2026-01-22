@@ -37,9 +37,7 @@ const signupSchema = z
     email: z.string().email("Please enter a valid email address"),
     password: z.string().min(8, "Password must be at least 8 characters long"),
     confirmPassword: z.string().min(1, "Please confirm your password"),
-    userType: z.enum(["TENANT", "LANDLORD"], {
-      required_error: "Please select whether you are a tenant or landlord",
-    }),
+    userType: z.literal("TENANT"), // Landlord signup disabled
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords don't match",
@@ -184,24 +182,8 @@ export function SignupForm({
                 </div>
               )}
 
-              <Field>
-                <FieldLabel>I am a</FieldLabel>
-                <Tabs
-                  value={formData.userType === "TENANT" ? "tenant" : "landlord"}
-                  onValueChange={handleUserTypeChange}
-                  className="w-full"
-                >
-                  <TabsList className="grid w-full grid-cols-2">
-                    <TabsTrigger value="tenant">Tenant</TabsTrigger>
-                    <TabsTrigger value="landlord">Landlord</TabsTrigger>
-                  </TabsList>
-                </Tabs>
-                {errors.userType && (
-                  <FieldDescription className="text-red-600">
-                    {errors.userType}
-                  </FieldDescription>
-                )}
-              </Field>
+              {/* Hidden field - Landlord signup disabled */}
+              <input type="hidden" name="userType" value="TENANT" />
 
               <Field>
                 <FieldLabel htmlFor="name">Full Name</FieldLabel>
