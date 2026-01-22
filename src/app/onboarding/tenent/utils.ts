@@ -61,7 +61,6 @@ const repairJSON = (jsonString: string): string => {
   // Fix common range expressions like "2500-5000" to middle value
   repaired = repaired.replace(/:\s*(\d+)-(\d+)/g, (match, start, end) => {
     const middle = Math.round((parseInt(start) + parseInt(end)) / 2);
-    console.log(`🔧 Repaired range ${start}-${end} to ${middle}`);
     return `: ${middle}`;
   });
   
@@ -99,7 +98,6 @@ const extractJSONObjects = (text: string): string[] => {
             const repaired = repairJSON(jsonCandidate);
             JSON.parse(repaired);
             jsonObjects.push(repaired);
-            console.log("🔧 JSON repaired successfully");
           } catch {
             // Still not valid JSON, continue
           }
@@ -162,10 +160,8 @@ export const parseAIResponse = (
         parsed = JSON.parse(jsonToProcess) as AIResponse;
       } catch (parseError) {
         // Try to repair and parse
-        console.log("🔧 JSON parse failed, attempting repair");
         const repaired = repairJSON(jsonToProcess);
         parsed = JSON.parse(repaired) as AIResponse;
-        console.log("✅ JSON repaired and parsed successfully");
       }
       
       const aiProfileData = parsed.data?.tenantProfile || parsed.tenantProfile;

@@ -127,7 +127,6 @@ function TenantOnboarding() {
           parseAIResponse(assistantMessage);
 
         // Handle final response - show modal when we have profile data
-        console.log("🔍 Profile data check:", !!profileData, profileData);
         if (profileData) {
           setAggregatedData(profileData);
           setFinalProfileData(profileData);

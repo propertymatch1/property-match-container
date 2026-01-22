@@ -12,7 +12,6 @@ export async function persistProperty(
   indexConfig: IndexConfig,
 ): Promise<void> {
   const record = await constructPropertyRecord(property);
-  console.log("Computed embedding record: ", record);
   await upsert("property", indexConfig, [record]);
 }
 

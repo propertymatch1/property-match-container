@@ -81,9 +81,7 @@ export async function POST(req: Request) {
         const aiProfileData = parsed.tenantProfile || parsed.profileData || parsed;
         
         // Map AI response to database format
-        console.log('🔍 AI Response before mapping:', aiProfileData);
         profileData = mapAIResponseToProfileData(aiProfileData);
-        console.log('🔍 Mapped profile data:', profileData);
       } catch (jsonError) {
         console.error('Failed to parse AI response as JSON:', jsonError);
         console.error('AI response:', text);

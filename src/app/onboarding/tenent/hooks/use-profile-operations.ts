@@ -68,7 +68,6 @@ export const useProfileOperations = () => {
       const profileData = await processConversationData(conversationStorage);
 
       toast.loading("Saving your profile...", { id: "skip-process" });
-      console.log("🔍 Saving profile data:", profileData);
       
       await saveProfile(profileData);
 
@@ -98,7 +97,6 @@ export const useProfileOperations = () => {
 
     try {
       toast.loading("Saving your complete profile...", { id: "submit-profile" });
-      console.log("🔍 Saving aggregated data:", aggregatedData);
 
       await saveProfile(aggregatedData);
 

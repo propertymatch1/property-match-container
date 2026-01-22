@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 import { db } from '~/server/db';
 
 export async function POST(req: NextRequest) {
@@ -21,12 +21,6 @@ export async function POST(req: NextRequest) {
         { status: 400 }
       );
     }
-
-    // Debug: Log the received data
-    console.log('🔍 DEBUG - Received data:', JSON.stringify(data, null, 2));
-
-    // Debug: Log received data (no required field validation)
-    console.log('🔍 DEBUG - Received data:', JSON.stringify(data, null, 2));
 
     // No validation - all fields are optional
 
