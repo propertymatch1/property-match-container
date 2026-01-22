@@ -76,7 +76,7 @@ export function OperationsMaturityCard({
 
   const businessStage = tennentExperience || "First Location";
   const stageInfo =
-    stageConfig[businessStage] || stageConfig["First Location"];
+    stageConfig[businessStage] || stageConfig["First Location"]!;
   const teamType =
     mode === "FOUNDER"
       ? "Founder-led operations"
