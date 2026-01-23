@@ -6,6 +6,8 @@ import { ArrowRight, Store, Sparkles, Building, Mail } from "lucide-react";
 import { Twitter, Linkedin } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "~/components/ui/button";
+import { useSession, getRedirectPath } from "~/lib/auth-client";
+import type { User } from "~/lib/auth-client";
 
 // Custom hook for intersection observer (scroll-triggered animations)
 function useIntersectionObserver(options?: IntersectionObserverInit) {
@@ -60,6 +62,7 @@ function useIntersectionObserver(options?: IntersectionObserverInit) {
 
 export default function HomePage() {
   const router = useRouter();
+  const { data: session } = useSession();
   const [isScrolled, setIsScrolled] = useState(false);
   const { visibleElements, observe } = useIntersectionObserver();
 
@@ -102,6 +105,18 @@ export default function HomePage() {
     }
   };
 
+  // Handle Generate Passport button - redirect based on auth state
+  const handleGeneratePassport = () => {
+    if (session?.user) {
+      // User is logged in - redirect to their dashboard
+      const redirectPath = getRedirectPath(session.user as User, false);
+      handleNavigation(redirectPath, "generate passport - logged in");
+    } else {
+      // User is not logged in - redirect to sign in
+      handleNavigation("/signin", "generate passport - not logged in");
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[var(--warm-50)]">
       {/* Enhanced Navigation with Glass-morphism */}
@@ -112,9 +127,9 @@ export default function HomePage() {
       >
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 sm:py-4">
           {/* Brand name with distinctive Playfair Display typography */}
-          <h1 className="font-[var(--font-playfair)] text-xl font-semibold tracking-tight text-[var(--warm-900)] sm:text-2xl">
+          <a href="/" className="font-[var(--font-playfair)] text-xl font-semibold tracking-tight text-[var(--warm-900)] sm:text-2xl hover:opacity-80 transition-opacity">
             Identia
-          </h1>
+          </a>
           <nav className="flex items-center gap-2 sm:gap-4 md:gap-8">
             {/* Nav links with underline hover animation - hidden on mobile, shown on md+ */}
             <div className="hidden md:flex md:items-center md:gap-8">
@@ -144,7 +159,7 @@ export default function HomePage() {
               </a>
             </div>
             <Button
-              onClick={() => handleNavigation("/onboarding/tenent", "generate passport button")}
+              onClick={handleGeneratePassport}
               className="min-h-[40px] bg-[var(--sage-500)] px-3 text-xs text-white transition-colors hover:bg-[var(--sage-600)] sm:min-h-[44px] sm:px-6 sm:text-sm"
               aria-label="Generate your brand passport"
             >
@@ -200,7 +215,7 @@ export default function HomePage() {
               {/* CTA buttons with enhanced styling - responsive layout */}
               <div className="mt-8 flex flex-col items-center gap-3 sm:mt-10 sm:flex-row sm:gap-4 lg:justify-start">
                 <Button
-                  onClick={() => handleNavigation("/onboarding/tenent", "generate passport CTA")}
+                  onClick={handleGeneratePassport}
                   className="btn-primary w-full min-h-[48px] rounded-xl bg-[var(--sage-500)] px-6 text-sm font-medium text-white shadow-lg shadow-[var(--sage-500)]/20 transition-all duration-300 hover:bg-[var(--sage-600)] hover:shadow-xl hover:shadow-[var(--sage-500)]/30 sm:w-auto sm:min-h-[52px] sm:px-8 sm:text-base"
                   aria-label="Generate your brand passport"
                 >
@@ -328,12 +343,12 @@ export default function HomePage() {
           {/* For Brands Card */}
           <div 
             className={`feature-card group cursor-pointer fade-in-section stagger-1 ${visibleElements.has('features') ? 'is-visible' : ''}`}
-            onClick={() => handleNavigation("/onboarding/tenent", "brands generate passport")}
+            onClick={handleGeneratePassport}
             role="button"
             tabIndex={0}
             onKeyDown={(e) => {
               if (e.key === 'Enter' || e.key === ' ') {
-                handleNavigation("/onboarding/tenent", "brands generate passport");
+                handleGeneratePassport();
               }
             }}
             aria-label="Generate your brand passport"
@@ -564,7 +579,7 @@ export default function HomePage() {
           
           {/* CTA Button - White on sage for contrast */}
           <Button
-            onClick={() => handleNavigation("/onboarding/tenent", "secondary CTA button")}
+            onClick={handleGeneratePassport}
             className="btn-primary mt-8 min-h-[48px] w-full rounded-xl bg-white px-8 text-sm font-semibold text-[var(--sage-500)] shadow-lg shadow-black/10 transition-all duration-300 hover:bg-[var(--warm-100)] hover:shadow-xl sm:mt-10 sm:w-auto sm:min-h-[52px] sm:px-10 sm:text-base"
             aria-label="Start creating your brand passport"
           >
@@ -644,7 +659,7 @@ export default function HomePage() {
                   How It Works
                 </a>
                 <button
-                  onClick={() => handleNavigation("/onboarding/tenent", "footer get started")}
+                  onClick={handleGeneratePassport}
                   className="text-left text-xs text-[var(--warm-800)] transition-colors hover:text-[var(--sage-500)] sm:text-sm"
                 >
                   Get Started

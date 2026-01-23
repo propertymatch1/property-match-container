@@ -13,6 +13,13 @@ interface OperationsMaturityCardProps {
   mode: TenantMode;
 }
 
+// Icon sizes standardized to design system: 16px (small), 20px (standard), 24px (large)
+const ICON_SIZE = {
+  small: 16,
+  standard: 20,
+  large: 24,
+} as const;
+
 const stageConfig: Record<
   string,
   { color: string; progress: number }
@@ -109,14 +116,17 @@ export function OperationsMaturityCard({
       defaultOpen={false}
       accentColor="#4A90A4"
     >
-      <div className="space-y-6">
+      <div className="space-y-[var(--space-6,1.5rem)]">
         {/* Two Column Layout */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-[var(--space-4,1rem)]">
           {/* Business Stage */}
-          <div className="bg-[#FAF9F7] rounded-xl p-4">
-            <div className="flex items-center gap-2 mb-3">
-              <Building2 size={16} className="text-[#2D2D2D]/40" />
-              <span className="text-sm text-[#2D2D2D]/60">Business Stage</span>
+          <div 
+            className="bg-[var(--warm-50,#fafaf9)] p-[var(--space-4,1rem)]"
+            style={{ borderRadius: "var(--radius-xl, 1rem)" }}
+          >
+            <div className="flex items-center gap-[var(--space-2,0.5rem)] mb-[var(--space-3,0.75rem)]">
+              <Building2 size={ICON_SIZE.small} className="text-[var(--warm-400,#a8a29e)]" />
+              <span className="text-sm text-[var(--warm-500,#78716c)]">Business Stage</span>
             </div>
             <Badge
               className={`${stageInfo.color} text-sm px-3 py-1.5 rounded-full`}
@@ -124,35 +134,51 @@ export function OperationsMaturityCard({
               {businessStage}
             </Badge>
             {/* Progress bar */}
-            <div className="mt-3 h-1.5 bg-[#2D2D2D]/10 rounded-full overflow-hidden">
+            <div 
+              className="mt-[var(--space-3,0.75rem)] h-1.5 bg-[var(--warm-200,#e7e5e4)] overflow-hidden"
+              style={{ borderRadius: "var(--radius-full, 9999px)" }}
+            >
               <div
-                className="h-full bg-[#6B7B6B] rounded-full transition-all duration-500"
-                style={{ width: `${stageInfo.progress}%` }}
+                className="h-full bg-[var(--sage-500,#6b7c6e)]"
+                style={{ 
+                  width: `${stageInfo.progress}%`,
+                  borderRadius: "var(--radius-full, 9999px)",
+                  transition: "width var(--transition-slow, 500ms ease)"
+                }}
               />
             </div>
           </div>
 
           {/* Team Type */}
-          <div className="bg-[#FAF9F7] rounded-xl p-4">
-            <div className="flex items-center gap-2 mb-3">
-              <Users size={16} className="text-[#2D2D2D]/40" />
-              <span className="text-sm text-[#2D2D2D]/60">Team Structure</span>
+          <div 
+            className="bg-[var(--warm-50,#fafaf9)] p-[var(--space-4,1rem)]"
+            style={{ borderRadius: "var(--radius-xl, 1rem)" }}
+          >
+            <div className="flex items-center gap-[var(--space-2,0.5rem)] mb-[var(--space-3,0.75rem)]">
+              <Users size={ICON_SIZE.small} className="text-[var(--warm-400,#a8a29e)]" />
+              <span className="text-sm text-[var(--warm-500,#78716c)]">Team Structure</span>
             </div>
-            <p className="text-lg font-semibold text-[#2D2D2D]">{teamType}</p>
+            <p className="text-lg font-semibold text-[var(--warm-800,#292524)]">{teamType}</p>
           </div>
         </div>
 
         {/* Leasing Experience */}
-        <div className="bg-gradient-to-r from-[#6B7B6B]/5 to-[#6B7B6B]/10 rounded-xl p-4 sm:p-5">
-          <div className="flex items-start gap-3">
-            <div className="w-10 h-10 rounded-full bg-[#6B7B6B]/20 flex items-center justify-center flex-shrink-0">
-              <Award size={18} className="text-[#6B7B6B]" />
+        <div 
+          className="bg-gradient-to-r from-[var(--sage-100,#e3e7e4)]/50 to-[var(--sage-100,#e3e7e4)]/30 p-[var(--space-4,1rem)] sm:p-[var(--space-5,1.25rem)]"
+          style={{ borderRadius: "var(--radius-xl, 1rem)" }}
+        >
+          <div className="flex items-start gap-[var(--space-3,0.75rem)]">
+            <div 
+              className="w-10 h-10 flex items-center justify-center flex-shrink-0 bg-[var(--sage-200,#c7d0c9)]"
+              style={{ borderRadius: "var(--radius-full, 9999px)" }}
+            >
+              <Award size={ICON_SIZE.standard} className="text-[var(--sage-600,#556259)]" />
             </div>
             <div>
-              <p className="text-sm text-[#2D2D2D]/60 mb-1">
+              <p className="text-sm text-[var(--warm-500,#78716c)] mb-1">
                 Commercial Leasing Experience
               </p>
-              <p className="text-base font-medium text-[#2D2D2D]">
+              <p className="text-base font-medium text-[var(--warm-800,#292524)]">
                 {getLeasingExperience()}
               </p>
             </div>
@@ -161,17 +187,18 @@ export function OperationsMaturityCard({
 
         {/* Operational Strengths */}
         <div>
-          <h4 className="text-sm font-semibold text-[#2D2D2D]/60 uppercase tracking-wide mb-3">
+          <h4 className="text-sm font-semibold text-[var(--warm-500,#78716c)] uppercase tracking-wide mb-[var(--space-3,0.75rem)]">
             Operational Strengths
           </h4>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-[var(--space-2,0.5rem)]">
             {operationalStrengths.map((strength, index) => (
               <Badge
                 key={index}
                 variant="outline"
-                className="bg-white border-[#6B7B6B]/20 text-[#2D2D2D] px-3 py-1.5 text-sm rounded-full flex items-center gap-1.5"
+                className="bg-white border-[var(--sage-200,#c7d0c9)] text-[var(--warm-800,#292524)] px-3 py-1.5 text-sm rounded-full flex items-center gap-1.5 transition-colors"
+                style={{ transitionDuration: "var(--transition-fast, 150ms)" }}
               >
-                <CheckCircle size={12} className="text-[#6B7B6B]" />
+                <CheckCircle size={12} className="text-[var(--sage-500,#6b7c6e)]" />
                 {strength}
               </Badge>
             ))}
@@ -181,14 +208,15 @@ export function OperationsMaturityCard({
         {/* Space Types (if available) */}
         {spaceLooking.length > 0 && (
           <div>
-            <h4 className="text-sm font-semibold text-[#2D2D2D]/60 uppercase tracking-wide mb-3">
+            <h4 className="text-sm font-semibold text-[var(--warm-500,#78716c)] uppercase tracking-wide mb-[var(--space-3,0.75rem)]">
               Space Types
             </h4>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-[var(--space-2,0.5rem)]">
               {spaceLooking.map((spaceType, index) => (
                 <Badge
                   key={index}
-                  className="bg-[#4A90A4]/10 text-[#4A90A4] hover:bg-[#4A90A4]/20 px-3 py-1.5 text-sm rounded-full"
+                  className="bg-sky-50 text-sky-700 hover:bg-sky-100 px-3 py-1.5 text-sm rounded-full transition-colors"
+                  style={{ transitionDuration: "var(--transition-fast, 150ms)" }}
                 >
                   {spaceType}
                 </Badge>

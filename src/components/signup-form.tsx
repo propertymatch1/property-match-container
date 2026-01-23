@@ -19,7 +19,6 @@ import {
   FieldLabel,
 } from "~/components/ui/field";
 import { Input } from "~/components/ui/input";
-import { Tabs, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import {
   signUp,
   getSession,
@@ -74,11 +73,6 @@ export function SignupForm({
     if (authError) {
       setAuthError(null);
     }
-  };
-
-  const handleUserTypeChange = (value: string) => {
-    const userType = value === "tenant" ? "TENANT" : "LANDLORD";
-    handleInputChange("userType", userType);
   };
 
   const validateForm = (): boolean => {
@@ -165,10 +159,10 @@ export function SignupForm({
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
-      <Card>
+      <Card className="card-elevated border-0 shadow-[var(--shadow-medium)]">
         <CardHeader className="text-center">
-          <CardTitle className="text-xl">Create your account</CardTitle>
-          <CardDescription>
+          <CardTitle className="text-xl font-semibold text-[var(--warm-900)]">Create your account</CardTitle>
+          <CardDescription className="text-[var(--warm-600)]">
             Enter your information below to create your account
           </CardDescription>
         </CardHeader>
@@ -177,7 +171,7 @@ export function SignupForm({
             <FieldGroup>
               {/* General auth error display */}
               {authError && !authError.field && (
-                <div className="rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-800">
+                <div className="rounded-[var(--radius-md)] border border-red-200 bg-red-50 p-3 text-sm text-red-800">
                   {authError.message}
                 </div>
               )}
@@ -186,45 +180,54 @@ export function SignupForm({
               <input type="hidden" name="userType" value="TENANT" />
 
               <Field>
-                <FieldLabel htmlFor="name">Full Name</FieldLabel>
+                <FieldLabel htmlFor="name" className="text-sm font-medium text-[var(--warm-700)]">Full Name</FieldLabel>
                 <Input
                   id="name"
                   type="text"
                   placeholder="John Doe"
                   value={formData.name}
                   onChange={(e) => handleInputChange("name", e.target.value)}
-                  className={errors.name ? "border-red-500" : ""}
+                  className={cn(
+                    "h-11 rounded-[var(--radius-md)] border-[var(--warm-300)] bg-white transition-all duration-[var(--transition-fast)]",
+                    "focus-visible:border-[var(--sage-500)] focus-visible:ring-[var(--sage-500)]/20",
+                    errors.name && "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-500/20"
+                  )}
                   disabled={isLoading}
                 />
                 {errors.name && (
-                  <FieldDescription className="text-red-600">
+                  <FieldDescription className="text-red-600 text-sm">
                     {errors.name}
                   </FieldDescription>
                 )}
               </Field>
 
               <Field>
-                <FieldLabel htmlFor="email">Email</FieldLabel>
+                <FieldLabel htmlFor="email" className="text-sm font-medium text-[var(--warm-700)]">Email</FieldLabel>
                 <Input
                   id="email"
                   type="email"
                   placeholder="m@example.com"
                   value={formData.email}
                   onChange={(e) => handleInputChange("email", e.target.value)}
-                  className={errors.email ? "border-red-500" : ""}
+                  className={cn(
+                    "h-11 rounded-[var(--radius-md)] border-[var(--warm-300)] bg-white transition-all duration-[var(--transition-fast)]",
+                    "focus-visible:border-[var(--sage-500)] focus-visible:ring-[var(--sage-500)]/20",
+                    errors.email && "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-500/20"
+                  )}
                   disabled={isLoading}
                 />
                 {errors.email && (
-                  <FieldDescription className="text-red-600">
+                  <FieldDescription className="text-red-600 text-sm">
                     {errors.email}
                   </FieldDescription>
                 )}
               </Field>
 
               <Field>
-                <Field className="grid grid-cols-2 gap-4">
+                {/* Password fields - stack vertically on mobile, side by side on larger screens */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <Field>
-                    <FieldLabel htmlFor="password">Password</FieldLabel>
+                    <FieldLabel htmlFor="password" className="text-sm font-medium text-[var(--warm-700)]">Password</FieldLabel>
                     <Input
                       id="password"
                       type="password"
@@ -232,17 +235,21 @@ export function SignupForm({
                       onChange={(e) =>
                         handleInputChange("password", e.target.value)
                       }
-                      className={errors.password ? "border-red-500" : ""}
+                      className={cn(
+                        "h-11 rounded-[var(--radius-md)] border-[var(--warm-300)] bg-white transition-all duration-[var(--transition-fast)]",
+                        "focus-visible:border-[var(--sage-500)] focus-visible:ring-[var(--sage-500)]/20",
+                        errors.password && "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-500/20"
+                      )}
                       disabled={isLoading}
                     />
                     {errors.password && (
-                      <FieldDescription className="text-red-600">
+                      <FieldDescription className="text-red-600 text-sm">
                         {errors.password}
                       </FieldDescription>
                     )}
                   </Field>
                   <Field>
-                    <FieldLabel htmlFor="confirm-password">
+                    <FieldLabel htmlFor="confirm-password" className="text-sm font-medium text-[var(--warm-700)]">
                       Confirm Password
                     </FieldLabel>
                     <Input
@@ -252,28 +259,36 @@ export function SignupForm({
                       onChange={(e) =>
                         handleInputChange("confirmPassword", e.target.value)
                       }
-                      className={errors.confirmPassword ? "border-red-500" : ""}
+                      className={cn(
+                        "h-11 rounded-[var(--radius-md)] border-[var(--warm-300)] bg-white transition-all duration-[var(--transition-fast)]",
+                        "focus-visible:border-[var(--sage-500)] focus-visible:ring-[var(--sage-500)]/20",
+                        errors.confirmPassword && "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-500/20"
+                      )}
                       disabled={isLoading}
                     />
                     {errors.confirmPassword && (
-                      <FieldDescription className="text-red-600">
+                      <FieldDescription className="text-red-600 text-sm">
                         {errors.confirmPassword}
                       </FieldDescription>
                     )}
                   </Field>
-                </Field>
-                <FieldDescription>
+                </div>
+                <FieldDescription className="text-[var(--warm-500)]">
                   Must be at least 8 characters long.
                 </FieldDescription>
               </Field>
 
               <Field>
-                <Button type="submit" disabled={isLoading} className="w-full">
+                <Button 
+                  type="submit" 
+                  disabled={isLoading} 
+                  className="w-full min-h-[44px] bg-[var(--sage-600)] hover:bg-[var(--sage-700)] text-white rounded-[var(--radius-md)] transition-all duration-[var(--transition-base)]"
+                >
                   {isLoading ? "Creating Account..." : "Create Account"}
                 </Button>
-                <FieldDescription className="text-center">
+                <FieldDescription className="text-center text-[var(--warm-600)]">
                   Already have an account?{" "}
-                  <a href="/signin" className="text-blue-600 hover:underline">
+                  <a href="/signin" className="text-[var(--sage-600)] hover:text-[var(--sage-700)] hover:underline transition-colors duration-[var(--transition-fast)]">
                     Sign in
                   </a>
                 </FieldDescription>
@@ -282,13 +297,13 @@ export function SignupForm({
           </form>
         </CardContent>
       </Card>
-      <FieldDescription className="px-6 text-center">
+      <FieldDescription className="px-6 text-center text-[var(--warm-500)]">
         By clicking continue, you agree to our{" "}
-        <a href="#" className="text-blue-600 hover:underline">
+        <a href="#" className="text-[var(--sage-600)] hover:text-[var(--sage-700)] hover:underline transition-colors duration-[var(--transition-fast)]">
           Terms of Service
         </a>{" "}
         and{" "}
-        <a href="#" className="text-blue-600 hover:underline">
+        <a href="#" className="text-[var(--sage-600)] hover:text-[var(--sage-700)] hover:underline transition-colors duration-[var(--transition-fast)]">
           Privacy Policy
         </a>
         .

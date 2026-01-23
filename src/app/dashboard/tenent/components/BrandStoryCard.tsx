@@ -52,28 +52,29 @@ export function BrandStoryCard({
       icon={BookOpen}
       preview={preview}
       defaultOpen={true}
-      accentColor="#6B7B6B"
+      accentColor="var(--sage-500, #6B7B6B)"
     >
-      <div className="space-y-6">
+      <div className="space-y-[var(--space-6,1.5rem)]">
         {/* Main Story Text */}
-        <p className="text-[#2D2D2D]/80 leading-relaxed text-base sm:text-lg">
+        <p className="text-[var(--warm-700,#44403c)] leading-relaxed text-base sm:text-lg">
           {story}
         </p>
 
         {/* Brand Attributes Grid */}
         {(brandKeywords.length > 0 || personalityTags.length > 0 || toneTags.length > 0) && (
-          <div className="space-y-4">
+          <div className="space-y-[var(--space-5,1.25rem)]">
             {/* Brand Keywords */}
             {brandKeywords.length > 0 && (
-              <div className="space-y-2">
-                <h4 className="text-sm font-semibold text-[#2D2D2D]/60 uppercase tracking-wide">
+              <div className="space-y-[var(--space-3,0.75rem)]">
+                <h4 className="text-sm font-semibold text-[var(--warm-500,#78716c)] uppercase tracking-wide">
                   Brand Keywords
                 </h4>
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-[var(--space-2,0.5rem)]">
                   {brandKeywords.map((keyword, index) => (
                     <Badge
                       key={index}
-                      className="bg-[#6B7B6B]/10 text-[#6B7B6B] hover:bg-[#6B7B6B]/20 px-3 py-1 rounded-full"
+                      className="bg-[var(--sage-100,#e3e7e4)] text-[var(--sage-700,#454f47)] hover:bg-[var(--sage-200,#c7d0c9)] px-3 py-1.5 rounded-full transition-colors"
+                      style={{ transitionDuration: "var(--transition-fast, 150ms)" }}
                     >
                       {keyword}
                     </Badge>
@@ -84,15 +85,16 @@ export function BrandStoryCard({
 
             {/* Personality Tags */}
             {personalityTags.length > 0 && (
-              <div className="space-y-2">
-                <h4 className="text-sm font-semibold text-[#2D2D2D]/60 uppercase tracking-wide">
+              <div className="space-y-[var(--space-3,0.75rem)]">
+                <h4 className="text-sm font-semibold text-[var(--warm-500,#78716c)] uppercase tracking-wide">
                   Brand Personality
                 </h4>
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-[var(--space-2,0.5rem)]">
                   {personalityTags.map((tag, index) => (
                     <Badge
                       key={index}
-                      className="bg-purple-50 text-purple-700 hover:bg-purple-100 px-3 py-1 rounded-full"
+                      className="bg-purple-50 text-purple-700 hover:bg-purple-100 px-3 py-1.5 rounded-full transition-colors"
+                      style={{ transitionDuration: "var(--transition-fast, 150ms)" }}
                     >
                       {tag}
                     </Badge>
@@ -103,15 +105,16 @@ export function BrandStoryCard({
 
             {/* Tone Tags */}
             {toneTags.length > 0 && (
-              <div className="space-y-2">
-                <h4 className="text-sm font-semibold text-[#2D2D2D]/60 uppercase tracking-wide">
+              <div className="space-y-[var(--space-3,0.75rem)]">
+                <h4 className="text-sm font-semibold text-[var(--warm-500,#78716c)] uppercase tracking-wide">
                   Communication Tone
                 </h4>
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-[var(--space-2,0.5rem)]">
                   {toneTags.map((tag, index) => (
                     <Badge
                       key={index}
-                      className="bg-blue-50 text-blue-700 hover:bg-blue-100 px-3 py-1 rounded-full"
+                      className="bg-blue-50 text-blue-700 hover:bg-blue-100 px-3 py-1.5 rounded-full transition-colors"
+                      style={{ transitionDuration: "var(--transition-fast, 150ms)" }}
                     >
                       {tag}
                     </Badge>

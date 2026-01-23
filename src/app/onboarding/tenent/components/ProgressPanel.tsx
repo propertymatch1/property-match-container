@@ -39,20 +39,20 @@ export const ProgressPanel: React.FC<ProgressPanelProps> = ({
   return (
     <>
       {/* Mobile Progress Panel - Fixed Bottom */}
-      <div className="bg-background/95 border-border fixed right-0 bottom-0 left-0 z-50 border-t shadow-lg backdrop-blur-sm lg:hidden">
+      <div className="fixed right-0 bottom-0 left-0 z-50 border-t border-[var(--warm-200)] bg-white/95 shadow-lg backdrop-blur-sm lg:hidden">
         <div className="space-y-3 p-4">
           {/* Mobile Progress Header */}
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
-              <span className="text-sm font-medium">Progress</span>
-              <span className="text-muted-foreground text-xs">
+              <span className="text-sm font-medium text-[var(--warm-900)]">Progress</span>
+              <span className="text-xs text-[var(--warm-600)]">
                 {questionsCompleted}/{ONBOARDING_CONFIG.TOTAL_QUESTIONS}
               </span>
             </div>
             <div className="mx-3 flex-1">
-              <div className="h-2 w-full rounded-full bg-gray-200">
+              <div className="h-2 w-full rounded-full bg-[var(--warm-200)]">
                 <div
-                  className="h-2 rounded-full bg-blue-600 transition-all duration-300"
+                  className="h-2 rounded-full bg-[var(--sage-500)] transition-all duration-300"
                   style={{ width: `${progressPercentage}%` }}
                 />
               </div>
@@ -64,7 +64,7 @@ export const ProgressPanel: React.FC<ProgressPanelProps> = ({
             <Button
               onClick={onSkip}
               variant="outline"
-              className="flex-1"
+              className="min-h-[44px] flex-1 border-[var(--warm-300)] text-[var(--warm-700)] hover:border-[var(--sage-500)] hover:bg-[var(--sage-50)] hover:text-[var(--sage-700)]"
               disabled={isProcessingSkip || isSubmitting}
               size="sm"
             >
@@ -80,7 +80,7 @@ export const ProgressPanel: React.FC<ProgressPanelProps> = ({
 
             <Button
               onClick={onSubmitProfile}
-              className="flex-1"
+              className="min-h-[44px] flex-1 bg-[var(--sage-500)] text-white hover:bg-[var(--sage-600)]"
               disabled={!isComplete || isProcessingSkip || isSubmitting}
               size="sm"
             >
@@ -98,33 +98,35 @@ export const ProgressPanel: React.FC<ProgressPanelProps> = ({
       </div>
 
       {/* Desktop layout */}
-      <div className="border-border bg-muted/30 hidden h-full overflow-y-auto border-l lg:flex lg:min-w-[320px] lg:flex-1">
+      <div className="hidden h-full overflow-y-auto border-l border-[var(--warm-200)] bg-[var(--warm-50)] lg:flex lg:min-w-[320px] lg:flex-1">
         <div className="w-full space-y-4 p-6">
-          <h2 className="text-lg font-medium">Your Progress</h2>
+          <h2 className="font-[var(--font-playfair)] text-lg font-medium tracking-tight text-[var(--warm-900)]">
+            Your Progress
+          </h2>
 
           {/* Progress indicator */}
           <div className="space-y-2">
             <div className="flex items-center justify-between text-sm">
-              <span>Questions completed</span>
-              <span className="font-medium">
+              <span className="text-[var(--warm-700)]">Questions completed</span>
+              <span className="font-medium text-[var(--warm-900)]">
                 {questionsCompleted}/{ONBOARDING_CONFIG.TOTAL_QUESTIONS}
               </span>
             </div>
-            <div className="h-2 w-full rounded-full bg-gray-200">
+            <div className="h-2 w-full rounded-full bg-[var(--warm-200)]">
               <div
-                className="h-2 rounded-full bg-blue-600 transition-all duration-300"
+                className="h-2 rounded-full bg-[var(--sage-500)] transition-all duration-300"
                 style={{ width: `${progressPercentage}%` }}
               />
             </div>
           </div>
 
           {/* Action buttons */}
-          <div className="border-border space-y-3 border-t pt-4">
+          <div className="space-y-3 border-t border-[var(--warm-200)] pt-4">
             {/* Skip button - always enabled */}
             <Button
               onClick={onSkip}
               variant="outline"
-              className="w-full"
+              className="min-h-[44px] w-full border-[var(--warm-300)] text-[var(--warm-700)] hover:border-[var(--sage-500)] hover:bg-[var(--sage-50)] hover:text-[var(--sage-700)]"
               disabled={isProcessingSkip || isSubmitting}
             >
               {isProcessingSkip ? (
@@ -140,7 +142,7 @@ export const ProgressPanel: React.FC<ProgressPanelProps> = ({
             {/* Submit button - enabled only after Q10 */}
             <Button
               onClick={onSubmitProfile}
-              className="w-full"
+              className="min-h-[44px] w-full bg-[var(--sage-500)] text-white hover:bg-[var(--sage-600)]"
               disabled={!isComplete || isProcessingSkip || isSubmitting}
             >
               {isSubmitting ? (
@@ -154,7 +156,7 @@ export const ProgressPanel: React.FC<ProgressPanelProps> = ({
             </Button>
 
             {/* Helper text */}
-            <p className="text-muted-foreground text-center text-xs">
+            <p className="text-center text-xs text-[var(--warm-600)]">
               {modalClosedWithoutCompletion
                 ? "Profile ready! Click Submit Profile to complete your onboarding."
                 : isComplete

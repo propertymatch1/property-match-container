@@ -22,6 +22,13 @@ const customerTypeColors: Record<string, string> = {
   "Remote Workers": "bg-indigo-50 text-indigo-700 border-indigo-200",
 };
 
+// Icon sizes standardized to design system: 16px (small), 20px (standard), 24px (large)
+const ICON_SIZE = {
+  small: 16,
+  standard: 20,
+  large: 24,
+} as const;
+
 const motivationIcons: Record<string, React.ElementType> = {
   Quality: Star,
   Convenience: Clock,
@@ -92,16 +99,16 @@ export function CustomerPricingCard({
       icon={Users}
       preview={getPreview()}
       defaultOpen={false}
-      accentColor="#C4A77D"
+      accentColor="var(--gold-500, #C4A77D)"
     >
-      <div className="space-y-6">
+      <div className="space-y-[var(--space-6,1.5rem)]">
         {/* Target Customers */}
         {typcialCustomer.length > 0 && (
           <div>
-            <h4 className="text-sm font-semibold text-[#2D2D2D]/60 uppercase tracking-wide mb-3">
+            <h4 className="text-sm font-semibold text-[var(--warm-500,#78716c)] uppercase tracking-wide mb-[var(--space-3,0.75rem)]">
               Target Customers
             </h4>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-[var(--space-2,0.5rem)]">
               {typcialCustomer.map((customer, index) => (
                 <Badge
                   key={index}
@@ -109,7 +116,8 @@ export function CustomerPricingCard({
                   className={`${
                     customerTypeColors[customer] ||
                     "bg-gray-50 text-gray-700 border-gray-200"
-                  } px-3 py-1.5 text-sm font-medium rounded-full cursor-default`}
+                  } px-3 py-1.5 text-sm font-medium rounded-full cursor-default transition-colors`}
+                  style={{ transitionDuration: "var(--transition-fast, 150ms)" }}
                 >
                   {customer}
                 </Badge>
@@ -118,18 +126,24 @@ export function CustomerPricingCard({
           </div>
         )}
 
-        {/* Spend Range */}
+        {/* Spend Range - Gold variant for financial info */}
         {typcialCustomerSpend && (
-          <div className="bg-[#FAF9F7] rounded-xl p-4 sm:p-5">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-[#C4A77D]/20 flex items-center justify-center">
-                <DollarSign size={18} className="text-[#8B6914]" />
+          <div 
+            className="bg-[var(--gold-300,#e4c5a4)]/20 p-[var(--space-4,1rem)] sm:p-[var(--space-5,1.25rem)]"
+            style={{ borderRadius: "var(--radius-xl, 1rem)" }}
+          >
+            <div className="flex items-center gap-[var(--space-3,0.75rem)]">
+              <div 
+                className="w-10 h-10 flex items-center justify-center bg-[var(--gold-400,#d4a574)]/30"
+                style={{ borderRadius: "var(--radius-full, 9999px)" }}
+              >
+                <DollarSign size={ICON_SIZE.standard} className="text-[var(--gold-600,#b4855a)]" />
               </div>
               <div>
-                <p className="text-sm text-[#2D2D2D]/60">
+                <p className="text-sm text-[var(--warm-500,#78716c)]">
                   Customer Spend Range
                 </p>
-                <p className="text-xl font-semibold text-[#2D2D2D]">
+                <p className="text-xl font-semibold text-[var(--warm-800,#292524)]">
                   {typcialCustomerSpend}
                 </p>
               </div>
@@ -137,16 +151,22 @@ export function CustomerPricingCard({
           </div>
         )}
 
-        {/* Rent Budget (if available) */}
+        {/* Rent Budget (if available) - Gold variant */}
         {rentRangeDesire && (
-          <div className="bg-[#FAF9F7] rounded-xl p-4 sm:p-5">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-[#C4A77D]/20 flex items-center justify-center">
-                <DollarSign size={18} className="text-[#8B6914]" />
+          <div 
+            className="bg-[var(--gold-300,#e4c5a4)]/20 p-[var(--space-4,1rem)] sm:p-[var(--space-5,1.25rem)]"
+            style={{ borderRadius: "var(--radius-xl, 1rem)" }}
+          >
+            <div className="flex items-center gap-[var(--space-3,0.75rem)]">
+              <div 
+                className="w-10 h-10 flex items-center justify-center bg-[var(--gold-400,#d4a574)]/30"
+                style={{ borderRadius: "var(--radius-full, 9999px)" }}
+              >
+                <DollarSign size={ICON_SIZE.standard} className="text-[var(--gold-600,#b4855a)]" />
               </div>
               <div>
-                <p className="text-sm text-[#2D2D2D]/60">Monthly Rent Budget</p>
-                <p className="text-xl font-semibold text-[#2D2D2D]">
+                <p className="text-sm text-[var(--warm-500,#78716c)]">Monthly Rent Budget</p>
+                <p className="text-xl font-semibold text-[var(--warm-800,#292524)]">
                   {formatCurrency(rentRangeDesire)}
                 </p>
               </div>
@@ -157,19 +177,20 @@ export function CustomerPricingCard({
         {/* Motivations */}
         {motivations.length > 0 && (
           <div>
-            <h4 className="text-sm font-semibold text-[#2D2D2D]/60 uppercase tracking-wide mb-3">
+            <h4 className="text-sm font-semibold text-[var(--warm-500,#78716c)] uppercase tracking-wide mb-[var(--space-3,0.75rem)]">
               What Draws Customers
             </h4>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-2 gap-[var(--space-3,0.75rem)]">
               {motivations.map((motivation, index) => {
                 const Icon = motivationIcons[motivation] || Heart;
                 return (
                   <div
                     key={index}
-                    className="flex items-center gap-3 p-3 rounded-xl bg-[#6B7B6B]/5 border border-[#6B7B6B]/10"
+                    className="flex items-center gap-[var(--space-3,0.75rem)] p-[var(--space-3,0.75rem)] bg-[var(--sage-50,#f6f7f6)] border border-[var(--sage-200,#c7d0c9)]"
+                    style={{ borderRadius: "var(--radius-xl, 1rem)" }}
                   >
-                    <Icon size={18} className="text-[#6B7B6B]" />
-                    <span className="text-sm font-medium text-[#2D2D2D]">
+                    <Icon size={ICON_SIZE.standard} className="text-[var(--sage-500,#6b7c6e)]" />
+                    <span className="text-sm font-medium text-[var(--warm-800,#292524)]">
                       {motivation}
                     </span>
                   </div>
@@ -183,7 +204,7 @@ export function CustomerPricingCard({
         {typcialCustomer.length === 0 &&
           !typcialCustomerSpend &&
           !rentRangeDesire && (
-            <p className="text-[#2D2D2D]/60 text-center py-4">
+            <p className="text-[var(--warm-500,#78716c)] text-center py-[var(--space-4,1rem)]">
               No customer or pricing information available yet.
             </p>
           )}

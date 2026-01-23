@@ -22,8 +22,8 @@ function TenantDashboard() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-[#FAF9F7] flex items-center justify-center">
-        <div className="max-w-4xl mx-auto px-4 py-8">
+      <div className="min-h-screen bg-[var(--warm-50)] flex items-center justify-center">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8">
           <div className="space-y-4">
             <div className="bg-white/50 rounded-lg p-6 animate-pulse">
               <div className="h-4 bg-gray-200 rounded w-1/4 mb-2"></div>
@@ -40,17 +40,17 @@ function TenantDashboard() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-[#FAF9F7] flex items-center justify-center">
-        <div className="max-w-4xl mx-auto px-4 py-8">
+      <div className="min-h-screen bg-[var(--warm-50)] flex items-center justify-center">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8">
           <Alert variant="destructive">
             <AlertCircle className="h-4 w-4" />
-            <AlertDescription className="flex items-center justify-between">
+            <AlertDescription className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
               <span>{error}</span>
               <Button
                 onClick={retry}
                 variant="outline"
                 size="sm"
-                className="ml-4"
+                className="min-h-[44px] w-full sm:w-auto sm:ml-4"
               >
                 Retry
               </Button>
@@ -63,11 +63,11 @@ function TenantDashboard() {
 
   if (!profile) {
     return (
-      <div className="min-h-screen bg-[#FAF9F7] flex items-center justify-center">
-        <div className="max-w-4xl mx-auto px-4 py-8">
+      <div className="min-h-screen bg-[var(--warm-50)] flex items-center justify-center">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8">
           <Alert>
             <Building className="h-4 w-4" />
-            <AlertDescription className="flex items-center justify-between">
+            <AlertDescription className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
               <div>
                 <p className="font-semibold mb-1">Complete Your Profile</p>
                 <p className="text-sm">
@@ -75,7 +75,7 @@ function TenantDashboard() {
                   your business profile.
                 </p>
               </div>
-              <Button asChild size="sm" className="ml-4">
+              <Button asChild size="sm" className="min-h-[44px] w-full sm:w-auto sm:ml-4">
                 <Link href="/onboarding/tenent">Start Onboarding</Link>
               </Button>
             </AlertDescription>
@@ -87,7 +87,7 @@ function TenantDashboard() {
 
   return (
     <TooltipProvider>
-      <div className="min-h-screen bg-[#FAF9F7]">
+      <div className="min-h-screen bg-[var(--warm-50)]">
         <main className="pb-24 md:pb-8">
           {/* Hero Section */}
           <DashboardHeroCard
@@ -102,8 +102,8 @@ function TenantDashboard() {
             notes={profile.notes}
           />
 
-          {/* Content Sections */}
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 space-y-4 sm:space-y-6 mt-6">
+          {/* Content Sections - Single column on mobile, responsive spacing */}
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 space-y-4 sm:space-y-6 mt-4 sm:mt-6">
             {/* Brand Story Section */}
             <BrandStoryCard
               brandKeywords={profile.brandKeywords}
@@ -143,8 +143,10 @@ function TenantDashboard() {
           </div>
         </main>
 
-        {/* Footer */}
-        <Footer />
+        {/* Footer - Hidden on mobile to avoid overlap with MobileCTA */}
+        <div className="hidden sm:block">
+          <Footer />
+        </div>
 
         {/* Mobile CTA */}
         <MobileCTA />

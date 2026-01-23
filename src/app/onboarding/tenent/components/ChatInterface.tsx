@@ -61,11 +61,13 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
     onSubmit({ text: suggestion });
   };
   return (
-    <div className="relative flex size-full flex-col overflow-hidden">
+    <div className="relative flex size-full flex-col overflow-hidden bg-white">
       {/* Header */}
-      <div className="border-border shrink-0 border-b p-4">
-        <h1 className="text-xl font-semibold">Tenant Onboarding</h1>
-        <p className="text-muted-foreground text-sm">
+      <div className="shrink-0 border-b border-[var(--warm-200)] bg-white p-4 sm:p-6">
+        <h1 className="font-[var(--font-playfair)] text-xl font-semibold tracking-tight text-[var(--warm-900)] sm:text-2xl">
+          Tenant Onboarding
+        </h1>
+        <p className="mt-1 text-sm text-[var(--warm-600)]">
           Let's get to know your brand and find the perfect space
         </p>
       </div>

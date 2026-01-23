@@ -334,7 +334,7 @@ function TenantOnboarding() {
   }, [conversationContext.questionCount, showProfileModal, aggregatedData]);
 
   return (
-    <div className="bg-background flex h-screen">
+    <div className="flex h-screen bg-[var(--warm-50)]">
       {/* Mobile: Full width chat, Desktop: Flex layout */}
       <div className="flex flex-1 flex-col lg:flex-2">
         <ChatInterface

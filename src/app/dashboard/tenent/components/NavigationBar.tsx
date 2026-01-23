@@ -1,10 +1,19 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { Button } from "~/components/ui/button";
-import { Menu, X } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "~/components/ui/dropdown-menu";
+import { Menu, X, LogOut, User, ChevronDown } from "lucide-react";
+import { signOut } from "~/lib/auth-client";
 
 export default function NavigationBar() {
+  const router = useRouter();
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -14,87 +23,120 @@ export default function NavigationBar() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const handleSignOut = async () => {
+    await signOut();
+    router.push('/signin');
+  };
+
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled ? 'bg-white/95 backdrop-blur-md shadow-sm' : 'bg-transparent'
-      }`}
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-[var(--transition-base)] ${
+        scrolled 
+          ? 'bg-white/95 backdrop-blur-md shadow-[var(--shadow-subtle)]' 
+          : 'bg-[rgba(250,250,249,0.8)] backdrop-blur-[12px]'
+      } ${scrolled ? 'border-b border-[rgba(0,0,0,0.08)]' : 'border-b border-transparent'}`}
     >
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         <div className="flex items-center justify-between h-16 sm:h-20">
-          {/* Logo */}
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-gradient-to-br from-[#6B7B6B] to-[#4A5A4A] flex items-center justify-center">
-              <span className="text-white font-bold text-sm sm:text-lg">T</span>
-            </div>
-            <span className="font-semibold text-lg sm:text-xl tracking-tight text-[#2D2D2D]">
-              TENET
-            </span>
-          </div>
+          {/* Brand name - consistent with landing page (text only, no icon) */}
+          <a href="/" className="font-[var(--font-playfair)] text-xl font-semibold tracking-tight text-[var(--warm-900)] sm:text-2xl hover:opacity-80 transition-opacity">
+            Identia
+          </a>
 
-          {/* Desktop Navigation */}
+          {/* Desktop Navigation - consistent with landing page nav-link styling */}
           <div className="hidden md:flex items-center gap-8">
             <a
-              href="#about"
-              className="text-[#2D2D2D]/70 hover:text-[#2D2D2D] transition-colors text-sm font-medium"
+              href="/"
+              className="nav-link relative text-sm text-[var(--warm-600)] hover:text-[var(--warm-900)] transition-colors font-medium"
             >
-              About
+              Home
             </a>
             <a
-              href="#landlords"
-              className="text-[#2D2D2D]/70 hover:text-[#2D2D2D] transition-colors text-sm font-medium"
+              href="/#brands"
+              className="nav-link relative text-sm text-[var(--warm-600)] hover:text-[var(--warm-900)] transition-colors font-medium"
+            >
+              For Brands
+            </a>
+            <a
+              href="/#landlords"
+              className="nav-link relative text-sm text-[var(--warm-600)] hover:text-[var(--warm-900)] transition-colors font-medium"
             >
               For Landlords
             </a>
-            <a
-              href="#tenants"
-              className="text-[#2D2D2D]/70 hover:text-[#2D2D2D] transition-colors text-sm font-medium"
-            >
-              For Tenants
-            </a>
           </div>
 
-          {/* CTA Button */}
+          {/* Account Dropdown - Desktop */}
           <div className="hidden md:block">
-            <Button className="bg-[#6B7B6B] hover:bg-[#5A6A5A] text-white rounded-full px-6 font-medium shadow-lg shadow-[#6B7B6B]/20">
-              Create Your Passport
-            </Button>
+            <DropdownMenu modal={false}>
+              <DropdownMenuTrigger asChild>
+                <Button 
+                  variant="outline" 
+                  className="min-h-[44px] rounded-full px-4 border-[var(--warm-300)] text-[var(--warm-700)] hover:bg-[var(--warm-100)] hover:border-[var(--warm-400)] gap-2"
+                >
+                  <User size={18} />
+                  Account
+                  <ChevronDown size={16} />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" sideOffset={8}>
+                <DropdownMenuItem 
+                  onClick={handleSignOut}
+                  className="cursor-pointer text-red-600 focus:text-red-600 focus:bg-red-50"
+                >
+                  <LogOut size={16} className="mr-2" />
+                  Sign Out
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
 
-          {/* Mobile Menu Button */}
+          {/* Mobile Menu Button - Touch-friendly with min-h-[44px] */}
           <button
-            className="md:hidden p-2 rounded-lg hover:bg-[#2D2D2D]/5 transition-colors"
+            className="md:hidden min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg hover:bg-[var(--warm-100)] transition-colors duration-[var(--transition-fast)]"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+            aria-expanded={mobileMenuOpen}
           >
             {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
 
-        {/* Mobile Menu */}
+        {/* Mobile Menu - Touch-friendly navigation items */}
         {mobileMenuOpen && (
-          <div className="md:hidden absolute top-16 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-[#2D2D2D]/5 shadow-lg">
-            <div className="flex flex-col p-4 gap-4">
+          <div className="md:hidden absolute top-16 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-[var(--warm-200)] shadow-[var(--shadow-elevated)]">
+            <div className="flex flex-col p-4 gap-2">
               <a
-                href="#about"
-                className="text-[#2D2D2D]/70 hover:text-[#2D2D2D] transition-colors text-sm font-medium py-2"
+                href="/"
+                className="min-h-[44px] flex items-center px-4 rounded-lg text-[var(--warm-700)] hover:text-[var(--warm-900)] hover:bg-[var(--warm-100)] transition-colors duration-[var(--transition-fast)] text-sm font-medium"
+                onClick={() => setMobileMenuOpen(false)}
               >
-                About
+                Home
               </a>
               <a
-                href="#landlords"
-                className="text-[#2D2D2D]/70 hover:text-[#2D2D2D] transition-colors text-sm font-medium py-2"
+                href="/#brands"
+                className="min-h-[44px] flex items-center px-4 rounded-lg text-[var(--warm-700)] hover:text-[var(--warm-900)] hover:bg-[var(--warm-100)] transition-colors duration-[var(--transition-fast)] text-sm font-medium"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                For Brands
+              </a>
+              <a
+                href="/#landlords"
+                className="min-h-[44px] flex items-center px-4 rounded-lg text-[var(--warm-700)] hover:text-[var(--warm-900)] hover:bg-[var(--warm-100)] transition-colors duration-[var(--transition-fast)] text-sm font-medium"
+                onClick={() => setMobileMenuOpen(false)}
               >
                 For Landlords
               </a>
-              <a
-                href="#tenants"
-                className="text-[#2D2D2D]/70 hover:text-[#2D2D2D] transition-colors text-sm font-medium py-2"
+              <div className="border-t border-[var(--warm-200)] my-2" />
+              <button 
+                className="min-h-[44px] flex items-center px-4 rounded-lg text-red-600 hover:bg-red-50 transition-colors duration-[var(--transition-fast)] text-sm font-medium gap-2"
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  handleSignOut();
+                }}
               >
-                For Tenants
-              </a>
-              <Button className="bg-[#6B7B6B] hover:bg-[#5A6A5A] text-white rounded-full font-medium w-full">
-                Create Your Passport
-              </Button>
+                <LogOut size={18} />
+                Sign Out
+              </button>
             </div>
           </div>
         )}

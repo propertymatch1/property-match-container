@@ -10,6 +10,13 @@ interface FinancialReadinessCardProps {
   rentRangeDesire: number | null;
 }
 
+// Icon sizes standardized to design system: 16px (small), 20px (standard), 24px (large)
+const ICON_SIZE = {
+  small: 16,
+  standard: 20,
+  large: 24,
+} as const;
+
 export function FinancialReadinessCard({
   rentRangeDesire,
 }: FinancialReadinessCardProps) {
@@ -43,49 +50,53 @@ export function FinancialReadinessCard({
       icon={DollarSign}
       preview={getPreview()}
       defaultOpen={false}
-      accentColor="#6366F1"
+      accentColor="var(--gold-500, #c4956a)"
     >
-      <div className="space-y-6">
+      <div className="space-y-[var(--space-6,1.5rem)]">
         {/* Readiness Status */}
-        <div className="space-y-3">
-          <div className="flex items-center gap-2">
-            <CheckCircle2 size={18} className="text-[#6366F1]" />
-            <h4 className="text-sm font-semibold text-[#2D2D2D]/60 uppercase tracking-wide">
+        <div className="space-y-[var(--space-3,0.75rem)]">
+          <div className="flex items-center gap-[var(--space-2,0.5rem)]">
+            <CheckCircle2 size={ICON_SIZE.standard} className="text-[var(--gold-500,#c4956a)]" />
+            <h4 className="text-sm font-semibold text-[var(--warm-500,#78716c)] uppercase tracking-wide">
               Readiness Status
             </h4>
           </div>
           <Badge
             className={`${
               rentRangeDesire
-                ? "bg-indigo-50 text-indigo-700"
-                : "bg-gray-50 text-gray-600"
-            } hover:opacity-90 px-4 py-2 text-sm rounded-full`}
+                ? "bg-[var(--gold-300,#e4c5a4)]/30 text-[var(--gold-600,#b4855a)]"
+                : "bg-[var(--warm-100,#f5f5f4)] text-[var(--warm-500,#78716c)]"
+            } hover:opacity-90 px-4 py-2 text-sm rounded-full transition-opacity`}
+            style={{ transitionDuration: "var(--transition-fast, 150ms)" }}
           >
             {rentRangeDesire ? "Budget Defined" : "Pending"}
           </Badge>
         </div>
 
-        {/* Budget Information */}
+        {/* Budget Information - Gold variant for financial info */}
         {rentRangeDesire && (
-          <div className="space-y-3">
-            <div className="flex items-center gap-2">
-              <DollarSign size={18} className="text-[#6366F1]" />
-              <h4 className="text-sm font-semibold text-[#2D2D2D]/60 uppercase tracking-wide">
+          <div className="space-y-[var(--space-3,0.75rem)]">
+            <div className="flex items-center gap-[var(--space-2,0.5rem)]">
+              <DollarSign size={ICON_SIZE.standard} className="text-[var(--gold-500,#c4956a)]" />
+              <h4 className="text-sm font-semibold text-[var(--warm-500,#78716c)] uppercase tracking-wide">
                 Monthly Rent Budget
               </h4>
             </div>
-            <div className="bg-gradient-to-br from-indigo-50 to-indigo-50/50 rounded-xl p-4 space-y-3">
+            <div 
+              className="bg-gradient-to-br from-[var(--gold-300,#e4c5a4)]/20 to-[var(--gold-300,#e4c5a4)]/10 p-[var(--space-4,1rem)] space-y-[var(--space-3,0.75rem)]"
+              style={{ borderRadius: "var(--radius-xl, 1rem)" }}
+            >
               <div className="flex items-baseline justify-between">
-                <span className="text-3xl font-bold text-[#2D2D2D]">
+                <span className="text-3xl font-bold text-[var(--warm-800,#292524)]">
                   {formatCurrency(rentRangeDesire)}
                 </span>
-                <span className="text-sm text-[#2D2D2D]/60">/month</span>
+                <span className="text-sm text-[var(--warm-500,#78716c)]">/month</span>
               </div>
               <Progress
                 value={getBudgetProgress(rentRangeDesire)}
-                className="h-2 bg-indigo-100"
+                className="h-2 bg-[var(--gold-300,#e4c5a4)]/30"
               />
-              <p className="text-xs text-[#2D2D2D]/60">
+              <p className="text-xs text-[var(--warm-500,#78716c)]">
                 Allocated monthly budget for commercial space rent
               </p>
             </div>
@@ -93,15 +104,18 @@ export function FinancialReadinessCard({
         )}
 
         {/* Placeholder for future features */}
-        <div className="bg-gray-50 rounded-xl p-4 text-center">
-          <p className="text-sm text-[#2D2D2D]/60">
+        <div 
+          className="bg-[var(--warm-50,#fafaf9)] p-[var(--space-4,1rem)] text-center"
+          style={{ borderRadius: "var(--radius-xl, 1rem)" }}
+        >
+          <p className="text-sm text-[var(--warm-500,#78716c)]">
             Additional financial details (funding status, documents) coming soon
           </p>
         </div>
 
         {/* Empty State */}
         {!rentRangeDesire && (
-          <p className="text-[#2D2D2D]/60 text-center py-4">
+          <p className="text-[var(--warm-500,#78716c)] text-center py-[var(--space-4,1rem)]">
             No financial information available yet.
           </p>
         )}
