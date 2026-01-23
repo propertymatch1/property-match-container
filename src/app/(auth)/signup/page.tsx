@@ -22,7 +22,7 @@ export default function SignupPage() {
           Back
         </Button>
         <div className="flex justify-center">
-          <BrandHeader size="md" showIcon />
+          <BrandHeader size="md" showIcon={false} />
         </div>
         <SignupForm />
       </PageContainer>
