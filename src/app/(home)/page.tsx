@@ -8,6 +8,10 @@ import { toast } from "sonner";
 import { Button } from "~/components/ui/button";
 import { useSession, getRedirectPath } from "~/lib/auth-client";
 import type { User } from "~/lib/auth-client";
+import { useGSAPAnimations } from "~/hooks/use-gsap-animations";
+import { GSAPLoader } from "~/components/gsap-loader";
+import { EnhancedTypewriterHero } from "~/components/enhanced-typewriter-hero";
+import { SciFiConstellation } from "~/components/sci-fi-constellation";
 
 // Custom hook for intersection observer (scroll-triggered animations)
 function useIntersectionObserver(options?: IntersectionObserverInit) {
@@ -65,6 +69,9 @@ export default function HomePage() {
   const { data: session } = useSession();
   const [isScrolled, setIsScrolled] = useState(false);
   const { visibleElements, observe } = useIntersectionObserver();
+  
+  // Initialize GSAP animations
+  useGSAPAnimations();
 
   // Refs for animated sections
   const statsRef = useRef<HTMLElement>(null);
@@ -118,7 +125,8 @@ export default function HomePage() {
   };
 
   return (
-    <div className="min-h-screen bg-[var(--warm-50)]">
+    <GSAPLoader>
+      <div className="min-h-screen bg-[var(--warm-50)]">
       {/* Enhanced Navigation with Glass-morphism */}
       <header 
         className={`sticky top-0 z-50 backdrop-blur-[12px] bg-[rgba(250,250,249,0.8)] transition-[border-color] duration-300 ${
@@ -174,19 +182,19 @@ export default function HomePage() {
       <section className="relative min-h-[80vh] overflow-hidden bg-gradient-to-br from-[var(--warm-50)] via-[var(--sage-50)] to-[var(--warm-100)] sm:min-h-[90vh]">
         {/* Decorative circle elements with absolute positioning - scaled for mobile */}
         <div 
-          className="absolute -left-16 -top-16 h-48 w-48 rounded-full bg-gradient-to-br from-[rgba(107,124,110,0.08)] to-[rgba(107,124,110,0.02)] sm:-left-32 sm:-top-32 sm:h-96 sm:w-96"
+          className="parallax-element absolute -left-16 -top-16 h-48 w-48 rounded-full bg-gradient-to-br from-[rgba(107,124,110,0.08)] to-[rgba(107,124,110,0.02)] sm:-left-32 sm:-top-32 sm:h-96 sm:w-96"
           aria-hidden="true"
         />
         <div 
-          className="absolute -right-10 top-1/4 h-36 w-36 rounded-full bg-gradient-to-br from-[rgba(107,124,110,0.06)] to-[rgba(107,124,110,0.01)] sm:-right-20 sm:h-72 sm:w-72"
+          className="parallax-element absolute -right-10 top-1/4 h-36 w-36 rounded-full bg-gradient-to-br from-[rgba(107,124,110,0.06)] to-[rgba(107,124,110,0.01)] sm:-right-20 sm:h-72 sm:w-72"
           aria-hidden="true"
         />
         <div 
-          className="absolute bottom-20 left-1/4 h-24 w-24 rounded-full bg-gradient-to-br from-[rgba(212,165,116,0.08)] to-[rgba(212,165,116,0.02)] sm:h-48 sm:w-48"
+          className="parallax-element absolute bottom-20 left-1/4 h-24 w-24 rounded-full bg-gradient-to-br from-[rgba(212,165,116,0.08)] to-[rgba(212,165,116,0.02)] sm:h-48 sm:w-48"
           aria-hidden="true"
         />
         <div 
-          className="absolute -bottom-8 right-1/3 h-32 w-32 rounded-full bg-gradient-to-br from-[rgba(107,124,110,0.05)] to-transparent sm:-bottom-16 sm:h-64 sm:w-64"
+          className="parallax-element absolute -bottom-8 right-1/3 h-32 w-32 rounded-full bg-gradient-to-br from-[rgba(107,124,110,0.05)] to-transparent sm:-bottom-16 sm:h-64 sm:w-64"
           aria-hidden="true"
         />
 
@@ -194,7 +202,7 @@ export default function HomePage() {
         <div className="relative mx-auto flex min-h-[80vh] max-w-7xl items-center px-4 py-12 sm:min-h-[90vh] sm:px-6 sm:py-20">
           <div className="grid w-full gap-8 lg:grid-cols-2 lg:gap-16">
             {/* Left side - Content */}
-            <div className="flex flex-col justify-center text-center lg:text-left">
+            <div className="hero-content flex flex-col justify-center text-center lg:text-left">
               {/* Label */}
               <p className="label mb-4 text-[var(--sage-500)] sm:mb-6">
                 Brand Identity Platform
@@ -202,9 +210,7 @@ export default function HomePage() {
               
               {/* Hero headline with Playfair Display - responsive sizing */}
               <h2 className="font-[var(--font-playfair)] text-4xl font-semibold leading-tight tracking-tight text-[var(--warm-900)] sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl">
-                Where Brands
-                <br />
-                <span className="text-[var(--sage-500)]">Find Their Space</span>
+                <EnhancedTypewriterHero />
               </h2>
               
               {/* Subheadline with Inter - responsive sizing */}
@@ -213,7 +219,7 @@ export default function HomePage() {
               </p>
               
               {/* CTA buttons with enhanced styling - responsive layout */}
-              <div className="mt-8 flex flex-col items-center gap-3 sm:mt-10 sm:flex-row sm:gap-4 lg:justify-start">
+              <div className="hero-cta mt-8 flex flex-col items-center gap-3 sm:mt-10 sm:flex-row sm:gap-4 lg:justify-start">
                 <Button
                   onClick={handleGeneratePassport}
                   className="btn-primary w-full min-h-[48px] rounded-xl bg-[var(--sage-500)] px-6 text-sm font-medium text-white shadow-lg shadow-[var(--sage-500)]/20 transition-all duration-300 hover:bg-[var(--sage-600)] hover:shadow-xl hover:shadow-[var(--sage-500)]/30 sm:w-auto sm:min-h-[52px] sm:px-8 sm:text-base"
@@ -232,33 +238,10 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* Right side - Abstract geometric visual accent */}
-            <div className="hidden items-center justify-center lg:flex" aria-hidden="true">
+            {/* Right side - Sci-Fi Constellation Network */}
+            <div className="hero-visual hidden items-center justify-center lg:flex" aria-hidden="true">
               <div className="relative h-[480px] w-[480px]">
-                {/* Main geometric pattern */}
-                <div className="absolute inset-0 flex items-center justify-center">
-                  {/* Outer ring */}
-                  <div className="absolute h-[400px] w-[400px] rounded-full border-2 border-[var(--sage-500)]/10" />
-                  
-                  {/* Middle ring with gradient */}
-                  <div className="absolute h-[320px] w-[320px] rounded-full border border-[var(--sage-500)]/20 bg-gradient-to-br from-[var(--sage-50)] to-transparent" />
-                  
-                  {/* Inner filled circle */}
-                  <div className="absolute h-[240px] w-[240px] rounded-full bg-gradient-to-br from-[var(--sage-100)] to-[var(--sage-200)]/50 shadow-inner" />
-                  
-                  {/* Center accent */}
-                  <div className="absolute h-[120px] w-[120px] rounded-full bg-gradient-to-br from-[var(--sage-500)] to-[var(--sage-400)] shadow-lg" />
-                  
-                  {/* Decorative dots */}
-                  <div className="absolute -right-4 top-1/4 h-4 w-4 rounded-full bg-[var(--gold-400)]" />
-                  <div className="absolute bottom-1/4 left-0 h-3 w-3 rounded-full bg-[var(--sage-500)]/60" />
-                  <div className="absolute right-1/4 top-0 h-2 w-2 rounded-full bg-[var(--sage-300)]" />
-                </div>
-                
-                {/* Floating accent shapes */}
-                <div className="absolute -left-8 top-1/3 h-16 w-16 rounded-2xl bg-gradient-to-br from-[var(--sage-500)]/20 to-transparent backdrop-blur-sm" />
-                <div className="absolute -right-4 bottom-1/3 h-12 w-12 rounded-xl bg-gradient-to-br from-[var(--gold-400)]/30 to-transparent" />
-                <div className="absolute bottom-8 left-1/4 h-8 w-8 rounded-lg bg-[var(--sage-200)]/40" />
+                <SciFiConstellation />
               </div>
             </div>
           </div>
@@ -274,13 +257,13 @@ export default function HomePage() {
       {/* Stats/Social Proof Section */}
       <section 
         ref={statsRef}
-        className={`relative bg-[var(--sage-50)] py-16 fade-in-section ${visibleElements.has('stats') ? 'is-visible' : ''}`}
+        className={`stats-section relative bg-[var(--sage-50)] py-16 fade-in-section ${visibleElements.has('stats') ? 'is-visible' : ''}`}
       >
         <div className="mx-auto max-w-7xl px-6">
           <div className="grid grid-cols-1 gap-8 md:grid-cols-3 md:gap-12">
             {/* Stat Item 1 */}
             <div className={`text-center fade-in-section stagger-1 ${visibleElements.has('stats') ? 'is-visible' : ''}`}>
-              <p className="font-[var(--font-playfair)] text-5xl font-semibold tracking-tight text-[var(--warm-900)] md:text-6xl">
+              <p className="stat-number font-[var(--font-playfair)] text-5xl font-semibold tracking-tight text-[var(--warm-900)] md:text-6xl" data-value="500" data-suffix="+">
                 500+
               </p>
               <p className="mt-3 text-sm font-medium uppercase tracking-wider text-[var(--sage-500)]">
@@ -290,7 +273,7 @@ export default function HomePage() {
 
             {/* Stat Item 2 */}
             <div className={`text-center fade-in-section stagger-2 ${visibleElements.has('stats') ? 'is-visible' : ''}`}>
-              <p className="font-[var(--font-playfair)] text-5xl font-semibold tracking-tight text-[var(--warm-900)] md:text-6xl">
+              <p className="stat-number font-[var(--font-playfair)] text-5xl font-semibold tracking-tight text-[var(--warm-900)] md:text-6xl" data-value="200" data-suffix="+">
                 200+
               </p>
               <p className="mt-3 text-sm font-medium uppercase tracking-wider text-[var(--sage-500)]">
@@ -300,7 +283,7 @@ export default function HomePage() {
 
             {/* Stat Item 3 */}
             <div className={`text-center fade-in-section stagger-3 ${visibleElements.has('stats') ? 'is-visible' : ''}`}>
-              <p className="font-[var(--font-playfair)] text-5xl font-semibold tracking-tight text-[var(--warm-900)] md:text-6xl">
+              <p className="stat-number font-[var(--font-playfair)] text-5xl font-semibold tracking-tight text-[var(--warm-900)] md:text-6xl" data-value="98" data-suffix="%">
                 98%
               </p>
               <p className="mt-3 text-sm font-medium uppercase tracking-wider text-[var(--sage-500)]">
@@ -328,7 +311,7 @@ export default function HomePage() {
       <section 
         id="brands" 
         ref={featuresRef}
-        className={`bg-white mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-16 md:py-20 fade-in-section ${visibleElements.has('features') ? 'is-visible' : ''}`}
+        className={`features-section bg-white mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-16 md:py-20 fade-in-section ${visibleElements.has('features') ? 'is-visible' : ''}`}
       >
         {/* Section header */}
         <div className="mb-8 text-center sm:mb-12">
@@ -342,7 +325,7 @@ export default function HomePage() {
         <div className="grid gap-6 sm:gap-8 md:grid-cols-3">
           {/* For Brands Card */}
           <div 
-            className={`feature-card group cursor-pointer fade-in-section stagger-1 ${visibleElements.has('features') ? 'is-visible' : ''}`}
+            className={`feature-card gsap-hover group cursor-pointer fade-in-section stagger-1 ${visibleElements.has('features') ? 'is-visible' : ''}`}
             onClick={handleGeneratePassport}
             role="button"
             tabIndex={0}
@@ -372,7 +355,7 @@ export default function HomePage() {
 
           {/* AI-Powered Matching Card */}
           <div 
-            className={`feature-card group cursor-pointer fade-in-section stagger-2 ${visibleElements.has('features') ? 'is-visible' : ''}`}
+            className={`feature-card gsap-hover group cursor-pointer fade-in-section stagger-2 ${visibleElements.has('features') ? 'is-visible' : ''}`}
             onClick={() => handleNavigation("#how-it-works", "ai matching learn more")}
             role="button"
             tabIndex={0}
@@ -403,7 +386,7 @@ export default function HomePage() {
           {/* For Landlords Card */}
           <div 
             id="landlords"
-            className={`feature-card group cursor-pointer fade-in-section stagger-3 ${visibleElements.has('features') ? 'is-visible' : ''}`}
+            className={`feature-card gsap-hover group cursor-pointer fade-in-section stagger-3 ${visibleElements.has('features') ? 'is-visible' : ''}`}
             onClick={() => handleNavigation("#how-it-works", "landlords explore")}
             role="button"
             tabIndex={0}
@@ -437,7 +420,7 @@ export default function HomePage() {
       <section 
         id="how-it-works" 
         ref={howItWorksRef}
-        className={`bg-white py-12 sm:py-16 md:py-20 fade-in-section ${visibleElements.has('howItWorks') ? 'is-visible' : ''}`}
+        className={`how-it-works-section bg-white py-12 sm:py-16 md:py-20 fade-in-section ${visibleElements.has('howItWorks') ? 'is-visible' : ''}`}
       >
         <div className="mx-auto max-w-7xl px-4 sm:px-6">
           {/* Section header */}
@@ -453,13 +436,13 @@ export default function HomePage() {
           <div className="relative">
             {/* Connecting line - hidden on mobile, visible on md+ */}
             <div 
-              className="absolute left-1/2 top-6 hidden h-0.5 w-[calc(66.666%-4rem)] -translate-x-1/2 bg-gradient-to-r from-[var(--sage-200)] via-[var(--sage-500)] to-[var(--sage-200)] md:top-8 md:block"
+              className="connecting-line absolute left-1/2 top-6 hidden h-0.5 w-[calc(66.666%-4rem)] -translate-x-1/2 bg-gradient-to-r from-[var(--sage-200)] via-[var(--sage-500)] to-[var(--sage-200)] md:top-8 md:block"
               aria-hidden="true"
             />
             
             {/* Vertical connecting line for mobile */}
             <div 
-              className="absolute left-6 top-12 h-[calc(100%-6rem)] w-0.5 bg-gradient-to-b from-[var(--sage-200)] via-[var(--sage-500)] to-[var(--sage-200)] sm:left-8 sm:top-16 sm:h-[calc(100%-8rem)] md:hidden"
+              className="connecting-line absolute left-6 top-12 h-[calc(100%-6rem)] w-0.5 bg-gradient-to-b from-[var(--sage-200)] via-[var(--sage-500)] to-[var(--sage-200)] sm:left-8 sm:top-16 sm:h-[calc(100%-8rem)] md:hidden"
               aria-hidden="true"
             />
 
@@ -468,11 +451,11 @@ export default function HomePage() {
               {/* Step 1 */}
               <div className={`flex gap-4 sm:gap-6 md:flex-col md:items-center md:text-center fade-in-section stagger-1 ${visibleElements.has('howItWorks') ? 'is-visible' : ''}`}>
                 {/* Step circle */}
-                <div className="relative z-10 flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[var(--sage-500)] to-[var(--sage-600)] shadow-lg shadow-[var(--sage-500)]/20 sm:h-16 sm:w-16">
+                <div className="step-circle relative z-10 flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[var(--sage-500)] to-[var(--sage-600)] shadow-lg shadow-[var(--sage-500)]/20 sm:h-16 sm:w-16">
                   <span className="font-[var(--font-playfair)] text-lg font-semibold text-white sm:text-2xl">1</span>
                 </div>
                 {/* Step content */}
-                <div className="flex-1">
+                <div className="step-content flex-1">
                   <h3 className="font-[var(--font-playfair)] text-lg font-semibold tracking-tight text-[var(--warm-900)] sm:text-xl md:mt-6">
                     Create Your Profile
                   </h3>
@@ -485,11 +468,11 @@ export default function HomePage() {
               {/* Step 2 */}
               <div className={`flex gap-4 sm:gap-6 md:flex-col md:items-center md:text-center fade-in-section stagger-2 ${visibleElements.has('howItWorks') ? 'is-visible' : ''}`}>
                 {/* Step circle */}
-                <div className="relative z-10 flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[var(--sage-500)] to-[var(--sage-600)] shadow-lg shadow-[var(--sage-500)]/20 sm:h-16 sm:w-16">
+                <div className="step-circle relative z-10 flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[var(--sage-500)] to-[var(--sage-600)] shadow-lg shadow-[var(--sage-500)]/20 sm:h-16 sm:w-16">
                   <span className="font-[var(--font-playfair)] text-lg font-semibold text-white sm:text-2xl">2</span>
                 </div>
                 {/* Step content */}
-                <div className="flex-1">
+                <div className="step-content flex-1">
                   <h3 className="font-[var(--font-playfair)] text-lg font-semibold tracking-tight text-[var(--warm-900)] sm:text-xl md:mt-6">
                     Get Matched
                   </h3>
@@ -502,11 +485,11 @@ export default function HomePage() {
               {/* Step 3 */}
               <div className={`flex gap-4 sm:gap-6 md:flex-col md:items-center md:text-center fade-in-section stagger-3 ${visibleElements.has('howItWorks') ? 'is-visible' : ''}`}>
                 {/* Step circle */}
-                <div className="relative z-10 flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[var(--sage-500)] to-[var(--sage-600)] shadow-lg shadow-[var(--sage-500)]/20 sm:h-16 sm:w-16">
+                <div className="step-circle relative z-10 flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[var(--sage-500)] to-[var(--sage-600)] shadow-lg shadow-[var(--sage-500)]/20 sm:h-16 sm:w-16">
                   <span className="font-[var(--font-playfair)] text-lg font-semibold text-white sm:text-2xl">3</span>
                 </div>
                 {/* Step content */}
-                <div className="flex-1">
+                <div className="step-content flex-1">
                   <h3 className="font-[var(--font-playfair)] text-lg font-semibold tracking-tight text-[var(--warm-900)] sm:text-xl md:mt-6">
                     Connect & Grow
                   </h3>
@@ -523,9 +506,9 @@ export default function HomePage() {
       {/* Testimonial Section */}
       <section 
         ref={testimonialRef}
-        className={`bg-[var(--sage-50)] py-12 sm:py-16 md:py-20 lg:py-24 fade-in-section ${visibleElements.has('testimonial') ? 'is-visible' : ''}`}
+        className={`testimonial-section bg-[var(--sage-50)] py-12 sm:py-16 md:py-20 lg:py-24 fade-in-section ${visibleElements.has('testimonial') ? 'is-visible' : ''}`}
       >
-        <div className="mx-auto max-w-4xl px-4 text-center sm:px-6">
+        <div className="testimonial-content mx-auto max-w-4xl px-4 text-center sm:px-6">
           {/* Large decorative quote mark - opening */}
           <div 
             className="mb-4 font-[var(--font-playfair)] text-5xl leading-none text-[var(--sage-200)] sm:mb-6 sm:text-7xl md:text-8xl"
@@ -564,9 +547,9 @@ export default function HomePage() {
       {/* Secondary CTA Section - Gradient Banner */}
       <section 
         ref={ctaRef}
-        className={`bg-gradient-to-br from-[var(--sage-500)] to-[var(--sage-600)] py-12 sm:py-16 md:py-20 fade-in-section ${visibleElements.has('cta') ? 'is-visible' : ''}`}
+        className={`cta-section bg-gradient-to-br from-[var(--sage-500)] to-[var(--sage-600)] py-12 sm:py-16 md:py-20 fade-in-section ${visibleElements.has('cta') ? 'is-visible' : ''}`}
       >
-        <div className="mx-auto max-w-4xl px-4 text-center sm:px-6">
+        <div className="cta-content mx-auto max-w-4xl px-4 text-center sm:px-6">
           {/* Compelling headline */}
           <h2 className="font-[var(--font-playfair)] text-2xl font-semibold tracking-tight text-white sm:text-3xl md:text-4xl lg:text-5xl">
             Ready to Find Your Perfect Space?
@@ -751,5 +734,6 @@ export default function HomePage() {
         </div>
       </footer>
     </div>
+    </GSAPLoader>
   );
 }

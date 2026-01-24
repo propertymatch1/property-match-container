@@ -568,3 +568,146 @@ html {
     transform: none;
   }
 }
+
+/* === GSAP ANIMATION ENHANCEMENTS === */
+@layer components {
+  /* GSAP hover class for enhanced interactions */
+  .gsap-hover {
+    cursor: pointer;
+    transform-origin: center;
+  }
+
+  /* Floating elements for hero section */
+  .floating-element {
+    will-change: transform;
+  }
+
+  /* Stat numbers for counter animation */
+  .stat-number {
+    will-change: transform, opacity;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Step elements for how-it-works animation */
+  .step-circle {
+    will-change: transform;
+    transform-origin: center;
+  }
+
+  .step-content {
+    will-change: transform, opacity;
+  }
+
+  /* Connecting lines for animated reveals */
+  .connecting-line {
+    will-change: transform;
+  }
+
+  /* Testimonial and CTA content */
+  .testimonial-content,
+  .cta-content {
+    will-change: transform, opacity;
+  }
+
+  /* Parallax elements */
+  .parallax-element {
+    will-change: transform;
+  }
+
+  /* Enhanced feature cards for GSAP */
+  .feature-card.gsap-hover {
+    transform-origin: center bottom;
+    backface-visibility: hidden;
+    perspective: 1000px;
+  }
+
+  /* Smooth transitions for reduced motion users */
+  @media (prefers-reduced-motion: reduce) {
+    .floating-element,
+    .stat-number,
+    .step-circle,
+    .step-content,
+    .connecting-line,
+    .testimonial-content,
+    .cta-content,
+    .parallax-element,
+    .gsap-hover {
+      will-change: auto;
+    }
+  }
+
+  /* Loading state for GSAP elements */
+  .gsap-loading {
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  /* Hero content initial state */
+  .hero-content {
+    will-change: transform, opacity;
+  }
+
+  .hero-cta {
+    will-change: transform, opacity;
+  }
+
+  .hero-visual {
+    will-change: transform, opacity;
+  }
+
+  /* Performance optimizations */
+  .stats-section,
+  .features-section,
+  .how-it-works-section,
+  .testimonial-section,
+  .cta-section {
+    contain: layout style paint;
+  }
+}
+
+/* === GSAP ANIMATION KEYFRAMES === */
+@keyframes gsap-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes gsap-scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes gsap-slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Fallback animations for when GSAP doesn't load */
+.no-gsap .hero-content {
+  animation: gsap-fade-in 1s ease-out;
+}
+
+.no-gsap .feature-card {
+  animation: gsap-scale-in 0.8s ease-out;
+}
+
+.no-gsap .stat-number {
+  animation: gsap-slide-up 0.6s ease-out;
+}
