@@ -16,3 +16,8 @@ export function nullthrows<T>(
     message ?? `Expected value not to be null or undefined but got ${value}`,
   );
 }
+
+export type OptionalWrapper<T> = {
+  value: T;
+  exists: boolean;
+};
