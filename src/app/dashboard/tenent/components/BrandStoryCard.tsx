@@ -10,6 +10,8 @@ interface BrandStoryCardProps {
   personalityTags: string[];
   toneTags: string[];
   notes: string | null;
+  variant?: 'standard' | 'featured';
+  sectionId?: string;
 }
 
 export function BrandStoryCard({
@@ -17,6 +19,8 @@ export function BrandStoryCard({
   personalityTags,
   toneTags,
   notes,
+  variant = 'standard',
+  sectionId = 'brand-story',
 }: BrandStoryCardProps) {
   // Create a story text from available data
   const getStoryText = () => {
@@ -53,6 +57,8 @@ export function BrandStoryCard({
       preview={preview}
       defaultOpen={true}
       accentColor="var(--sage-500, #6B7B6B)"
+      variant={variant}
+      sectionId={sectionId}
     >
       <div className="space-y-[var(--space-6,1.5rem)]">
         {/* Main Story Text */}

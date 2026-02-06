@@ -10,6 +10,8 @@ interface ExpansionIntentCardProps {
   cityNext: string[];
   whenNextOpen: string | null;
   spaceNeed: number | null;
+  variant?: 'standard' | 'featured';
+  sectionId?: string;
 }
 
 // Icon sizes standardized to design system: 16px (small), 20px (standard), 24px (large)
@@ -23,6 +25,8 @@ export function ExpansionIntentCard({
   cityNext,
   whenNextOpen,
   spaceNeed,
+  variant = 'standard',
+  sectionId = 'expansion',
 }: ExpansionIntentCardProps) {
   // Generate preview text
   const getPreview = () => {
@@ -50,8 +54,10 @@ export function ExpansionIntentCard({
       title="Expansion Intent"
       icon={Rocket}
       preview={getPreview()}
-      defaultOpen={false}
+      defaultOpen={true}
       accentColor="#8B5CF6"
+      variant={variant}
+      sectionId={sectionId}
     >
       <div className="space-y-[var(--space-6,1.5rem)]">
         {/* Target Cities */}

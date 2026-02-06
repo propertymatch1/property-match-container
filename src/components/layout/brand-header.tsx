@@ -4,7 +4,7 @@ import { cn } from "~/lib/utils";
 const sizeStyles = {
   sm: {
     container: "gap-2",
-    text: "text-lg sm:text-xl",
+    text: "text-xl sm:text-2xl",
     icon: "h-6 w-6 sm:h-7 sm:w-7",
   },
   md: {

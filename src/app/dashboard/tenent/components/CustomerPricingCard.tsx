@@ -9,6 +9,8 @@ interface CustomerPricingCardProps {
   typcialCustomer: string[];
   typcialCustomerSpend: string | null;
   rentRangeDesire: number | null;
+  variant?: 'standard' | 'featured';
+  sectionId?: string;
 }
 
 const customerTypeColors: Record<string, string> = {
@@ -68,6 +70,8 @@ export function CustomerPricingCard({
   typcialCustomer,
   typcialCustomerSpend,
   rentRangeDesire,
+  variant = 'standard',
+  sectionId = 'customer-pricing',
 }: CustomerPricingCardProps) {
   // Generate preview text
   const getPreview = () => {
@@ -98,8 +102,10 @@ export function CustomerPricingCard({
       title="Customer & Pricing"
       icon={Users}
       preview={getPreview()}
-      defaultOpen={false}
+      defaultOpen={true}
       accentColor="var(--gold-500, #C4A77D)"
+      variant={variant}
+      sectionId={sectionId}
     >
       <div className="space-y-[var(--space-6,1.5rem)]">
         {/* Target Customers */}

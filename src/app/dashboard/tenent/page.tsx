@@ -16,6 +16,12 @@ import { FinancialReadinessCard } from "./components/FinancialReadinessCard";
 import { MediaSocialCard } from "./components/MediaSocialCard";
 import Footer from "./components/Footer";
 import MobileCTA from "./components/MobileCTA";
+import DashboardLayout from "./components/DashboardLayout";
+import { NavigationSidebar, DASHBOARD_SECTIONS } from "./components/NavigationSidebar";
+import BentoGrid from "./components/BentoGrid";
+import QuickStatsSection from "./components/QuickStatsSection";
+import ProfileCompletenessBar from "./components/ProfileCompletenessBar";
+import { extractQuickStats } from "./utils/profile-utils";
 
 function TenantDashboard() {
   const { profile, isLoading, error, retry } = useTenantProfile();
@@ -88,65 +94,94 @@ function TenantDashboard() {
   return (
     <TooltipProvider>
       <div className="min-h-screen bg-[var(--warm-50)]">
-        <main className="pb-24 md:pb-8">
-          {/* Hero Section */}
-          <DashboardHeroCard
-            brandName={profile.brandName}
-            logoUrl={profile.logoUrl}
-            industry={profile.industry}
-            typcialCustomer={profile.typcialCustomer}
-            typcialCustomerSpend={profile.typcialCustomerSpend}
-            spaceLooking={profile.spaceLooking}
-            cityNext={profile.cityNext}
-            whenNextOpen={profile.whenNextOpen}
-            notes={profile.notes}
-          />
-
-          {/* Content Sections - Single column on mobile, responsive spacing */}
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 space-y-4 sm:space-y-6 mt-4 sm:mt-6">
-            {/* Brand Story Section */}
-            <BrandStoryCard
-              brandKeywords={profile.brandKeywords}
-              personalityTags={profile.personalityTags}
-              toneTags={profile.toneTags}
+        <DashboardLayout
+          sidebar={
+            <NavigationSidebar
+              sections={DASHBOARD_SECTIONS}
+            />
+          }
+        >
+          <main className="pb-24 md:pb-8">
+            {/* Hero Section */}
+            <DashboardHeroCard
+              brandName={profile.brandName}
+              logoUrl={profile.logoUrl}
+              industry={profile.industry}
+              typcialCustomer={profile.typcialCustomer}
+              typcialCustomerSpend={profile.typcialCustomerSpend}
+              spaceLooking={profile.spaceLooking}
+              cityNext={profile.cityNext}
+              whenNextOpen={profile.whenNextOpen}
               notes={profile.notes}
             />
 
-            {/* Customer & Pricing Section */}
-            <CustomerPricingCard
-              typcialCustomer={profile.typcialCustomer}
-              typcialCustomerSpend={profile.typcialCustomerSpend}
-              rentRangeDesire={profile.rentRangeDesire}
-            />
+            {/* Profile Completeness and Quick Stats */}
+            <div className="max-w-6xl mx-auto px-4 sm:px-6 space-y-4 sm:space-y-6 mt-4 sm:mt-6">
+              {/* Profile Completeness Bar */}
+              <ProfileCompletenessBar profile={profile} />
 
-            {/* Operations & Maturity Section */}
-            <OperationsMaturityCard
-              tennentExperience={profile.tennentExperience}
-              spaceLooking={profile.spaceLooking}
-              mode={profile.mode}
-            />
+              {/* Quick Stats Section */}
+              <QuickStatsSection stats={extractQuickStats(profile)} />
+            </div>
 
-            {/* Expansion Intent Section */}
-            <ExpansionIntentCard
-              cityNext={profile.cityNext}
-              whenNextOpen={profile.whenNextOpen}
-              spaceNeed={profile.spaceNeed}
-            />
+            {/* Dashboard Cards in Bento Grid Layout */}
+            <div className="max-w-6xl mx-auto px-4 sm:px-6 mt-4 sm:mt-6">
+              <BentoGrid>
+                {/* Featured Cards - 2 column span on desktop */}
+                <BrandStoryCard
+                  brandKeywords={profile.brandKeywords}
+                  personalityTags={profile.personalityTags}
+                  toneTags={profile.toneTags}
+                  notes={profile.notes}
+                  variant="featured"
+                  sectionId="brand-story"
+                />
 
-            {/* Financial Readiness Section */}
-            <FinancialReadinessCard
-              rentRangeDesire={profile.rentRangeDesire}
-            />
+                <CustomerPricingCard
+                  typcialCustomer={profile.typcialCustomer}
+                  typcialCustomerSpend={profile.typcialCustomerSpend}
+                  rentRangeDesire={profile.rentRangeDesire}
+                  variant="featured"
+                  sectionId="customer-pricing"
+                />
 
-            {/* Media & Social Section */}
-            <MediaSocialCard logoUrl={profile.logoUrl} />
+                {/* Standard Cards - 1 column span */}
+                <OperationsMaturityCard
+                  tennentExperience={profile.tennentExperience}
+                  spaceLooking={profile.spaceLooking}
+                  mode={profile.mode}
+                  variant="standard"
+                  sectionId="operations"
+                />
+
+                <ExpansionIntentCard
+                  cityNext={profile.cityNext}
+                  whenNextOpen={profile.whenNextOpen}
+                  spaceNeed={profile.spaceNeed}
+                  variant="standard"
+                  sectionId="expansion"
+                />
+
+                <FinancialReadinessCard
+                  rentRangeDesire={profile.rentRangeDesire}
+                  variant="standard"
+                  sectionId="financial"
+                />
+
+                <MediaSocialCard
+                  logoUrl={profile.logoUrl}
+                  variant="standard"
+                  sectionId="media"
+                />
+              </BentoGrid>
+            </div>
+          </main>
+
+          {/* Footer - Hidden on mobile to avoid overlap with MobileCTA */}
+          <div className="hidden sm:block">
+            <Footer />
           </div>
-        </main>
-
-        {/* Footer - Hidden on mobile to avoid overlap with MobileCTA */}
-        <div className="hidden sm:block">
-          <Footer />
-        </div>
+        </DashboardLayout>
 
         {/* Mobile CTA */}
         <MobileCTA />

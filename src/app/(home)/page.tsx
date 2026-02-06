@@ -12,6 +12,7 @@ import { useGSAPAnimations } from "~/hooks/use-gsap-animations";
 import { GSAPLoader } from "~/components/gsap-loader";
 import { EnhancedTypewriterHero } from "~/components/enhanced-typewriter-hero";
 import { SciFiConstellation } from "~/components/sci-fi-constellation";
+import { BrandHeader } from "~/components/layout";
 
 // Custom hook for intersection observer (scroll-triggered animations)
 function useIntersectionObserver(options?: IntersectionObserverInit) {
@@ -134,9 +135,9 @@ export default function HomePage() {
         }`}
       >
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 sm:py-4">
-          {/* Brand name with distinctive Playfair Display typography */}
-          <a href="/" className="font-[var(--font-playfair)] text-xl font-semibold tracking-tight text-[var(--warm-900)] sm:text-2xl hover:opacity-80 transition-opacity">
-            Identia
+          {/* Brand name with standardized BrandHeader component */}
+          <a href="/" className="hover:opacity-80 transition-opacity">
+            <BrandHeader size="sm" showIcon={false} />
           </a>
           <nav className="flex items-center gap-2 sm:gap-4 md:gap-8">
             {/* Nav links with underline hover animation - hidden on mobile, shown on md+ */}
@@ -589,9 +590,7 @@ export default function HomePage() {
           <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 sm:gap-12 lg:grid-cols-5">
             {/* Brand column with tagline */}
             <div className="sm:col-span-2 lg:col-span-2">
-              <h4 className="font-[var(--font-playfair)] text-xl font-semibold tracking-tight text-[var(--warm-900)] sm:text-2xl">
-                Identia
-              </h4>
+              <BrandHeader size="sm" showIcon={false} />
               <p className="mt-3 max-w-sm text-sm leading-relaxed text-[var(--warm-800)] sm:mt-4 sm:text-base">
                 A modern identity layer for commercial brands. Building the foundation for how brands are understood and evaluated.
               </p>

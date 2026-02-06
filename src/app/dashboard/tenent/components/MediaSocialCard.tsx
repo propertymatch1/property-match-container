@@ -7,9 +7,15 @@ import { Avatar, AvatarImage, AvatarFallback } from "~/components/ui/avatar";
 
 interface MediaSocialCardProps {
   logoUrl: string | null;
+  variant?: 'standard' | 'featured';
+  sectionId?: string;
 }
 
-export function MediaSocialCard({ logoUrl }: MediaSocialCardProps) {
+export function MediaSocialCard({ 
+  logoUrl, 
+  variant = 'standard',
+  sectionId = 'media',
+}: MediaSocialCardProps) {
   // Check if there's any data to display
   const hasLogo = logoUrl !== null && logoUrl !== "";
 
@@ -23,8 +29,10 @@ export function MediaSocialCard({ logoUrl }: MediaSocialCardProps) {
       title="Media & Social Presence"
       icon={Camera}
       preview={getPreview()}
-      defaultOpen={false}
+      defaultOpen={true}
       accentColor="#EC4899"
+      variant={variant}
+      sectionId={sectionId}
     >
       <div className="space-y-[var(--space-6,1.5rem)]">
         {/* Logo Section */}

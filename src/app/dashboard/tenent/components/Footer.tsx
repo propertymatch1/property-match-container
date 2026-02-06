@@ -2,6 +2,7 @@
 
 import React from "react";
 import { Twitter, Linkedin, Mail } from "lucide-react";
+import { BrandHeader } from "~/components/layout";
 
 export default function Footer() {
   return (
@@ -10,9 +11,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
           {/* Brand column */}
           <div className="sm:col-span-2 lg:col-span-1">
-            <h2 className="font-[var(--font-playfair)] text-xl font-semibold tracking-tight text-[var(--warm-900)]">
-              Identia
-            </h2>
+            <BrandHeader size="sm" showIcon={false} />
             <p className="mt-3 text-sm leading-relaxed text-[var(--warm-600)] max-w-xs">
               A modern identity layer for commercial brands.
             </p>

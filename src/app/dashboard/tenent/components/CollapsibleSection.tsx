@@ -16,6 +16,8 @@ interface CollapsibleSectionProps {
   defaultOpen?: boolean;
   accentColor?: string;
   children: React.ReactNode;
+  sectionId?: string; // For scroll-to navigation
+  variant?: 'standard' | 'featured'; // For bento grid layout
 }
 
 export default function CollapsibleSection({
@@ -25,14 +27,21 @@ export default function CollapsibleSection({
   defaultOpen = false,
   accentColor = "var(--sage-500, #6B7B6B)",
   children,
+  sectionId,
+  variant = 'standard',
 }: CollapsibleSectionProps) {
   const [isOpen, setIsOpen] = React.useState(defaultOpen);
 
   return (
     <Collapsible open={isOpen} onOpenChange={setIsOpen}>
       <div 
-        className="card-elevated overflow-hidden"
+        id={sectionId}
+        className={cn(
+          "card-elevated overflow-hidden",
+          variant === 'featured' ? 'bento-card-featured' : 'bento-card-standard'
+        )}
         style={{ borderRadius: "var(--radius-2xl, 1.5rem)" }}
+        data-state={isOpen ? "open" : "closed"}
       >
         <CollapsibleTrigger asChild>
           <button
@@ -90,7 +99,12 @@ export default function CollapsibleSection({
             transition: "height var(--transition-base, 300ms ease)",
           }}
         >
-          <div className="px-6 pb-6 pt-2">{children}</div>
+          <div className={cn(
+            "px-6 pb-6 pt-2",
+            variant === 'featured' && "collapsible-content"
+          )}>
+            {children}
+          </div>
         </CollapsibleContent>
       </div>
     </Collapsible>

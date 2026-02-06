@@ -11,6 +11,8 @@ interface OperationsMaturityCardProps {
   tennentExperience: string | null;
   spaceLooking: string[];
   mode: TenantMode;
+  variant?: 'standard' | 'featured';
+  sectionId?: string;
 }
 
 // Icon sizes standardized to design system: 16px (small), 20px (standard), 24px (large)
@@ -69,6 +71,8 @@ export function OperationsMaturityCard({
   tennentExperience,
   spaceLooking,
   mode,
+  variant = 'standard',
+  sectionId = 'operations',
 }: OperationsMaturityCardProps) {
   // Generate preview text
   const getPreview = () => {
@@ -113,8 +117,10 @@ export function OperationsMaturityCard({
       title="Operations & Maturity"
       icon={Building2}
       preview={getPreview()}
-      defaultOpen={false}
+      defaultOpen={true}
       accentColor="#4A90A4"
+      variant={variant}
+      sectionId={sectionId}
     >
       <div className="space-y-[var(--space-6,1.5rem)]">
         {/* Two Column Layout */}

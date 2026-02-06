@@ -36,9 +36,9 @@ export default function NavigationBar() {
           : 'bg-[rgba(250,250,249,0.8)] backdrop-blur-[12px]'
       } ${scrolled ? 'border-b border-[rgba(0,0,0,0.08)]' : 'border-b border-transparent'}`}
     >
-      <div className="max-w-6xl mx-auto px-4 sm:px-6">
-        <div className="flex items-center justify-between h-16 sm:h-20">
-          {/* Brand name - consistent with landing page (text only, no icon) */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        <div className="flex items-center justify-between py-3 sm:py-4">
+          {/* Brand name - matching landing page exactly */}
           <a href="/" className="font-[var(--font-playfair)] text-xl font-semibold tracking-tight text-[var(--warm-900)] sm:text-2xl hover:opacity-80 transition-opacity">
             Identia
           </a>
@@ -103,7 +103,7 @@ export default function NavigationBar() {
 
         {/* Mobile Menu - Touch-friendly navigation items */}
         {mobileMenuOpen && (
-          <div className="md:hidden absolute top-16 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-[var(--warm-200)] shadow-[var(--shadow-elevated)]">
+          <div className="md:hidden absolute top-full left-0 right-0 bg-white/95 backdrop-blur-md border-t border-[var(--warm-200)] shadow-[var(--shadow-elevated)]">
             <div className="flex flex-col p-4 gap-2">
               <a
                 href="/"

@@ -711,3 +711,330 @@ html {
 .no-gsap .stat-number {
   animation: gsap-slide-up 0.6s ease-out;
 }
+
+/* === BENTO GRID LAYOUT === */
+@layer components {
+  /* BentoGrid responsive configuration */
+  .bento-grid {
+    display: grid;
+    gap: var(--space-4);
+    grid-template-columns: 1fr;
+    width: 100%;
+  }
+
+  /* Tablet breakpoint: 2 columns */
+  @media (min-width: 640px) {
+    .bento-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--space-6);
+    }
+  }
+
+  /* Desktop breakpoint: 3 columns */
+  @media (min-width: 1024px) {
+    .bento-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  /* Card span variants */
+  .bento-card-standard {
+    grid-column: span 1;
+  }
+
+  .bento-card-featured {
+    grid-column: span 1;
+  }
+
+  /* Featured cards span 2 columns on tablet and desktop */
+  @media (min-width: 640px) {
+    .bento-card-featured {
+      grid-column: span 2;
+    }
+  }
+
+  /* Enhanced styling for featured cards */
+  .bento-card-featured {
+    box-shadow: var(--shadow-elevated, 0 8px 24px rgba(0, 0, 0, 0.12));
+  }
+
+  .bento-card-featured:hover {
+    box-shadow: var(--shadow-prominent, 0 12px 32px rgba(0, 0, 0, 0.16));
+  }
+
+  .bento-card-featured .collapsible-content {
+    padding: 1.5rem 2rem 2rem 2rem;
+  }
+
+  /* Enhanced border highlight on expanded state */
+  .card-elevated[data-state="open"] {
+    border-left-width: 6px;
+  }
+
+  /* Ensure smooth transition for border width changes */
+  .card-elevated {
+    transition: border-left-width var(--transition-base, 300ms ease), 
+                box-shadow var(--transition-base, 300ms ease);
+  }
+
+  /* Ensure smooth transitions between breakpoints */
+  .bento-grid > * {
+    transition: grid-column var(--transition-base, 300ms ease);
+  }
+
+  /* Respect reduced motion preferences */
+  @media (prefers-reduced-motion: reduce) {
+    .bento-grid > * {
+      transition: none;
+    }
+  }
+
+  /* === VISUAL CONNECTORS === */
+  
+  /* Card group background sections */
+  .card-group-section {
+    position: relative;
+    padding: var(--space-4) 0;
+    margin: var(--space-6) 0;
+  }
+
+  .card-group-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -2rem;
+    right: -2rem;
+    bottom: 0;
+    background: linear-gradient(
+      135deg,
+      var(--sage-50, #f6f7f6) 0%,
+      var(--warm-50, #fafaf9) 50%,
+      var(--sage-50, #f6f7f6) 100%
+    );
+    border-radius: var(--radius-3xl, 2rem);
+    opacity: 0.6;
+    z-index: -1;
+  }
+
+  /* Highlighted variant for important sections */
+  .card-group-highlighted::before {
+    background: linear-gradient(
+      135deg,
+      var(--sage-100, #e3e7e4) 0%,
+      var(--warm-100, #f5f5f4) 30%,
+      var(--gold-300, #e4c5a4) 50%,
+      var(--warm-100, #f5f5f4) 70%,
+      var(--sage-100, #e3e7e4) 100%
+    );
+    opacity: 0.4;
+  }
+
+  /* Subtle variant for less prominent sections */
+  .card-group-subtle::before {
+    background: linear-gradient(
+      135deg,
+      var(--warm-50, #fafaf9) 0%,
+      var(--sage-50, #f6f7f6) 100%
+    );
+    opacity: 0.3;
+  }
+
+  /* Subtle dividers between sections */
+  .section-divider {
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      var(--sage-200, #c7d0c9) 20%,
+      var(--warm-300, #d6d3d1) 50%,
+      var(--sage-200, #c7d0c9) 80%,
+      transparent 100%
+    );
+    margin: var(--space-8) 0;
+    opacity: 0.7;
+  }
+
+  /* Decorative connecting lines */
+  .visual-connector {
+    position: relative;
+    margin: var(--space-6) 0;
+  }
+
+  .visual-connector::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      var(--sage-300, #a3b1a6) 25%,
+      var(--gold-400, #d4a574) 50%,
+      var(--sage-300, #a3b1a6) 75%,
+      transparent 100%
+    );
+    transform: translateY(-50%);
+    opacity: 0.4;
+  }
+
+  .visual-connector::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 8px;
+    height: 8px;
+    background: var(--gold-500, #c4956a);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0.6;
+    box-shadow: 0 0 0 2px var(--warm-50, #fafaf9);
+  }
+
+  /* Flow indicators for card relationships */
+  .flow-indicator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: var(--space-4) 0;
+    opacity: 0.5;
+  }
+
+  .flow-indicator::before,
+  .flow-indicator::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      var(--sage-300, #a3b1a6) 50%,
+      transparent 100%
+    );
+  }
+
+  .flow-indicator-icon {
+    margin: 0 var(--space-3);
+    color: var(--sage-400, #7d8f81);
+    font-size: 0.875rem;
+  }
+
+  /* Responsive adjustments for visual connectors */
+  @media (max-width: 640px) {
+    .card-group-section::before {
+      left: -1rem;
+      right: -1rem;
+    }
+    
+    .visual-connector {
+      margin: var(--space-4) 0;
+    }
+    
+    .section-divider {
+      margin: var(--space-6) 0;
+    }
+  }
+
+  /* Hide decorative elements on mobile for better performance */
+  @media (max-width: 639px) {
+    .decorative-desktop-only {
+      display: none;
+    }
+  }
+
+  /* === DASHBOARD LAYOUT === */
+  
+  /* Dashboard layout container */
+  .dashboard-layout {
+    display: grid;
+    grid-template-columns: 1fr;
+    width: 100%;
+    min-height: 100vh;
+  }
+
+  /* Desktop layout with sidebar */
+  @media (min-width: 1024px) {
+    .dashboard-layout {
+      grid-template-columns: 240px 1fr;
+      gap: var(--space-8);
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 var(--space-6);
+    }
+  }
+
+  /* Sidebar styling */
+  .dashboard-sidebar {
+    display: none;
+  }
+
+  @media (min-width: 1024px) {
+    .dashboard-sidebar {
+      display: block;
+      position: sticky;
+      top: var(--space-6);
+      height: fit-content;
+      max-height: calc(100vh - var(--space-12));
+      overflow-y: auto;
+    }
+  }
+
+  /* Main content area */
+  .dashboard-main {
+    width: 100%;
+    min-width: 0; /* Prevent grid overflow */
+  }
+
+  /* === DECORATIVE BACKGROUND === */
+  
+  /* Base decorative background styles */
+  .decorative-background {
+    z-index: -1;
+    will-change: auto;
+  }
+
+  /* Prominent variant with enhanced visual elements */
+  .decorative-background--prominent {
+    z-index: -1;
+  }
+
+  /* Desktop-only decorative elements - shown on desktop and tablet */
+  .decorative-desktop-only {
+    display: block;
+  }
+
+  @media (max-width: 639px) {
+    .decorative-desktop-only {
+      display: none;
+    }
+  }
+
+  /* Respect reduced motion preferences for decorative elements */
+  @media (prefers-reduced-motion: reduce) {
+    .decorative-background {
+      opacity: 0.5;
+    }
+    
+    .decorative-background * {
+      animation: none !important;
+      transition: none !important;
+      transform: none !important;
+    }
+  }
+
+  /* Performance optimizations for decorative elements */
+  .decorative-background > * {
+    contain: layout style paint;
+    backface-visibility: hidden;
+    transform-style: preserve-3d;
+  }
+
+  /* Ensure decorative elements don't interfere with interactions */
+  .decorative-background,
+  .decorative-background * {
+    pointer-events: none;
+    user-select: none;
+  }
+}

@@ -8,6 +8,8 @@ import { Progress } from "~/components/ui/progress";
 
 interface FinancialReadinessCardProps {
   rentRangeDesire: number | null;
+  variant?: 'standard' | 'featured';
+  sectionId?: string;
 }
 
 // Icon sizes standardized to design system: 16px (small), 20px (standard), 24px (large)
@@ -19,6 +21,8 @@ const ICON_SIZE = {
 
 export function FinancialReadinessCard({
   rentRangeDesire,
+  variant = 'standard',
+  sectionId = 'financial',
 }: FinancialReadinessCardProps) {
   // Generate preview text
   const getPreview = () => {
@@ -49,8 +53,10 @@ export function FinancialReadinessCard({
       title="Financial Readiness"
       icon={DollarSign}
       preview={getPreview()}
-      defaultOpen={false}
+      defaultOpen={true}
       accentColor="var(--gold-500, #c4956a)"
+      variant={variant}
+      sectionId={sectionId}
     >
       <div className="space-y-[var(--space-6,1.5rem)]">
         {/* Readiness Status */}
