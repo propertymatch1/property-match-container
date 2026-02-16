@@ -2,25 +2,28 @@
 
 import React, { useState } from "react";
 import type { OptionalWrapper } from "~/lib/utils";
+import type { AIRefinementConfig } from "./OnboardingAIRefinement";
+import OnboardingAIRefinement from "./OnboardingAIRefinement";
 
 interface Props {
   prompt: string;
   subprompt?: string;
   text: string;
   onSubmit: (text: OptionalWrapper<string>) => void;
-  allowOptional?: boolean;
-  aiGenerate?: (text: string) => Promise<string>;
+  optionality?: string;
+  aiRefinementConfig?: AIRefinementConfig<string>;
 }
 
 export default function OnboardingTextInput(props: Props) {
-  const { prompt, subprompt, onSubmit, allowOptional, aiGenerate } = props;
+  const { prompt, subprompt, onSubmit, optionality, aiRefinementConfig } =
+    props;
   const [text, setText] = useState(props.text);
   return (
     <div className="flex w-full max-w-2xl flex-col items-start gap-4 text-gray-700">
       <div className="gap-2s mb-8 flex flex-col">
-        <div className="text-xl">{props.prompt}</div>
-        {props.subprompt ? (
-          <div className="text-md text-gray-500">{props.subprompt}</div>
+        <div className="text-xl">{prompt}</div>
+        {subprompt ? (
+          <div className="text-md text-gray-500">{subprompt}</div>
         ) : null}
       </div>
       <input
@@ -37,7 +40,7 @@ export default function OnboardingTextInput(props: Props) {
           }
         }}
       />
-      <div className="flex flex-row items-center gap-4">
+      <div className="mb-8 flex flex-row items-center gap-4">
         <button
           onClick={() => {
             if (text != "") {
@@ -52,31 +55,24 @@ export default function OnboardingTextInput(props: Props) {
         >
           OK
         </button>
-        {props.allowOptional ? (
+        {optionality ? (
           <button
             onClick={() => {
               onSubmit({ value: "", exists: false });
             }}
             className={`cursor-pointer rounded-md bg-cyan-500 px-4 py-2 text-lg text-white transition-all hover:bg-cyan-600`}
           >
-            I don't have one yet
-          </button>
-        ) : null}
-        {aiGenerate ? (
-          <button
-            onClick={() => {
-              aiGenerate(text).then((result) => setText(result));
-            }}
-            className={`rounded-md px-4 py-2 text-lg text-white transition-all ${
-              text == ""
-                ? "bg-cyan-300"
-                : "cursor-pointer bg-cyan-500 hover:bg-cyan-600"
-            }`}
-          >
-            Generate with AI
+            {optionality}
           </button>
         ) : null}
       </div>
+      {aiRefinementConfig ? (
+        <OnboardingAIRefinement
+          config={aiRefinementConfig}
+          solution={text}
+          setSolution={setText}
+        />
+      ) : null}
     </div>
   );
 }

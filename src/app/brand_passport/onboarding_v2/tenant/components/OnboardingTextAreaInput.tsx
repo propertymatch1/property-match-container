@@ -1,15 +1,18 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
+import type { AIRefinementConfig } from "./OnboardingAIRefinement";
+import type { OptionalWrapper } from "~/lib/utils";
+import OnboardingAIRefinement from "./OnboardingAIRefinement";
 
 interface Props {
   prompt: string;
   subprompt?: string;
   text: string;
-  onSubmit: (text: string, notExist: boolean) => void;
-  allowOptional?: boolean;
+  onSubmit: (text: OptionalWrapper<string>) => void;
+  optionality?: string;
   placeholder?: string;
-  aiGenerate?: (text: string) => Promise<string>;
+  aiRefinementConfig?: AIRefinementConfig<string>;
 }
 
 export default function OnboardingTextAreaInput(props: Props) {
@@ -17,9 +20,9 @@ export default function OnboardingTextAreaInput(props: Props) {
     prompt,
     subprompt,
     onSubmit,
-    allowOptional,
+    optionality,
     placeholder,
-    aiGenerate,
+    aiRefinementConfig,
   } = props;
   const textareaRef = useRef(null);
   const [text, setText] = useState(props.text);
@@ -28,7 +31,7 @@ export default function OnboardingTextAreaInput(props: Props) {
     const el = textareaRef.current;
     if (el) {
       el.style.height = "auto"; // Reset to shrink
-      el.style.height = el.scrollHeight + "px"; // Adjust height
+      el.style.height = Math.min(el.scrollHeight, 200) + "px"; // Adjust height
     }
   }, [text]);
 
@@ -49,12 +52,19 @@ export default function OnboardingTextAreaInput(props: Props) {
         }}
         placeholder={placeholder ?? "Type answer here..."}
         className="w-full resize-none border-0 border-b-2 border-indigo-300 pb-2 text-2xl text-indigo-800 placeholder-indigo-300 transition-all outline-none focus:border-indigo-800 focus:ring-0"
-        onKeyDown={(e) => (e.key === "Enter" ? onSubmit(text, false) : "")}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" && !e.shiftKey && text != "") {
+            e.preventDefault();
+            onSubmit({ value: text, exists: true });
+          }
+        }}
       />
-      <div className="flex flex-row items-center gap-4">
+      <div className="mb-8 flex flex-row items-center gap-4">
         <button
           onClick={() => {
-            onSubmit(text, false);
+            if (text != "") {
+              onSubmit({ value: text, exists: true });
+            }
           }}
           className={`rounded-md px-4 py-2 text-lg text-white transition-all ${
             text == ""
@@ -64,31 +74,24 @@ export default function OnboardingTextAreaInput(props: Props) {
         >
           OK
         </button>
-        {allowOptional ? (
+        {optionality ? (
           <button
             onClick={() => {
-              onSubmit(text, true);
+              onSubmit({ value: "", exists: false });
             }}
             className={`cursor-pointer rounded-md bg-cyan-500 px-4 py-2 text-lg text-white transition-all hover:bg-cyan-600`}
           >
-            I don't have one yet
-          </button>
-        ) : null}
-        {aiGenerate ? (
-          <button
-            onClick={() => {
-              aiGenerate(text).then((result) => setText(result));
-            }}
-            className={`rounded-md px-4 py-2 text-lg text-white transition-all ${
-              text == ""
-                ? "bg-cyan-300"
-                : "cursor-pointer bg-cyan-500 hover:bg-cyan-600"
-            }`}
-          >
-            Polish with AI
+            {optionality}
           </button>
         ) : null}
       </div>
+      {aiRefinementConfig ? (
+        <OnboardingAIRefinement
+          config={aiRefinementConfig}
+          solution={text}
+          setSolution={setText}
+        />
+      ) : null}
     </div>
   );
 }

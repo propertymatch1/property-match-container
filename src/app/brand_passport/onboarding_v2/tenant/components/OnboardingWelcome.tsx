@@ -14,13 +14,16 @@ export default function OnboardingWelcome(props: Props) {
       </div>
       <div className="flex h-screen w-screen flex-col gap-12 bg-gray-100 px-8">
         <div className="flex w-full text-xl text-gray-800">
-          Welcome! You're about to create your Brand Passport — your brand's
-          professional identity, built beautifully and clearly in minutes.
+          Welcome — let's capture your brand as it truly is.
         </div>
         <div className="flex w-full text-xl text-gray-800">
-          Whether you're exploring a new location or simply organizing your
-          brand for the future, this onboarding makes everything simple and
-          stress-free.
+          This short interview helps turn your story, customers, and identity
+          into a clear, shareable Brand Passport — something you can use
+          whenever opportunities come knocking.
+        </div>
+        <div className="flex w-full text-xl text-gray-800">
+          No pressure. There are no right answers. This is simply about being
+          understood.
         </div>
         <button
           onClick={() => {

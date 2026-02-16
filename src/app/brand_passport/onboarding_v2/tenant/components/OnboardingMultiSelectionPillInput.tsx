@@ -7,6 +7,7 @@ import type { OptionalWrapper } from "~/lib/utils";
 interface Props {
   prompt: string;
   subprompt?: string;
+  selected: string[];
   placeholder?: string;
   options: string[];
   onSubmit: (options: OptionalWrapper<string[]>) => void;
@@ -16,7 +17,7 @@ interface Props {
 export default function OnboardingMultiSelectionPillInput(props: Props) {
   const { prompt, subprompt, placeholder, options, onSubmit, allowOptional } =
     props;
-  const [selected, setSelected] = useState<string[]>([]);
+  const [selected, setSelected] = useState<string[]>(props.selected);
   return (
     <div className="flex w-full max-w-2xl flex-col items-start gap-4 text-gray-700">
       <div className="gap-2s mb-8 flex flex-col">
