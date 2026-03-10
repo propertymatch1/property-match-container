@@ -14,14 +14,37 @@ interface MultipleChoiceStepProps {
 export function MultipleChoiceStep({ question }: MultipleChoiceStepProps) {
   const { responses, updateResponse, skipToQuestion, pushToHistory, goToNextStep } = useOnboarding()
 
+  // Initialize selected values from saved responses, filtering out invalid options
   const [selectedValues, setSelectedValues] = React.useState<string[]>(() => {
     const saved = responses[question.id]
+    console.log("=== MultipleChoiceStep Init ===")
+    console.log("Question ID:", question.id)
+    console.log("Saved Response:", saved)
+    console.log("All Responses:", responses)
+    
     if (!saved) return []
-    return question.allowMultiple ? saved.split(",") : [saved]
+    
+    // Parse the saved value(s)
+    const savedArray = question.allowMultiple ? saved.split(",") : [saved]
+    console.log("Saved Array:", savedArray)
+    
+    // Only keep values that are valid options for this specific question
+    // This prevents cross-contamination between questions
+    const validOptionValues = new Set(question.options?.map(opt => opt.value) || [])
+    console.log("Valid Option Values:", Array.from(validOptionValues))
+    
+    const filtered = savedArray.filter(val => validOptionValues.has(val))
+    console.log("Filtered Values:", filtered)
+    
+    return filtered
   })
   const [error, setError] = React.useState("")
 
   const handleToggle = (value: string) => {
+    console.log("=== handleToggle ===")
+    console.log("Toggling value:", value)
+    console.log("Current selectedValues:", selectedValues)
+    
     if (question.allowMultiple) {
       setSelectedValues((prev) =>
         prev.includes(value)
@@ -46,10 +69,25 @@ export function MultipleChoiceStep({ question }: MultipleChoiceStepProps) {
       ? selectedValues.join(",")
       : selectedValues[0] || ""
     
+    console.log("=== MultipleChoiceStep handleContinue ===")
+    console.log("Question ID:", question.id)
+    console.log("Selected Values:", selectedValues)
+    console.log("Value to Save:", valueToSave)
+    console.log("Allow Multiple:", question.allowMultiple)
+    
     updateResponse(question.id, valueToSave)
     pushToHistory(question.id)
     
-    // Navigate to nextScreen or completion
+    // For single-choice with per-option navigation
+    if (!question.allowMultiple && selectedValues.length === 1) {
+      const selectedOption = question.options?.find(opt => opt.value === selectedValues[0])
+      if (selectedOption?.nextScreen) {
+        skipToQuestion(selectedOption.nextScreen)
+        return
+      }
+    }
+    
+    // Fallback to question-level nextScreen or completion
     if (question.nextScreen) {
       skipToQuestion(question.nextScreen)
     } else {

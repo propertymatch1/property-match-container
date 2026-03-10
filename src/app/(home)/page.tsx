@@ -14,7 +14,7 @@ import { MultipleChoiceStep } from "./steps/multiple-choice-step"
 import { CompletionStep } from "./steps/completion-step"
 
 export default function HomePage() {
-  const { currentStep, totalSteps, goToPreviousStep, goToStep, responses } = useOnboarding()
+  const { currentStep, totalSteps, goToPreviousStep, responses } = useOnboarding()
   const [showDebugDialog, setShowDebugDialog] = React.useState(false)
 
   // Calculate which component to render
@@ -40,9 +40,9 @@ export default function HomePage() {
         }
         // Use custom component for multiple choice questions
         if (question.type === "multiple-choice") {
-          return <MultipleChoiceStep question={question} />
+          return <MultipleChoiceStep key={question.id} question={question} />
         }
-        return <QuestionStep question={question} />
+        return <QuestionStep key={question.id} question={question} />
       }
     }
 

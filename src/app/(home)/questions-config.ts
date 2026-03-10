@@ -27,7 +27,20 @@ export const ONBOARDING_QUESTIONS: QuestionConfig[] = [
     helperText: "",
     useSplitScreen: true,
     nextScreen: "brandDetails", // If URL provided, go to brandDetails
-    nextScreenOnSkip: "industry", // If skipped, go directly to industry
+    nextScreenOnSkip: "industryOrAudience", // If skipped, go to branching question
+  },
+  {
+    id: "industryOrAudience",
+    title: "Industry or Target audience?",
+    description: "",
+    type: "multiple-choice",
+    placeholder: "",
+    required: true,
+    allowMultiple: false, // Single choice only
+    options: [
+      { value: "chooseIndustry", label: "INDUSTRY", nextScreen: "industry" },
+      { value: "chooseTargetAudience", label: "TARGET AUDIENCE", nextScreen: "targetAudience" },
+    ],
   },
   {
     id: "brandDetails",
@@ -47,7 +60,7 @@ export const ONBOARDING_QUESTIONS: QuestionConfig[] = [
     type: "select",
     placeholder: "Select your location",
     required: true,
-    nextScreen: "targetAudience",
+    nextScreen: "brandDescription", // Skip targetAudience, go directly to brandDescription
     options: [
       { value: "northeast", label: "Northeast Region" },
       { value: "southeast", label: "Southeast Region" },
@@ -73,7 +86,7 @@ export const ONBOARDING_QUESTIONS: QuestionConfig[] = [
       { value: "option4", label: "MULTIPLE SELECT 04" },
       { value: "other", label: "OTHER" },
     ],
-    nextScreen: "brandDescription",
+    nextScreen: "brandDescription", // Go to brandDescription (skip industry)
   },
   {
     id: "brandDescription",
