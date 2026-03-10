@@ -27,7 +27,11 @@ export interface QuestionConfig {
   maxLength?: number
   validation?: (value: string) => string | null // Returns error message or null
   helperText?: string
-  options?: Array<{ value: string; label: string }> // For select and multiple-choice types
+  options?: Array<{ 
+    value: string
+    label: string
+    nextScreen?: string // For single-choice: navigate to this screen when this option is selected
+  }>
   allowMultiple?: boolean // For multiple-choice type
   useSplitScreen?: boolean // Use split-screen layout
   nextScreen?: string // Next screen ID when continuing (if value provided)

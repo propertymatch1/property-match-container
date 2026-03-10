@@ -1,134 +1,295 @@
-# Onboarding Questions - Developer Guide
+# Onboarding Questions - Simple Setup Guide
 
-## Quick Start: Adding a New Question
+This guide shows you how to add questions and create branching logic in the onboarding flow. No coding knowledge required!
 
-### 1. Open the Config File
-Edit `src/app/(home)/questions-config.ts`
+---
 
-### 2. Add Your Question to the Array
-Add a new question object to the `ONBOARDING_QUESTIONS` array:
+## Where to Edit
+
+Open this file: `src/app/(home)/questions-config.ts`
+
+All questions are in the `ONBOARDING_QUESTIONS` array. Each question is a block of text between `{` and `}`.
+
+---
+
+## How to Add a Simple Question
+
+Copy and paste this template, then fill in your details:
 
 ```typescript
 {
-  id: "yourQuestionId",              // Unique identifier (camelCase)
-  title: "Your Question Title",      // Main heading
-  description: "Optional description", // Subheading (optional)
-  type: "text",                      // Question type (see types below)
-  placeholder: "Enter value...",     // Input placeholder
-  required: true,                    // Is this required?
-  nextScreen: "nextQuestionId",      // Where to go next (optional)
-}
+  id: "yourQuestionId",
+  title: "Your question text here?",
+  description: "Optional helper text",
+  type: "text",
+  placeholder: "Hint text that shows in the input box",
+  required: true,
+},
 ```
 
-### 3. Configure Navigation
-- **nextScreen**: ID of the next question (if continuing with value)
-- **nextScreenOnSkip**: ID to jump to when skipping (optional, for non-required questions)
-- **No nextScreen**: Goes to completion screen
+### What Each Part Means:
+
+- **id**: A unique name (no spaces, use lowercase and dashes like `"company-name"`)
+- **title**: The actual question the user sees
+- **description**: Extra help text below the title (can be empty `""`)
+- **type**: What kind of input (see types below)
+- **placeholder**: Gray hint text inside the input box
+- **required**: `true` = user must answer, `false` = user can skip
+
+---
 
 ## Question Types
 
-### Text Input
+### 1. Text Input (Short Answer)
+```typescript
+type: "text"
+```
+For short answers like names, emails, etc.
+
+### 2. Long Text (Paragraph)
+```typescript
+type: "textarea"
+```
+For longer answers like descriptions or stories.
+
+### 3. Dropdown Menu
+```typescript
+type: "select",
+options: [
+  { value: "option1", label: "First Choice" },
+  { value: "option2", label: "Second Choice" },
+  { value: "option3", label: "Third Choice" },
+]
+```
+User picks ONE option from a dropdown.
+
+### 4. Multiple Choice Buttons (Pick One)
+```typescript
+type: "multiple-choice",
+allowMultiple: false,
+options: [
+  { value: "choice1", label: "FIRST CHOICE" },
+  { value: "choice2", label: "SECOND CHOICE" },
+]
+```
+User clicks ONE button.
+
+### 5. Multiple Choice Buttons (Pick Many)
+```typescript
+type: "multiple-choice",
+allowMultiple: true,
+options: [
+  { value: "option1", label: "OPTION 1" },
+  { value: "option2", label: "OPTION 2" },
+  { value: "option3", label: "OPTION 3" },
+]
+```
+User can click MULTIPLE buttons.
+
+### 6. Website URL
+```typescript
+type: "url"
+```
+Special input that checks if the URL is valid.
+
+---
+
+## Creating Branching Logic
+
+Branching means: "If user picks A, go to Question X. If user picks B, go to Question Y."
+
+### Simple Flow (No Branching)
+
+Questions go in order automatically. Just add them to the list:
+
+```typescript
+[
+  { id: "question1", title: "First question?", type: "text", required: true },
+  { id: "question2", title: "Second question?", type: "text", required: true },
+  { id: "question3", title: "Third question?", type: "text", required: true },
+]
+```
+
+Flow: Question 1 → Question 2 → Question 3 → Done
+
+---
+
+### Jump to a Specific Question
+
+Add `nextScreen` to make the flow jump:
+
 ```typescript
 {
-  id: "companyName",
+  id: "question1",
+  title: "Do you have a website?",
   type: "text",
-  placeholder: "Enter company name",
-  minLength: 2,
-  maxLength: 100,
+  required: false,
+  nextScreen: "question5",  // Skip to question5 if answered
 }
 ```
 
-### Textarea
-```typescript
-{
-  id: "description",
-  type: "textarea",
-  placeholder: "Tell us more...",
-  minLength: 20,
-  maxLength: 500,
-}
-```
+Flow: Question 1 (answered) → Question 5
 
-### URL Input
+---
+
+### Different Paths for Skip vs Answer
+
+Use both `nextScreen` and `nextScreenOnSkip`:
+
 ```typescript
 {
-  id: "website",
+  id: "websiteUrl",
+  title: "What's your website?",
   type: "url",
-  placeholder: "www.example.com",
-  validation: validateUrl,  // Use built-in validator
+  required: false,
+  nextScreen: "brandDetails",           // If they enter a URL
+  nextScreenOnSkip: "industryQuestion", // If they skip
 }
 ```
 
-### Dropdown Select
+Flow:
+- User enters URL → Go to `brandDetails`
+- User skips → Go to `industryQuestion`
+
+---
+
+### Branching Based on User's Choice
+
+For multiple-choice questions where each button goes to a different place:
+
 ```typescript
 {
-  id: "region",
-  type: "select",
-  placeholder: "Select region",
+  id: "userType",
+  title: "Are you a business or individual?",
+  type: "multiple-choice",
+  allowMultiple: false,  // Single choice only!
+  required: true,
   options: [
-    { value: "north", label: "North" },
-    { value: "south", label: "South" },
+    { 
+      value: "business", 
+      label: "BUSINESS",
+      nextScreen: "businessQuestions"  // Goes here if they pick this
+    },
+    { 
+      value: "individual", 
+      label: "INDIVIDUAL",
+      nextScreen: "individualQuestions"  // Goes here if they pick this
+    },
   ],
 }
 ```
 
-### Multiple Choice
+Flow:
+- User clicks "BUSINESS" → Go to `businessQuestions`
+- User clicks "INDIVIDUAL" → Go to `individualQuestions`
+
+**Important**: This ONLY works when `allowMultiple: false` (single choice).
+
+---
+
+## Real Example: Complete Branching Flow
+
+Here's a real example from the code:
+
 ```typescript
+// Question 1: Ask for website (optional)
 {
-  id: "interests",
+  id: "websiteUrl",
+  title: "Where does your brand live online?",
+  type: "url",
+  required: false,
+  nextScreen: "brandDetails",        // If they enter URL → skip to end
+  nextScreenOnSkip: "industryOrAudience",  // If they skip → ask more questions
+},
+
+// Question 2: Branching question (only shows if they skipped website)
+{
+  id: "industryOrAudience",
+  title: "Industry or Target audience?",
+  type: "multiple-choice",
+  allowMultiple: false,
+  required: true,
+  options: [
+    { value: "chooseIndustry", label: "INDUSTRY", nextScreen: "industry" },
+    { value: "chooseTargetAudience", label: "TARGET AUDIENCE", nextScreen: "targetAudience" },
+  ],
+},
+
+// Question 3: Industry path
+{
+  id: "industry",
+  title: "Where do you primarily operate?",
+  type: "select",
+  required: true,
+  nextScreen: "brandDescription",  // Both paths meet here
+  options: [
+    { value: "northeast", label: "Northeast Region" },
+    { value: "west", label: "West Region" },
+  ],
+},
+
+// Question 4: Target Audience path
+{
+  id: "targetAudience",
+  title: "How do you define yourself?",
   type: "multiple-choice",
   allowMultiple: true,
+  required: true,
+  nextScreen: "brandDescription",  // Both paths meet here
   options: [
-    { value: "opt1", label: "OPTION 1" },
-    { value: "opt2", label: "OPTION 2" },
+    { value: "option1", label: "RETAIL" },
+    { value: "option2", label: "WHOLESALE" },
   ],
-}
-```
+},
 
-## Layout Options
-
-### Split-Screen Layout
-```typescript
+// Question 5: Final question (both paths end here)
 {
-  useSplitScreen: true,  // Illustration on left, form on right
-}
+  id: "brandDescription",
+  title: "Tell us about your brand",
+  type: "textarea",
+  required: true,
+  // No nextScreen = goes to completion
+},
 ```
 
-### Centered Layout (Default)
-Questions without `useSplitScreen` use centered layout with optional map placeholder.
+**Flow Diagram:**
 
-## Navigation Flow Examples
-
-### Linear Flow
-```typescript
-// Question 1
-{ id: "q1", nextScreen: "q2" }
-// Question 2
-{ id: "q2", nextScreen: "q3" }
-// Question 3 (last)
-{ id: "q3" }  // No nextScreen = goes to completion
+```
+Start
+  ↓
+Website URL?
+  ├─ Entered → Brand Details → Done
+  └─ Skipped → Industry or Audience?
+                ├─ Industry → Industry Question → Brand Description → Done
+                └─ Audience → Audience Question → Brand Description → Done
 ```
 
-### Conditional Flow
-```typescript
-// Question with skip option
-{
-  id: "optional",
-  required: false,
-  nextScreen: "detailsPage",      // If filled
-  nextScreenOnSkip: "summaryPage" // If skipped
-}
-```
+---
 
-## Accessing User Responses
+## Quick Reference: Navigation Fields
 
-### Method: `responses` Object
+| Field | When to Use | What It Does |
+|-------|-------------|--------------|
+| (none) | Default | Goes to next question in the list |
+| `nextScreen: "questionId"` | Always jump to a specific question | Skips other questions |
+| `nextScreenOnSkip: "questionId"` | User can skip this question | Different path if they skip |
+| `options[].nextScreen` | Multiple choice (single only) | Each button goes somewhere different |
 
-The `responses` object is a key-value store where:
-- **Key**: Question ID (e.g., "websiteUrl", "industry")
-- **Value**: User's input as a string
+---
 
-### In Any Component
+## Tips
+
+1. **Question IDs must be unique** - No two questions can have the same `id`
+2. **Use lowercase with dashes** - Good: `"company-name"`, Bad: `"Company Name"`
+3. **Test your flow** - Click through to make sure branches work correctly
+4. **Questions without `nextScreen`** - Automatically go to the next question in the list
+5. **Last question** - Don't add `nextScreen` to the last question (it goes to completion)
+
+---
+
+## How to Get User Answers in Your Code
+
+If you need to access what the user answered:
 
 ```typescript
 import { useOnboarding } from "./onboarding-context"
@@ -136,165 +297,20 @@ import { useOnboarding } from "./onboarding-context"
 function YourComponent() {
   const { responses } = useOnboarding()
   
-  // Access a specific response
+  // Get a specific answer using the question ID
+  const companyName = responses["company-name"]
   const websiteUrl = responses["websiteUrl"]
-  const industry = responses["industry"]
   
-  // Check if a field has been filled
-  if (responses["websiteUrl"]) {
-    console.log("User provided a website:", responses["websiteUrl"])
-  }
-  
-  // Get all responses
-  console.log(responses) // { websiteUrl: "...", industry: "...", ... }
-  
-  return <div>{/* Your JSX */}</div>
+  // For multiple choice (multiple selections), split by comma
+  const selectedOptions = responses["targetAudience"]?.split(",") || []
 }
 ```
 
-### In Completion Screen
+---
 
-```typescript
-import { useOnboarding } from "../onboarding-context"
+## Need Help?
 
-export function CompletionStep() {
-  const { responses } = useOnboarding()
-  
-  return (
-    <div>
-      <h1>Welcome, {responses["brandName"]}!</h1>
-      <p>Website: {responses["websiteUrl"] || "Not provided"}</p>
-      <p>Industry: {responses["industry"]}</p>
-    </div>
-  )
-}
-```
-
-### Updating Responses
-
-```typescript
-const { updateResponse } = useOnboarding()
-
-// Save a response
-updateResponse("questionId", "user's answer")
-
-// Save empty value (when skipping)
-updateResponse("questionId", "")
-```
-
-### Debug Dialog
-
-Click the bug icon (top right) to view all collected responses in real-time. This is useful for:
-- Testing the flow
-- Verifying data is saved correctly
-- Copying JSON for API testing
-
-### Response Data Structure
-
-```typescript
-// Example responses object:
-{
-  "websiteUrl": "https://example.com",
-  "brandName": "Acme Corp",
-  "brandColor": "#00bfa5",
-  "industry": "Northeast",
-  "targetAudience": "retail",
-  "brandDescription": "We sell quality products..."
-}
-```
-
-### Common Use Cases
-
-**1. Conditional Rendering Based on Responses**
-```typescript
-const { responses } = useOnboarding()
-
-{responses["websiteUrl"] ? (
-  <p>We found your website: {responses["websiteUrl"]}</p>
-) : (
-  <p>No website provided</p>
-)}
-```
-
-**2. Pre-filling Forms**
-```typescript
-const { responses } = useOnboarding()
-const [value, setValue] = useState(responses["questionId"] || "")
-```
-
-**3. Sending to API**
-```typescript
-const { responses } = useOnboarding()
-
-const handleSubmit = async () => {
-  await fetch("/api/onboarding", {
-    method: "POST",
-    body: JSON.stringify(responses),
-  })
-}
-```
-
-## Validation
-
-### Built-in Validators
-- `validateUrl` - URL format validation
-- `validateEmail` - Email format validation
-
-### Custom Validation
-```typescript
-const validateCustom = (value: string): string | null => {
-  if (/* invalid */) {
-    return "Error message"
-  }
-  return null
-}
-
-// In question config:
-{
-  validation: validateCustom,
-}
-```
-
-## Tips
-
-1. **Question Order**: Questions appear in array order
-2. **IDs**: Use camelCase, must be unique
-3. **Testing**: Use debug dialog (bug icon) to check responses
-4. **Navigation**: Always set `nextScreen` except for the last question
-5. **Required Fields**: Set `required: false` to show "Skip" button
-
-## Common Patterns
-
-### Optional Question with Skip
-```typescript
-{
-  required: false,
-  nextScreen: "nextQuestion",
-  // Skip button appears automatically
-}
-```
-
-### Last Question
-```typescript
-{
-  id: "finalQuestion",
-  // No nextScreen - automatically goes to completion
-}
-```
-
-### Validation with Length
-```typescript
-{
-  type: "text",
-  required: true,
-  minLength: 5,
-  maxLength: 50,
-}
-```
-
-## File Locations
-
-- **Config**: `src/app/(home)/questions-config.ts`
-- **Components**: `src/app/(home)/steps/`
-- **Context**: `src/app/(home)/onboarding-context.tsx`
-- **Main Page**: `src/app/(home)/page.tsx`
+- Check existing questions in `questions-config.ts` for examples
+- Make sure all `{` have matching `}`
+- Make sure all lines end with commas except the last one in a block
+- Test in the browser after making changes
