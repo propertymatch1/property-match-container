@@ -9,15 +9,6 @@ const validateUrl = (url: string): string | null => {
   return null
 }
 
-// Email validation helper
-const validateEmail = (email: string): string | null => {
-  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-  if (!emailPattern.test(email)) {
-    return "Please enter a valid email address"
-  }
-  return null
-}
-
 /**
  * Onboarding Questions Configuration
  * 
@@ -26,34 +17,63 @@ const validateEmail = (email: string): string | null => {
  */
 export const ONBOARDING_QUESTIONS: QuestionConfig[] = [
   {
-    id: "companyName",
-    title: "What's your company name?",
-    description: "Let's start with the basics. What should we call your brand?",
-    type: "text",
-    placeholder: "Enter your company name",
+    id: "websiteUrl",
+    title: "Where does your brand live online?",
+    description: "Paste your link and our AI will instantly pull your logo, primary color palette, and brand bio. It's the fastest way to seed your Passport.",
+    type: "url",
+    placeholder: "www.url.com",
+    required: false,
+    validation: validateUrl,
+    helperText: "",
+    useSplitScreen: true,
+    nextScreen: "brandDetails", // If URL provided, go to brandDetails
+    nextScreenOnSkip: "industry", // If skipped, go directly to industry
+  },
+  {
+    id: "brandDetails",
+    title: "Brand name & logo",
+    description: "",
+    type: "text", // This will be a custom multi-field question
+    placeholder: "brand name",
     required: true,
     minLength: 2,
     maxLength: 100,
+    // No nextScreen - will go to completion
   },
   {
     id: "industry",
-    title: "What industry are you in?",
-    description: "Help us understand your market and competitive landscape.",
-    type: "text",
-    placeholder: "e.g., Technology, Healthcare, Retail",
+    title: "Where do you primarily operate today?",
+    description: "you can let us know your operating address or simply tell us the zipcode where your business is at",
+    type: "select",
+    placeholder: "Select your location",
     required: true,
-    minLength: 2,
-    maxLength: 50,
+    nextScreen: "targetAudience",
+    options: [
+      { value: "northeast", label: "Northeast Region" },
+      { value: "southeast", label: "Southeast Region" },
+      { value: "midwest", label: "Midwest Region" },
+      { value: "southwest", label: "Southwest Region" },
+      { value: "west", label: "West Region" },
+      { value: "national", label: "National (Multiple Regions)" },
+      { value: "international", label: "International" },
+    ],
   },
   {
     id: "targetAudience",
-    title: "Who is your target audience?",
-    description: "Describe the customers or clients you're trying to reach.",
-    type: "text",
-    placeholder: "e.g., Small businesses, Millennials, Enterprise clients",
+    title: "In the retail world, how do you define yourself?",
+    description: "",
+    type: "multiple-choice",
+    placeholder: "",
     required: true,
-    minLength: 5,
-    maxLength: 200,
+    allowMultiple: true,
+    options: [
+      { value: "option1", label: "MULTIPLE SELECT 01" },
+      { value: "option2", label: "MULTIPLE SELECT 02" },
+      { value: "option3", label: "MULTIPLE SELECT 03" },
+      { value: "option4", label: "MULTIPLE SELECT 04" },
+      { value: "other", label: "OTHER" },
+    ],
+    nextScreen: "brandDescription",
   },
   {
     id: "brandDescription",
@@ -64,16 +84,7 @@ export const ONBOARDING_QUESTIONS: QuestionConfig[] = [
     required: true,
     minLength: 20,
     maxLength: 1000,
-  },
-  {
-    id: "websiteUrl",
-    title: "What's your website URL?",
-    description: "We'll use this to understand your current brand presence and provide tailored recommendations.",
-    type: "url",
-    placeholder: "https://example.com",
-    required: true,
-    validation: validateUrl,
-    helperText: "We'll analyze your website to better understand your brand identity",
+    // No nextScreen - will go to completion
   },
   
   // Add more questions below as needed

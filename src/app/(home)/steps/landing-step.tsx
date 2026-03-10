@@ -6,7 +6,12 @@ import { IllustrationContainer } from "~/components/layout/illustration-containe
 import { useOnboarding } from "../onboarding-context"
 
 export function LandingStep() {
-  const { goToNextStep } = useOnboarding()
+  const { goToNextStep, pushToHistory } = useOnboarding()
+
+  const handleStart = () => {
+    pushToHistory("landing")
+    goToNextStep()
+  }
 
   return (
     <div className="min-h-screen bg-[#f0f0f0] flex flex-col">
@@ -52,7 +57,7 @@ export function LandingStep() {
             <Button
               variant="primary"
               size="lg"
-              onClick={goToNextStep}
+              onClick={handleStart}
               className="bg-[#00897b] hover:bg-[#00796b] text-white px-10 py-4 rounded-md text-[15px] font-semibold uppercase tracking-wide shadow-md hover:shadow-lg transition-all"
             >
               START GUIDED INTERVIEW
