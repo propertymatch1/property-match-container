@@ -6,66 +6,26 @@ datasource db {
   provider = "postgresql"
 }
 
-model User {
-  id                   String            @id @default(cuid())
-  email                String            @unique
-  name                 String?
-  userType             UserType
-  companyName          String?
-  onboardingCompleted  Boolean           @default(false)
-  emailVerified        Boolean           @default(false)
-  createdAt            DateTime          @default(now())
-  updatedAt            DateTime          @updatedAt
-  image                String?
-  documents            Document[]
-  landlordProfile      LandlordProfile?
-  landlordMatches      Match[]           @relation("LandlordMatches")
-  tenantMatches        Match[]           @relation("TenantMatches")
-  messages             Message[]
-  landlordNegotiations NegotiationRoom[] @relation("LandlordNegotiations")
-  tenantNegotiations   NegotiationRoom[] @relation("TenantNegotiations")
-  properties           Property[]
-  tenantProfile        TenantProfile?
-  accounts             Account[]
-  sessions             Session[]
+model Document {
+  id              String          @id
+  roomId          String
+  uploaderEmail   String
+  fileName        String
+  fileUrl         String
+  fileSize        Int
+  documentType    DocumentType
+  description     String?
+  createdAt       DateTime        @default(now())
+  NegotiationRoom NegotiationRoom @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  user            user            @relation(fields: [uploaderEmail], references: [email], onDelete: Cascade)
 
-  @@index([email])
-  @@index([userType])
-  @@map("user")
-}
-
-model TenantProfile {
-  id                   String     @id @default(cuid())
-  mode                 TenantMode
-  brandName            String?
-  logoUrl              String?
-  industry             String?
-  createdAt            DateTime   @default(now())
-  updatedAt            DateTime   @updatedAt
-  brandKeywords        String[]   @default([])
-  cityNext             String[]   @default([])
-  notes                String?
-  personalityTags      String[]   @default([])
-  rentRangeDesire      Int?
-  spaceLooking         String[]   @default([])
-  tennentExperience    String?
-  toneTags             String[]   @default([])
-  typcialCustomer      String[]   @default([])
-  typcialCustomerSpend String?
-  whenNextOpen         String?
-  spaceNeed            Int?
-  userId               String     @unique
-  user                 User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@index([userId])
-  @@index([brandName])
-  @@index([industry])
-  @@index([spaceNeed])
-  @@index([rentRangeDesire])
+  @@index([documentType])
+  @@index([roomId])
+  @@index([uploaderEmail])
 }
 
 model LandlordProfile {
-  id                 String             @id @default(cuid())
+  id                 String             @id
   userEmail          String             @unique
   companyName        String
   contactName        String?
@@ -73,15 +33,79 @@ model LandlordProfile {
   portfolioSize      Int                @default(0)
   verificationStatus VerificationStatus @default(PENDING)
   createdAt          DateTime           @default(now())
-  updatedAt          DateTime           @updatedAt
-  user               User               @relation(fields: [userEmail], references: [email], onDelete: Cascade)
+  updatedAt          DateTime
+  user               user               @relation(fields: [userEmail], references: [email], onDelete: Cascade)
 
   @@index([userEmail])
   @@index([verificationStatus])
 }
 
+model Match {
+  id                             String           @id
+  tenantEmail                    String
+  propertyId                     String
+  landlordEmail                  String
+  tenantInterested               Boolean          @default(false)
+  landlordInterested             Boolean          @default(false)
+  fitScore                       Float
+  status                         MatchStatus      @default(PENDING)
+  notes                          String?
+  createdAt                      DateTime         @default(now())
+  updatedAt                      DateTime
+  user_Match_landlordEmailTouser user             @relation("Match_landlordEmailTouser", fields: [landlordEmail], references: [email], onDelete: Cascade)
+  Property                       Property         @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  user_Match_tenantEmailTouser   user             @relation("Match_tenantEmailTouser", fields: [tenantEmail], references: [email], onDelete: Cascade)
+  NegotiationRoom                NegotiationRoom?
+
+  @@unique([tenantEmail, propertyId])
+  @@index([fitScore])
+  @@index([landlordEmail])
+  @@index([propertyId])
+  @@index([status])
+  @@index([tenantEmail])
+}
+
+model Message {
+  id              String          @id
+  roomId          String
+  senderEmail     String
+  senderName      String
+  content         String
+  messageType     MessageType     @default(TEXT)
+  documentUrl     String?
+  createdAt       DateTime        @default(now())
+  NegotiationRoom NegotiationRoom @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  user            user            @relation(fields: [senderEmail], references: [email], onDelete: Cascade)
+
+  @@index([createdAt])
+  @@index([roomId])
+  @@index([senderEmail])
+}
+
+model NegotiationRoom {
+  id                                       String     @id
+  matchId                                  String     @unique
+  tenantEmail                              String
+  landlordEmail                            String
+  propertyId                               String
+  status                                   RoomStatus @default(ACTIVE)
+  createdAt                                DateTime   @default(now())
+  updatedAt                                DateTime
+  Document                                 Document[]
+  Message                                  Message[]
+  user_NegotiationRoom_landlordEmailTouser user       @relation("NegotiationRoom_landlordEmailTouser", fields: [landlordEmail], references: [email], onDelete: Cascade)
+  Match                                    Match      @relation(fields: [matchId], references: [id], onDelete: Cascade)
+  Property                                 Property   @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  user_NegotiationRoom_tenantEmailTouser   user       @relation("NegotiationRoom_tenantEmailTouser", fields: [tenantEmail], references: [email], onDelete: Cascade)
+
+  @@index([landlordEmail])
+  @@index([propertyId])
+  @@index([status])
+  @@index([tenantEmail])
+}
+
 model Property {
-  id                 String            @id @default(cuid())
+  id                 String            @id
   landlordEmail      String
   name               String
   tagline            String?
@@ -100,12 +124,12 @@ model Property {
   desiredTenantTypes String[]          @default([])
   isPremium          Boolean           @default(false)
   createdAt          DateTime          @default(now())
-  updatedAt          DateTime          @updatedAt
+  updatedAt          DateTime
   isDummy            Boolean           @default(false)
-  matches            Match[]
-  negotiationRooms   NegotiationRoom[]
-  landlord           User              @relation(fields: [landlordEmail], references: [email], onDelete: Cascade)
-  propertySpaces     PropertySpace[]
+  Match              Match[]
+  NegotiationRoom    NegotiationRoom[]
+  user               user              @relation(fields: [landlordEmail], references: [email], onDelete: Cascade)
+  PropertySpace      PropertySpace[]
 
   @@index([city, state])
   @@index([propertyType])
@@ -113,115 +137,49 @@ model Property {
 }
 
 model PropertySpace {
-  id               String         @id @default(cuid())
+  id               String         @id
   propertyId       String
   floorPlanUrl     String?
   squareFootage    Int
   availabilityDate DateTime
   status           PropertyStatus @default(AVAILABLE)
-  property         Property       @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  Property         Property       @relation(fields: [propertyId], references: [id], onDelete: Cascade)
 
   @@index([squareFootage])
   @@index([status])
 }
 
-model Match {
-  id                 String           @id @default(cuid())
-  tenantEmail        String
-  propertyId         String
-  landlordEmail      String
-  tenantInterested   Boolean          @default(false)
-  landlordInterested Boolean          @default(false)
-  fitScore           Float
-  status             MatchStatus      @default(PENDING)
-  notes              String?
-  createdAt          DateTime         @default(now())
-  updatedAt          DateTime         @updatedAt
-  landlord           User             @relation("LandlordMatches", fields: [landlordEmail], references: [email], onDelete: Cascade)
-  property           Property         @relation(fields: [propertyId], references: [id], onDelete: Cascade)
-  tenant             User             @relation("TenantMatches", fields: [tenantEmail], references: [email], onDelete: Cascade)
-  negotiationRoom    NegotiationRoom?
+model TenantProfile {
+  id                   String     @id
+  mode                 TenantMode
+  brandName            String?
+  logoUrl              String?
+  industry             String?
+  createdAt            DateTime   @default(now())
+  updatedAt            DateTime
+  brandKeywords        String[]   @default([])
+  cityNext             String[]   @default([])
+  notes                String?
+  personalityTags      String[]   @default([])
+  rentRangeDesire      Int?
+  spaceLooking         String[]   @default([])
+  tennentExperience    String?
+  toneTags             String[]   @default([])
+  typcialCustomer      String[]   @default([])
+  typcialCustomerSpend String?
+  whenNextOpen         String?
+  spaceNeed            Int?
+  userId               String     @unique
+  user                 user       @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@unique([tenantEmail, propertyId])
-  @@index([tenantEmail])
-  @@index([landlordEmail])
-  @@index([propertyId])
-  @@index([status])
-  @@index([fitScore])
+  @@index([brandName])
+  @@index([industry])
+  @@index([rentRangeDesire])
+  @@index([spaceNeed])
+  @@index([userId])
 }
 
-model NegotiationRoom {
-  id            String     @id @default(cuid())
-  matchId       String     @unique
-  tenantEmail   String
-  landlordEmail String
-  propertyId    String
-  status        RoomStatus @default(ACTIVE)
-  createdAt     DateTime   @default(now())
-  updatedAt     DateTime   @updatedAt
-  documents     Document[]
-  messages      Message[]
-  landlord      User       @relation("LandlordNegotiations", fields: [landlordEmail], references: [email], onDelete: Cascade)
-  match         Match      @relation(fields: [matchId], references: [id], onDelete: Cascade)
-  property      Property   @relation(fields: [propertyId], references: [id], onDelete: Cascade)
-  tenant        User       @relation("TenantNegotiations", fields: [tenantEmail], references: [email], onDelete: Cascade)
-
-  @@index([tenantEmail])
-  @@index([landlordEmail])
-  @@index([propertyId])
-  @@index([status])
-}
-
-model Message {
-  id          String          @id @default(cuid())
-  roomId      String
-  senderEmail String
-  senderName  String
-  content     String
-  messageType MessageType     @default(TEXT)
-  documentUrl String?
-  createdAt   DateTime        @default(now())
-  room        NegotiationRoom @relation(fields: [roomId], references: [id], onDelete: Cascade)
-  sender      User            @relation(fields: [senderEmail], references: [email], onDelete: Cascade)
-
-  @@index([roomId])
-  @@index([senderEmail])
-  @@index([createdAt])
-}
-
-model Document {
-  id            String          @id @default(cuid())
-  roomId        String
-  uploaderEmail String
-  fileName      String
-  fileUrl       String
-  fileSize      Int
-  documentType  DocumentType
-  description   String?
-  createdAt     DateTime        @default(now())
-  room          NegotiationRoom @relation(fields: [roomId], references: [id], onDelete: Cascade)
-  uploader      User            @relation(fields: [uploaderEmail], references: [email], onDelete: Cascade)
-
-  @@index([roomId])
-  @@index([uploaderEmail])
-  @@index([documentType])
-}
-
-model Session {
-  id        String   @id
-  expiresAt DateTime
-  token     String   @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  ipAddress String?
-  userAgent String?
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@map("session")
-}
-
-model Account {
+model account {
   id                    String    @id
   accountId             String
   providerId            String
@@ -234,51 +192,93 @@ model Account {
   scope                 String?
   password              String?
   createdAt             DateTime  @default(now())
-  updatedAt             DateTime  @updatedAt
-  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@map("account")
+  updatedAt             DateTime
+  user                  user      @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
-model Verification {
+model raw_response {
+  id        String   @id
+  userId    String   @unique
+  Q1        String?
+  Q2        String?
+  Q3        String?
+  Q4        String?
+  Q5        String?
+  Q6        String?
+  Q7        String?
+  Q8        String?
+  Q9        String?
+  Q10       String?
+  Q11       String?
+  Q12       String?
+  Q13       String?
+  Q14       String?
+  Q15       String?
+  Q16       String?
+  Q17       String?
+  Q18       String?
+  Q19       String?
+  Q20       String?
+  Q21       String?
+  Q22       String?
+  Q23       String?
+  Q24       String?
+  Q25       String?
+  Q26       String?
+  Q27       String?
+  Q28       String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime
+
+  @@index([userId])
+}
+
+model session {
+  id        String   @id
+  expiresAt DateTime
+  token     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      user     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model user {
+  id                                                  String            @id
+  email                                               String            @unique
+  name                                                String?
+  userType                                            UserType
+  companyName                                         String?
+  onboardingCompleted                                 Boolean           @default(false)
+  emailVerified                                       Boolean           @default(false)
+  createdAt                                           DateTime          @default(now())
+  updatedAt                                           DateTime
+  image                                               String?
+  Document                                            Document[]
+  LandlordProfile                                     LandlordProfile?
+  Match_Match_landlordEmailTouser                     Match[]           @relation("Match_landlordEmailTouser")
+  Match_Match_tenantEmailTouser                       Match[]           @relation("Match_tenantEmailTouser")
+  Message                                             Message[]
+  NegotiationRoom_NegotiationRoom_landlordEmailTouser NegotiationRoom[] @relation("NegotiationRoom_landlordEmailTouser")
+  NegotiationRoom_NegotiationRoom_tenantEmailTouser   NegotiationRoom[] @relation("NegotiationRoom_tenantEmailTouser")
+  Property                                            Property[]
+  TenantProfile                                       TenantProfile?
+  account                                             account[]
+  session                                             session[]
+
+  @@index([email])
+  @@index([userType])
+}
+
+model verification {
   id         String   @id
   identifier String
   value      String
   expiresAt  DateTime
   createdAt  DateTime @default(now())
-  updatedAt  DateTime @default(now()) @updatedAt
-
-  @@map("verification")
-}
-
-enum UserType {
-  TENANT
-  LANDLORD
-}
-
-enum TenantMode {
-  FOUNDER
-  BRAND
-}
-
-enum VerificationStatus {
-  PENDING
-  VERIFIED
-  REJECTED
-}
-
-enum PropertyType {
-  RETAIL
-  OFFICE
-  RESTAURANT
-  MIXED_USE
-  INDUSTRIAL
-}
-
-enum LeaseType {
-  GROSS
-  NNN
-  MODIFIED
+  updatedAt  DateTime @default(now())
 }
 
 enum ContactPreference {
@@ -287,10 +287,19 @@ enum ContactPreference {
   CALL
 }
 
-enum PropertyStatus {
-  AVAILABLE
-  PENDING
-  LEASED
+enum DocumentType {
+  LEASE
+  LOI
+  FINANCIAL
+  FLOOR_PLAN
+  PHOTO
+  OTHER
+}
+
+enum LeaseType {
+  GROSS
+  NNN
+  MODIFIED
 }
 
 enum MatchStatus {
@@ -302,22 +311,43 @@ enum MatchStatus {
   REJECTED
 }
 
-enum RoomStatus {
-  ACTIVE
-  ARCHIVED
-}
-
 enum MessageType {
   TEXT
   DOCUMENT
   SYSTEM
 }
 
-enum DocumentType {
-  LEASE
-  LOI
-  FINANCIAL
-  FLOOR_PLAN
-  PHOTO
-  OTHER
+enum PropertyStatus {
+  AVAILABLE
+  PENDING
+  LEASED
+}
+
+enum PropertyType {
+  RETAIL
+  OFFICE
+  RESTAURANT
+  MIXED_USE
+  INDUSTRIAL
+}
+
+enum RoomStatus {
+  ACTIVE
+  ARCHIVED
+}
+
+enum TenantMode {
+  FOUNDER
+  BRAND
+}
+
+enum UserType {
+  TENANT
+  LANDLORD
+}
+
+enum VerificationStatus {
+  PENDING
+  VERIFIED
+  REJECTED
 }

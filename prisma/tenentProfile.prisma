@@ -1,0 +1,155 @@
+enum TenantMode {
+  IDEA_STAGE
+  DTC_ONLY
+  SCALING
+  EVOLUTION
+  INTERNATIONAL_EXPANSION
+}
+
+enum SpaceUseMode {
+  QUICK_STOP
+  SOCIAL_HANGOUT
+  EXPERIENCE_SHOWROOM
+}
+
+enum FootTrafficNeed {
+  DESTINATION
+  NEEDS_ANCHOR
+}
+
+enum OpenWindow {
+  ASAP
+  THREE_TO_SIX_MONTHS
+  SIX_TO_TWELVE_MONTHS
+  JUST_SCOUTING
+}
+
+enum RetailType {
+  STREET_RETAIL
+  SHOPPING_PLAZA
+  MALL_MIXED_USE
+  FLEX_POPUP
+}
+
+enum StorefrontVisibilityNeed {
+  LOW
+  STANDARD
+  HIGH
+}
+
+model TenantProfile {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  user      user     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  mode           TenantMode
+  brandName       String?
+  logoUrl         String?
+  websiteUrl      String?
+  instagramHandle String?
+  brandBio        String?
+
+  categories      String[] @default([])
+  industryPrimary String?
+  brandKeywords   String[] @default([])
+  personalityTags String[] @default([])
+  toneTags        String[] @default([])
+
+  brandStory    String?
+  identityCore  String?
+  demographics  String[] @default([])
+  superFanNotes String?
+
+  avgOrderValueCents  Int?
+  aovLabel            String?
+  typicalCustomerTags String[] @default([])
+
+  idealNeighbors  String[] @default([])
+  spaceUseMode    SpaceUseMode?
+  footTrafficNeed FootTrafficNeed?
+
+  rentMinCents         Int?
+  rentMaxCents         Int?
+  signingEntity        String?
+  hasPersonalGuarantee Boolean?
+
+  notes String?
+
+  heroProduct HeroProduct?
+  ops         OperationalBlueprint?
+  expansion   ExpansionIntent?
+
+  @@index([brandName])
+  @@index([industryPrimary])
+  @@index([mode])
+  @@index([rentMinCents, rentMaxCents])
+}
+
+model HeroProduct {
+  id       String @id @default(cuid())
+  tenantId String @unique
+  tenant   TenantProfile @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  name         String?
+  whyItMatters String?
+  imageUrl     String?
+  attributes   Json?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model OperationalBlueprint {
+  id       String @id @default(cuid())
+  tenantId String @unique
+  tenant   TenantProfile @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  sqftMin Int?
+  sqftMax Int?
+
+  needsHighPower  Boolean @default(false)
+  needsVentingGas Boolean @default(false)
+  needsWaterDrain Boolean @default(false)
+  needsLoading    Boolean @default(false)
+
+  shipmentsPerWeek Int?
+  needsDock        Boolean?
+
+  ceilingHeightFt Int?
+  ceilingNotes    String?
+
+  storefrontVisibility StorefrontVisibilityNeed?
+  frontageFeetMin       Int?
+  frontageFeetMax       Int?
+  frontageNotes         String?
+
+  fohPercent Int?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([sqftMin, sqftMax])
+}
+
+model ExpansionIntent {
+  id       String @id @default(cuid())
+  tenantId String @unique
+  tenant   TenantProfile @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  latestMilestone String?
+
+  targetOpenWindow    OpenWindow?
+  targetNeighborhoods String[] @default([])
+  retailTypes         RetailType[] @default([])
+  wantsMultiLease     Boolean?
+
+  primaryCity     String?
+  primaryZip      String?
+  currentMarkets  String[] @default([])
+  globalFootprint Json?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

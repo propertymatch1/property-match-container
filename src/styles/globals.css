@@ -1,44 +1,424 @@
 @import "tailwindcss";
 
 @theme {
+  /* Breakpoint Tokens */
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+  --breakpoint-2xl: 1536px;
+
+  /* Color Tokens - Teal Scale */
+  --color-teal-50: #e0f7f4;
+  --color-teal-100: #b3ede5;
+  --color-teal-200: #80e2d4;
+  --color-teal-300: #4dd7c3;
+  --color-teal-400: #26ceb6;
+  --color-teal-500: #00bfa5;
+  --color-teal-600: #00b299;
+  --color-teal-700: #00a189;
+  --color-teal-800: #009179;
+  --color-teal-900: #007459;
+  
+  /* Color Tokens - Neutral Scale */
+  --color-neutral-50: #fafafa;
+  --color-neutral-100: #f5f5f5;
+  --color-neutral-200: #e5e5e5;
+  --color-neutral-300: #d4d4d4;
+  --color-neutral-400: #a3a3a3;
+  --color-neutral-500: #737373;
+  --color-neutral-600: #525252;
+  --color-neutral-700: #404040;
+  --color-neutral-800: #262626;
+  --color-neutral-900: #171717;
+  
+  /* Semantic Color Tokens */
+  --color-primary: var(--color-teal-500);
+  --color-primary-hover: var(--color-teal-600);
+  --color-background: #ffffff;
+  --color-surface: var(--color-neutral-50);
+  --color-border: var(--color-neutral-200);
+  --color-text: var(--color-neutral-900);
+  --color-text-muted: var(--color-neutral-600);
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-error: #ef4444;
+  --color-info: #3b82f6;
+  
+  /* Typography Tokens - Font Families */
   --font-sans: neue-haas-grotesk-text;
+  --font-display: neue-haas-grotesk-display;
+  
+  /* Typography Tokens - Font Sizes */
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.25rem;
+  --font-size-2xl: 1.5rem;
+  --font-size-3xl: 1.875rem;
+  --font-size-4xl: 2.25rem;
+  --font-size-5xl: 3rem;
+  
+  /* Typography Tokens - Font Weights */
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  
+  /* Typography Tokens - Line Heights */
+  --line-height-tight: 1.25;
+  --line-height-snug: 1.375;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.625;
+  --line-height-loose: 2;
+  
+  /* Spacing Tokens */
+  --spacing-1: 0.25rem;
+  --spacing-2: 0.5rem;
+  --spacing-3: 0.75rem;
+  --spacing-4: 1rem;
+  --spacing-6: 1.5rem;
+  --spacing-8: 2rem;
+  --spacing-12: 3rem;
+  --spacing-16: 4rem;
+  
+  /* Border Radius Tokens */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  
+  /* Shadow Tokens */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+  
+  /* Animation Tokens - Durations */
+  --duration-fast: 150ms;
+  --duration-normal: 250ms;
+  --duration-slow: 350ms;
+  
+  /* Animation Tokens - Easing Functions */
+  --easing-default: cubic-bezier(0.4, 0, 0.2, 1);
+  --easing-in: cubic-bezier(0.4, 0, 1, 1);
+  --easing-out: cubic-bezier(0, 0, 0.2, 1);
 }
 
 @layer base {
+  /* Base Element Styles */
   body {
-    font-family: neue-haas-grotesk-text;
+    font-family: var(--font-sans);
+    color: var(--color-text);
+    background-color: var(--color-background);
+    line-height: var(--line-height-normal);
+  }
+  
+  /* Heading Styles with Responsive Scaling */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+    font-weight: var(--font-weight-semibold);
+    line-height: var(--line-height-tight);
+    color: var(--color-text);
+  }
+  
+  h1 {
+    font-size: clamp(2.25rem, 5vw + 1rem, 3rem);
+  }
+  
+  h2 {
+    font-size: clamp(1.875rem, 4vw + 0.5rem, 2.25rem);
+  }
+  
+  h3 {
+    font-size: clamp(1.5rem, 3vw + 0.5rem, 1.875rem);
+  }
+  
+  h4 {
+    font-size: clamp(1.25rem, 2vw + 0.5rem, 1.5rem);
+  }
+  
+  h5 {
+    font-size: clamp(1.125rem, 1.5vw + 0.5rem, 1.25rem);
+  }
+  
+  h6 {
+    font-size: clamp(1rem, 1vw + 0.5rem, 1.125rem);
+  }
+  
+  /* Paragraph Styles */
+  p {
+    font-family: var(--font-sans);
+    font-size: var(--font-size-base);
+    line-height: var(--line-height-relaxed);
+    color: var(--color-text);
+  }
+  
+  /* Link Styles */
+  a {
+    color: var(--color-primary);
+    text-decoration: none;
+    transition: color var(--duration-fast) var(--easing-default);
+  }
+  
+  a:hover {
+    color: var(--color-primary-hover);
+  }
+  
+  a:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+    border-radius: var(--radius-sm);
   }
 }
 
-/* Typography Classes */
+/* Typography Utility Classes */
 @layer components {
+  /* Display Typography */
   .hero-title {
-    font-family: neue-haas-grotesk-display;
+    font-family: var(--font-display);
     font-size: clamp(2.5rem, 8vw, 5.5rem);
-    font-weight: 600;
+    font-weight: var(--font-weight-semibold);
     letter-spacing: -0.02em;
-    line-height: 1.1;
+    line-height: var(--line-height-tight);
   }
 
   .section-title {
-    font-family: neue-haas-grotesk-display;
+    font-family: var(--font-display);
     font-size: clamp(1.75rem, 5vw, 3rem);
-    font-weight: 500;
+    font-weight: var(--font-weight-medium);
     letter-spacing: -0.01em;
     line-height: 1.2;
   }
 
-  .body-text {
-    font-family: neue-haas-grotesk-text;
-    font-size: clamp(1rem, 2.5vw, 1.125rem);
-    line-height: 1.7;
+  /* Heading Utility Classes */
+  .heading-1 {
+    font-family: var(--font-display);
+    font-size: clamp(2.25rem, 5vw + 1rem, 3rem);
+    font-weight: var(--font-weight-semibold);
+    line-height: var(--line-height-tight);
   }
 
+  .heading-2 {
+    font-family: var(--font-display);
+    font-size: clamp(1.875rem, 4vw + 0.5rem, 2.25rem);
+    font-weight: var(--font-weight-semibold);
+    line-height: var(--line-height-tight);
+  }
+
+  .heading-3 {
+    font-family: var(--font-display);
+    font-size: clamp(1.5rem, 3vw + 0.5rem, 1.875rem);
+    font-weight: var(--font-weight-semibold);
+    line-height: var(--line-height-tight);
+  }
+
+  .heading-4 {
+    font-family: var(--font-display);
+    font-size: clamp(1.25rem, 2vw + 0.5rem, 1.5rem);
+    font-weight: var(--font-weight-semibold);
+    line-height: var(--line-height-snug);
+  }
+
+  .heading-5 {
+    font-family: var(--font-display);
+    font-size: clamp(1.125rem, 1.5vw + 0.5rem, 1.25rem);
+    font-weight: var(--font-weight-semibold);
+    line-height: var(--line-height-snug);
+  }
+
+  .heading-6 {
+    font-family: var(--font-display);
+    font-size: clamp(1rem, 1vw + 0.5rem, 1.125rem);
+    font-weight: var(--font-weight-semibold);
+    line-height: var(--line-height-snug);
+  }
+
+  /* Body Text Styles */
+  .body-text {
+    font-family: var(--font-sans);
+    font-size: clamp(1rem, 2.5vw, 1.125rem);
+    line-height: var(--line-height-relaxed);
+  }
+
+  .body-large {
+    font-family: var(--font-sans);
+    font-size: clamp(1.125rem, 2.5vw, 1.25rem);
+    line-height: var(--line-height-relaxed);
+  }
+
+  .body-small {
+    font-family: var(--font-sans);
+    font-size: clamp(0.875rem, 2vw, 1rem);
+    line-height: var(--line-height-normal);
+  }
+
+  /* Label and Caption Styles */
   .label-text {
-    font-family: neue-haas-grotesk-text;
-    font-size: 0.75rem;
-    font-weight: 600;
+    font-family: var(--font-sans);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    line-height: var(--line-height-normal);
+  }
+
+  .label-small {
+    font-family: var(--font-sans);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-medium);
+    line-height: var(--line-height-normal);
+  }
+
+  .label-uppercase {
+    font-family: var(--font-sans);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
     letter-spacing: 0.1em;
     text-transform: uppercase;
+    line-height: var(--line-height-normal);
+  }
+  
+  .caption-text {
+    font-family: var(--font-sans);
+    font-size: var(--font-size-sm);
+    line-height: var(--line-height-normal);
+    color: var(--color-text-muted);
+  }
+
+  .caption-small {
+    font-family: var(--font-sans);
+    font-size: var(--font-size-xs);
+    line-height: var(--line-height-normal);
+    color: var(--color-text-muted);
+  }
+}
+
+/* Custom Utility Classes */
+@layer utilities {
+  /* Screen Reader Only - Visually Hidden but Accessible */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+  
+  .not-sr-only {
+    position: static;
+    width: auto;
+    height: auto;
+    padding: 0;
+    margin: 0;
+    overflow: visible;
+    clip: auto;
+    white-space: normal;
+  }
+  
+  .text-balance {
+    text-wrap: balance;
+  }
+  
+  /* Indeterminate Progress Animation */
+  @keyframes indeterminate {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(100%);
+    }
+  }
+  
+  .animate-indeterminate {
+    animation: indeterminate 1.5s ease-in-out infinite;
+  }
+  
+  /* Fade In Animation */
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  
+  .animate-fade-in {
+    animation: fade-in var(--duration-normal) var(--easing-default);
+  }
+  
+  /* Slide Up Animation */
+  @keyframes slide-up {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .animate-slide-up {
+    animation: slide-up var(--duration-normal) var(--easing-out);
+  }
+  
+  /* Scale In Animation */
+  @keyframes scale-in {
+    from {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  
+  .animate-scale-in {
+    animation: scale-in var(--duration-normal) var(--easing-out);
+  }
+  
+  /* Pulse Animation for Loading States */
+  @keyframes pulse {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+    }
+  }
+  
+  .animate-pulse {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+}
+
+/* Respect User Motion Preferences */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  
+  /* Disable specific animations */
+  .animate-indeterminate,
+  .animate-fade-in,
+  .animate-slide-up,
+  .animate-scale-in,
+  .animate-pulse {
+    animation: none !important;
+  }
+  
+  /* For loading states, show static reduced opacity instead of pulse */
+  .animate-pulse {
+    opacity: 0.7 !important;
   }
 }
