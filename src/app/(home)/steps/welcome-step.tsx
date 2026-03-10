@@ -8,7 +8,12 @@ import { FeatureCard } from "~/components/ui/card"
 import { useOnboarding } from "../onboarding-context"
 
 export function WelcomeStep() {
-  const { goToNextStep } = useOnboarding()
+  const { goToNextStep, pushToHistory } = useOnboarding()
+
+  const handleGetStarted = () => {
+    pushToHistory("welcome")
+    goToNextStep()
+  }
 
   return (
     <SplitScreenLayout
@@ -61,7 +66,7 @@ export function WelcomeStep() {
             <Button
               variant="primary"
               size="lg"
-              onClick={goToNextStep}
+              onClick={handleGetStarted}
               className="min-w-[200px]"
             >
               Get Started
