@@ -39,10 +39,13 @@ enum StorefrontVisibilityNeed {
 
 model TenantProfile {
   id        String   @id @default(cuid())
-  userId    String   @unique
-  user      user     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String?  @unique
+  user      user?    @relation(fields: [userId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  onboarded   Boolean  @default(false)
+  session_key String?
 
   mode           TenantMode
   brandName       String?

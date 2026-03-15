@@ -249,6 +249,8 @@ model user {
   id                                                  String            @id
   email                                               String            @unique
   name                                                String?
+  verified                                            Boolean           @default(false)
+  
   userType                                            UserType
   companyName                                         String?
   onboardingCompleted                                 Boolean           @default(false)
