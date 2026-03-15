@@ -7,14 +7,14 @@ import { Avatar, AvatarImage, AvatarFallback } from "~/components/ui/avatar";
 
 interface MediaSocialCardProps {
   logoUrl: string | null;
-  variant?: 'standard' | 'featured';
+  variant?: "standard" | "featured";
   sectionId?: string;
 }
 
-export function MediaSocialCard({ 
-  logoUrl, 
-  variant = 'standard',
-  sectionId = 'media',
+export function MediaSocialCard({
+  logoUrl,
+  variant = "standard",
+  sectionId = "media",
 }: MediaSocialCardProps) {
   // Check if there's any data to display
   const hasLogo = logoUrl !== null && logoUrl !== "";
@@ -37,11 +37,11 @@ export function MediaSocialCard({
       <div className="space-y-[var(--space-6,1.5rem)]">
         {/* Logo Section */}
         <div className="space-y-[var(--space-3,0.75rem)]">
-          <h4 className="text-sm font-semibold text-[var(--warm-500,#78716c)] uppercase tracking-wide">
+          <h4 className="text-sm font-semibold tracking-wide text-[var(--warm-500,#78716c)] uppercase">
             Brand Logo
           </h4>
           {hasLogo ? (
-            <div 
+            <div
               className="flex items-center gap-[var(--space-4,1rem)] bg-gradient-to-br from-pink-50 to-pink-50/50 p-[var(--space-4,1rem)]"
               style={{ borderRadius: "var(--radius-xl, 1rem)" }}
             >
@@ -52,20 +52,20 @@ export function MediaSocialCard({
                 </AvatarFallback>
               </Avatar>
               <div className="flex-1">
-                <p className="text-sm text-[var(--warm-700,#44403c)] font-medium">
+                <p className="text-sm font-medium text-[var(--warm-700,#44403c)]">
                   Logo uploaded
                 </p>
-                <p className="text-xs text-[var(--warm-500,#78716c)] mt-1">
+                <p className="mt-1 text-xs text-[var(--warm-500,#78716c)]">
                   Your brand logo is set and will be displayed to landlords
                 </p>
               </div>
             </div>
           ) : (
-            <div 
+            <div
               className="bg-[var(--warm-50,#fafaf9)] p-[var(--space-4,1rem)] text-center"
               style={{ borderRadius: "var(--radius-xl, 1rem)" }}
             >
-              <ImageIcon className="h-12 w-12 text-[var(--warm-300,#d6d3d1)] mx-auto mb-[var(--space-2,0.5rem)]" />
+              <ImageIcon className="mx-auto mb-[var(--space-2,0.5rem)] h-12 w-12 text-[var(--warm-300,#d6d3d1)]" />
               <p className="text-sm text-[var(--warm-500,#78716c)]">
                 No logo uploaded yet
               </p>
@@ -74,7 +74,7 @@ export function MediaSocialCard({
         </div>
 
         {/* Placeholder for future features */}
-        <div 
+        <div
           className="bg-[var(--warm-50,#fafaf9)] p-[var(--space-4,1rem)] text-center"
           style={{ borderRadius: "var(--radius-xl, 1rem)" }}
         >

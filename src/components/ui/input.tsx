@@ -1,19 +1,22 @@
-import * as React from "react"
+import * as React from "react";
 
-import { cn } from "~/lib/utils"
+import { cn } from "~/lib/utils";
 
 interface InputProps extends React.ComponentProps<"input"> {
-  label?: string
-  error?: string
-  helperText?: string
+  label?: string;
+  error?: string;
+  helperText?: string;
 }
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, type, label, error, helperText, id: providedId, ...props }, ref) => {
-    const generatedId = React.useId()
-    const inputId = providedId || generatedId
-    const errorId = `${inputId}-error`
-    const helperTextId = `${inputId}-helper`
+  (
+    { className, type, label, error, helperText, id: providedId, ...props },
+    ref,
+  ) => {
+    const generatedId = React.useId();
+    const inputId = providedId || generatedId;
+    const errorId = `${inputId}-error`;
+    const helperTextId = `${inputId}-helper`;
 
     return (
       <div className="w-full">
@@ -37,7 +40,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           className={cn(
             // Base styles with design tokens
             "h-9 w-full min-w-0 bg-transparent px-3 py-1 text-base outline-none md:text-sm",
-            "border border-[var(--color-border)] rounded-[var(--radius-md)]",
+            "rounded-[var(--radius-md)] border border-[var(--color-border)]",
             "shadow-[var(--shadow-sm)]",
             "transition-[border-color,box-shadow] duration-[var(--duration-fast)] ease-[var(--easing-default)]",
             // Placeholder with WCAG AA contrast
@@ -48,12 +51,12 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
             error &&
               "border-[var(--color-error)] focus:border-[var(--color-error)] focus:ring-[var(--color-error)]/20",
             // Disabled state with reduced opacity
-            "disabled:cursor-not-allowed disabled:opacity-50 disabled:pointer-events-none",
+            "disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50",
             // File input styles
             "file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium",
             // Selection styles
             "selection:bg-[var(--color-primary)] selection:text-white",
-            className
+            className,
           )}
           {...props}
         />
@@ -73,10 +76,10 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           </p>
         )}
       </div>
-    )
-  }
-)
+    );
+  },
+);
 
-Input.displayName = "Input"
+Input.displayName = "Input";
 
-export { Input }
+export { Input };

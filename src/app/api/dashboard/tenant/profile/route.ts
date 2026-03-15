@@ -13,7 +13,7 @@ export async function GET(request: Request) {
     if (!session?.user) {
       return NextResponse.json(
         { success: false, error: "Unauthorized" },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
@@ -22,8 +22,11 @@ export async function GET(request: Request) {
     // Check if user has TENANT role
     if (user.userType !== "TENANT") {
       return NextResponse.json(
-        { success: false, error: "Forbidden - Only tenant users can access this resource" },
-        { status: 403 }
+        {
+          success: false,
+          error: "Forbidden - Only tenant users can access this resource",
+        },
+        { status: 403 },
       );
     }
 
@@ -49,16 +52,22 @@ export async function GET(request: Request) {
         error.message.includes("ECONNREFUSED")
       ) {
         return NextResponse.json(
-          { success: false, error: "Database connection failed. Please try again later." },
-          { status: 503 }
+          {
+            success: false,
+            error: "Database connection failed. Please try again later.",
+          },
+          { status: 503 },
         );
       }
 
       // Handle timeout errors
-      if (error.message.includes("timeout") || error.message.includes("ETIMEDOUT")) {
+      if (
+        error.message.includes("timeout") ||
+        error.message.includes("ETIMEDOUT")
+      ) {
         return NextResponse.json(
           { success: false, error: "Request timeout. Please try again." },
-          { status: 408 }
+          { status: 408 },
         );
       }
     }
@@ -66,7 +75,7 @@ export async function GET(request: Request) {
     // Generic server error
     return NextResponse.json(
       { success: false, error: "Failed to fetch profile" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

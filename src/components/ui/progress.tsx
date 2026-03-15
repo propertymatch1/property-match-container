@@ -1,16 +1,17 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import * as ProgressPrimitive from "@radix-ui/react-progress"
+import * as React from "react";
+import * as ProgressPrimitive from "@radix-ui/react-progress";
 
-import { cn } from "~/lib/utils"
+import { cn } from "~/lib/utils";
 
-interface ProgressProps extends React.ComponentProps<typeof ProgressPrimitive.Root> {
-  currentStep?: number
-  totalSteps?: number
-  showLabel?: boolean
-  variant?: "determinate" | "indeterminate"
-  position?: "top" | "inline"
+interface ProgressProps
+  extends React.ComponentProps<typeof ProgressPrimitive.Root> {
+  currentStep?: number;
+  totalSteps?: number;
+  showLabel?: boolean;
+  variant?: "determinate" | "indeterminate";
+  position?: "top" | "inline";
 }
 
 function Progress({
@@ -23,19 +24,20 @@ function Progress({
   position = "inline",
   ...props
 }: ProgressProps) {
-  const isIndeterminate = variant === "indeterminate"
-  const progressValue = isIndeterminate ? undefined : value
+  const isIndeterminate = variant === "indeterminate";
+  const progressValue = isIndeterminate ? undefined : value;
 
   // Generate accessible label
-  const ariaLabel = currentStep && totalSteps 
-    ? `Step ${currentStep} of ${totalSteps}, ${Math.round(((currentStep - 1) / (totalSteps - 1)) * 100)}% complete`
-    : `${progressValue}% complete`
+  const ariaLabel =
+    currentStep && totalSteps
+      ? `Step ${currentStep} of ${totalSteps}, ${Math.round(((currentStep - 1) / (totalSteps - 1)) * 100)}% complete`
+      : `${progressValue}% complete`;
 
   return (
     <div
       className={cn(
         "w-full",
-        position === "top" && "fixed top-0 left-0 right-0 z-50"
+        position === "top" && "fixed top-0 right-0 left-0 z-50",
       )}
     >
       <ProgressPrimitive.Root
@@ -43,7 +45,7 @@ function Progress({
         className={cn(
           "relative h-2 w-full overflow-hidden bg-[var(--color-neutral-200)]",
           position === "top" ? "rounded-none" : "rounded-full",
-          className
+          className,
         )}
         value={progressValue}
         aria-label={ariaLabel}
@@ -58,7 +60,7 @@ function Progress({
           className={cn(
             "h-full w-full flex-1 bg-[var(--color-primary)]",
             "transition-transform duration-[var(--duration-normal)] ease-[var(--easing-default)]",
-            isIndeterminate && "animate-indeterminate"
+            isIndeterminate && "animate-indeterminate",
           )}
           style={
             isIndeterminate
@@ -67,9 +69,12 @@ function Progress({
           }
         />
       </ProgressPrimitive.Root>
-      
+
       {showLabel && currentStep !== undefined && totalSteps !== undefined && (
-        <div className="mt-2 flex justify-between items-center" aria-hidden="true">
+        <div
+          className="mt-2 flex items-center justify-between"
+          aria-hidden="true"
+        >
           <span className="label-text text-[var(--color-text-muted)]">
             Step {currentStep} of {totalSteps}
           </span>
@@ -79,7 +84,7 @@ function Progress({
         </div>
       )}
     </div>
-  )
+  );
 }
 
-export { Progress }
+export { Progress };

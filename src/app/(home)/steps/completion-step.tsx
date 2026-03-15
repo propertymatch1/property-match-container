@@ -1,27 +1,27 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import { Check } from "lucide-react"
-import { Button } from "~/components/ui/button"
-import { SplitScreenLayout } from "~/components/layout/split-screen-layout"
-import { IllustrationContainer } from "~/components/layout/illustration-container"
-import { useOnboarding } from "../onboarding-context"
+import * as React from "react";
+import { Check } from "lucide-react";
+import { Button } from "~/components/ui/button";
+import { SplitScreenLayout } from "~/components/layout/split-screen-layout";
+import { IllustrationContainer } from "~/components/layout/illustration-container";
+import { useOnboarding } from "../onboarding-context";
 
 export function CompletionStep() {
-  const { responses, markCompleted, goToStep } = useOnboarding()
+  const { responses, markCompleted, goToStep } = useOnboarding();
 
   React.useEffect(() => {
-    markCompleted()
-  }, [markCompleted])
+    markCompleted();
+  }, [markCompleted]);
 
   const handleStartOver = () => {
-    goToStep(1)
-  }
+    goToStep(1);
+  };
 
   return (
     <SplitScreenLayout
       leftContent={
-        <div className="flex items-center justify-center h-full">
+        <div className="flex h-full items-center justify-center">
           <IllustrationContainer
             src="/illustrations/welcome.svg"
             alt="Onboarding complete"
@@ -31,45 +31,49 @@ export function CompletionStep() {
         </div>
       }
       rightContent={
-        <div className="flex flex-col justify-center h-full max-w-2xl mx-auto">
+        <div className="mx-auto flex h-full max-w-2xl flex-col justify-center">
           {/* Completion Message */}
           <div className="mb-[var(--spacing-8)]">
             <div className="mb-[var(--spacing-6)]">
-              <div 
-                className="w-16 h-16 rounded-full bg-[var(--color-teal-50)] flex items-center justify-center mb-[var(--spacing-4)]"
+              <div
+                className="mb-[var(--spacing-4)] flex h-16 w-16 items-center justify-center rounded-full bg-[var(--color-teal-50)]"
                 aria-hidden="true"
               >
-                <Check className="w-8 h-8 text-[var(--color-primary)]" />
+                <Check className="h-8 w-8 text-[var(--color-primary)]" />
               </div>
 
               <h1 className="heading-1 mb-[var(--spacing-4)] text-[var(--color-text)]">
                 You're All Set!
               </h1>
               <p className="body-large text-[var(--color-text-muted)]">
-                Your brand passport has been created successfully. We're now analyzing
-                your information to provide personalized insights and recommendations.
+                Your brand passport has been created successfully. We're now
+                analyzing your information to provide personalized insights and
+                recommendations.
               </p>
             </div>
           </div>
 
           {/* Summary Section */}
-          <section 
-            className="mb-[var(--spacing-8)] p-[var(--spacing-6)] bg-[var(--color-surface)] rounded-[var(--radius-lg)] border border-[var(--color-border)]"
+          <section
+            className="mb-[var(--spacing-8)] rounded-[var(--radius-lg)] border border-[var(--color-border)] bg-[var(--color-surface)] p-[var(--spacing-6)]"
             aria-labelledby="brand-profile-heading"
           >
-            <h2 id="brand-profile-heading" className="heading-3 mb-[var(--spacing-4)] text-[var(--color-text)]">
+            <h2
+              id="brand-profile-heading"
+              className="heading-3 mb-[var(--spacing-4)] text-[var(--color-text)]"
+            >
               Your Brand Profile
             </h2>
-            
+
             <dl className="space-y-[var(--spacing-4)]">
               {Object.entries(responses).map(([key, value]) => {
-                if (!value) return null
-                
+                if (!value) return null;
+
                 // Format the key to be more readable
                 const label = key
                   .split(/(?=[A-Z])/)
-                  .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-                  .join(" ")
+                  .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+                  .join(" ");
 
                 return (
                   <div key={key}>
@@ -80,7 +84,7 @@ export function CompletionStep() {
                       {value}
                     </dd>
                   </div>
-                )
+                );
               })}
             </dl>
           </section>
@@ -102,5 +106,5 @@ export function CompletionStep() {
       rightRatio={55}
       mobileStackOrder="right-first"
     />
-  )
+  );
 }

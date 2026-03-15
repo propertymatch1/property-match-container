@@ -11,14 +11,14 @@ interface QuickStatsSectionProps {
 
 /**
  * QuickStatsSection component displays key metrics in a horizontal layout.
- * 
+ *
  * Features:
  * - Renders StatCard array in horizontal layout
  * - Horizontal scroll with snap points on mobile
  * - Grid layout on desktop (4 columns)
  * - Responsive design with proper spacing
  * - Handles empty stats gracefully
- * 
+ *
  * Requirements: 3.1, 3.4
  */
 export default function QuickStatsSection({ stats }: QuickStatsSectionProps) {
@@ -30,31 +30,27 @@ export default function QuickStatsSection({ stats }: QuickStatsSectionProps) {
     <section className="w-full" aria-label="Quick Statistics">
       {/* Section Header */}
       <div className="mb-4">
-        <h2 className="text-lg font-semibold text-warm-800">
-          Quick Overview
-        </h2>
-        <p className="text-sm text-warm-600 mt-1">
-          Key metrics at a glance
-        </p>
+        <h2 className="text-warm-800 text-lg font-semibold">Quick Overview</h2>
+        <p className="text-warm-600 mt-1 text-sm">Key metrics at a glance</p>
       </div>
 
       {/* Stats Container */}
       <div
         className={cn(
           // Mobile: horizontal scroll with snap points
-          "flex gap-4 overflow-x-auto scrollbar-hide",
+          "scrollbar-hide flex gap-4 overflow-x-auto",
           "snap-x snap-mandatory",
           "pb-2", // Space for scroll indicator
           // Desktop: grid layout
-          "md:grid md:grid-cols-2 md:gap-6 md:overflow-visible md:snap-none",
+          "md:grid md:snap-none md:grid-cols-2 md:gap-6 md:overflow-visible",
           "lg:grid-cols-4 lg:gap-4",
           // Smooth scrolling
-          "scroll-smooth"
+          "scroll-smooth",
         )}
         style={{
           // Custom scrollbar styling for webkit browsers
-          scrollbarWidth: 'none', // Firefox
-          msOverflowStyle: 'none', // IE/Edge
+          scrollbarWidth: "none", // Firefox
+          msOverflowStyle: "none", // IE/Edge
         }}
       >
         {stats.map((stat) => (
@@ -62,10 +58,10 @@ export default function QuickStatsSection({ stats }: QuickStatsSectionProps) {
             key={stat.id}
             className={cn(
               // Mobile: snap point and min width
-              "snap-start flex-shrink-0",
+              "flex-shrink-0 snap-start",
               "min-w-[280px]", // Ensures cards are wide enough on mobile
               // Desktop: full width within grid
-              "md:min-w-0 md:w-full"
+              "md:w-full md:min-w-0",
             )}
           >
             <StatCard
@@ -79,12 +75,12 @@ export default function QuickStatsSection({ stats }: QuickStatsSectionProps) {
       </div>
 
       {/* Scroll Indicator for Mobile */}
-      <div className="flex justify-center mt-3 md:hidden">
+      <div className="mt-3 flex justify-center md:hidden">
         <div className="flex gap-1">
           {stats.map((_, index) => (
             <div
               key={index}
-              className="w-2 h-2 rounded-full bg-warm-300"
+              className="bg-warm-300 h-2 w-2 rounded-full"
               aria-hidden="true"
             />
           ))}

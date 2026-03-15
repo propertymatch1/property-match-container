@@ -1,7 +1,10 @@
 import { nullthrows } from "~/lib/utils";
 import { getClient } from "~/server/external_api/openai";
 
-export async function createTextEmbedding(text: string, dimensions: number): Promise<number[]> {
+export async function createTextEmbedding(
+  text: string,
+  dimensions: number,
+): Promise<number[]> {
   const openai = getClient();
   const embeddings = await openai.embeddings.create({
     input: text,

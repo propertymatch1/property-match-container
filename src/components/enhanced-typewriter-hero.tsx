@@ -7,7 +7,9 @@ interface EnhancedTypewriterHeroProps {
   className?: string;
 }
 
-export function EnhancedTypewriterHero({ className = "" }: EnhancedTypewriterHeroProps) {
+export function EnhancedTypewriterHero({
+  className = "",
+}: EnhancedTypewriterHeroProps) {
   const dynamicTextRef = useRef<HTMLSpanElement>(null);
   const cursorRef = useRef<HTMLSpanElement>(null);
 
@@ -19,19 +21,21 @@ export function EnhancedTypewriterHero({ className = "" }: EnhancedTypewriterHer
     { text: "Live Their Vision", color: "#6b7c6e" },
     { text: "Shape Their Legacy", color: "#a3b1a6" },
     { text: "Express Their Soul", color: "#d4a574" },
-    { text: "Claim Their Ground", color: "#556259" }
+    { text: "Claim Their Ground", color: "#556259" },
   ];
 
   useEffect(() => {
     if (!dynamicTextRef.current || !cursorRef.current) return;
 
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const prefersReducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
     if (prefersReducedMotion) {
       const firstTagline = taglines[0];
       if (firstTagline) {
         dynamicTextRef.current.textContent = firstTagline.text;
       }
-      cursorRef.current.style.display = 'none';
+      cursorRef.current.style.display = "none";
       return;
     }
 
@@ -47,20 +51,20 @@ export function EnhancedTypewriterHero({ className = "" }: EnhancedTypewriterHer
       duration: 0.8,
       repeat: -1,
       yoyo: true,
-      ease: "power2.inOut"
+      ease: "power2.inOut",
     });
 
     function typeWriter() {
       const currentTagline = taglines[currentTaglineIndex];
       if (!currentTagline) return;
-      
+
       if (!isDeleting) {
         const currentText = currentTagline.text.substring(0, charIndex + 1);
         charIndex++;
-        
+
         dynamicElement.textContent = currentText;
         dynamicElement.style.color = currentTagline.color;
-        
+
         if (charIndex === currentTagline.text.length) {
           timeoutId = setTimeout(() => {
             isDeleting = true;
@@ -71,9 +75,9 @@ export function EnhancedTypewriterHero({ className = "" }: EnhancedTypewriterHer
       } else {
         const currentText = currentTagline.text.substring(0, charIndex - 1);
         charIndex--;
-        
+
         dynamicElement.textContent = currentText;
-        
+
         if (charIndex === 0) {
           isDeleting = false;
           currentTaglineIndex = (currentTaglineIndex + 1) % taglines.length;
@@ -81,7 +85,7 @@ export function EnhancedTypewriterHero({ className = "" }: EnhancedTypewriterHer
           return;
         }
       }
-      
+
       const speed = isDeleting ? 40 : 100;
       timeoutId = setTimeout(typeWriter, speed + Math.random() * 50);
     }
@@ -97,19 +101,19 @@ export function EnhancedTypewriterHero({ className = "" }: EnhancedTypewriterHer
   return (
     <span className={className}>
       <span className="text-[var(--warm-900)]">Where Brands </span>
-      <span 
-        ref={dynamicTextRef} 
+      <span
+        ref={dynamicTextRef}
         className="font-medium"
         style={{ color: "var(--sage-500)" }}
       >
         Find Their Space
       </span>
-      <span 
+      <span
         ref={cursorRef}
-        className="inline-block w-[3px] ml-1 rounded-sm align-baseline"
-        style={{ 
+        className="ml-1 inline-block w-[3px] rounded-sm align-baseline"
+        style={{
           background: "var(--sage-500)",
-          height: "0.85em"
+          height: "0.85em",
         }}
         aria-hidden="true"
       />

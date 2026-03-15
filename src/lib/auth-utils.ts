@@ -11,84 +11,93 @@ export const PUBLIC_ROUTES = ["/", "/signin", "/signup"] as const;
 
 // Check if a route requires authentication
 export function isProtectedRoute(pathname: string): boolean {
-  return PROTECTED_ROUTES.AUTHENTICATED.some(route => pathname.startsWith(route));
+  return PROTECTED_ROUTES.AUTHENTICATED.some((route) =>
+    pathname.startsWith(route),
+  );
 }
 
 // Check if a route requires specific role
 export function requiresRole(pathname: string): "TENANT" | "LANDLORD" | null {
-  if (PROTECTED_ROUTES.TENANT.some(route => pathname.startsWith(route))) {
+  if (PROTECTED_ROUTES.TENANT.some((route) => pathname.startsWith(route))) {
     return "TENANT";
   }
-  if (PROTECTED_ROUTES.LANDLORD.some(route => pathname.startsWith(route))) {
+  if (PROTECTED_ROUTES.LANDLORD.some((route) => pathname.startsWith(route))) {
     return "LANDLORD";
   }
   return null;
 }
 
 // Check if user can access a specific route
-export function canAccessRoute(pathname: string, session: Session | null): boolean {
+export function canAccessRoute(
+  pathname: string,
+  session: Session | null,
+): boolean {
   // Public routes are always accessible
-  if (PUBLIC_ROUTES.some(route => pathname === route)) {
+  if (PUBLIC_ROUTES.some((route) => pathname === route)) {
     return true;
   }
-  
+
   // Protected routes require authentication
   if (isProtectedRoute(pathname)) {
     if (!session?.user) {
       return false;
     }
-    
+
     // Check role-specific access
     const requiredRole = requiresRole(pathname);
     if (requiredRole && session.user.userType !== requiredRole) {
       return false;
     }
   }
-  
+
   return true;
 }
 
 // Get appropriate redirect path based on authentication state and target route
 export function getAuthRedirect(
-  pathname: string, 
-  session: Session | null
+  pathname: string,
+  session: Session | null,
 ): string | null {
   // If user is not authenticated and trying to access protected route
   if (isProtectedRoute(pathname) && !session?.user) {
     return "/signin";
   }
-  
+
   // If user is authenticated but accessing wrong role-specific route
   if (session?.user) {
     const requiredRole = requiresRole(pathname);
     if (requiredRole && session.user.userType !== requiredRole) {
       // Redirect to appropriate dashboard
-      return session.user.userType === "TENANT" 
-        ? "/dashboard/tenent" 
+      return session.user.userType === "TENANT"
+        ? "/dashboard/tenent"
         : "/dashboard/landlord";
     }
   }
-  
+
   return null;
 }
 
 // User type guards
-export function isTenant(user: User | null): user is User & { userType: "TENANT" } {
+export function isTenant(
+  user: User | null,
+): user is User & { userType: "TENANT" } {
   return user?.userType === "TENANT";
 }
 
-export function isLandlord(user: User | null): user is User & { userType: "LANDLORD" } {
+export function isLandlord(
+  user: User | null,
+): user is User & { userType: "LANDLORD" } {
   return user?.userType === "LANDLORD";
 }
 
 // Session validation utilities
 export function isValidSession(session: Session | null): session is Session {
-  return !!(session?.user?.id);
+  return !!session?.user?.id;
 }
 
 export function isSessionExpired(session: Session | null): boolean {
   if (!session) return true;
-  
+
   // Better Auth handles session expiration internally
   // This is a placeholder for additional custom expiration logic if needed
   return false;

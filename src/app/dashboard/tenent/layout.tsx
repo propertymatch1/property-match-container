@@ -8,9 +8,7 @@ export default function TenantDashboardLayout({
   return (
     <div className="min-h-screen">
       <NavigationBar />
-      <div className="pt-[4.5rem] sm:pt-[5.5rem]">
-        {children}
-      </div>
+      <div className="pt-[4.5rem] sm:pt-[5.5rem]">{children}</div>
     </div>
   );
 }

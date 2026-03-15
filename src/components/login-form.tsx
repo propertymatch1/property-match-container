@@ -155,8 +155,12 @@ export function LoginForm({
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card className="card-elevated border-0 shadow-[var(--shadow-medium)]">
         <CardHeader className="text-center">
-          <CardTitle className="text-xl font-semibold text-[var(--warm-900)]">Welcome back</CardTitle>
-          <CardDescription className="text-[var(--warm-600)]">Login with your email and password</CardDescription>
+          <CardTitle className="text-xl font-semibold text-[var(--warm-900)]">
+            Welcome back
+          </CardTitle>
+          <CardDescription className="text-[var(--warm-600)]">
+            Login with your email and password
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit}>
@@ -172,7 +176,12 @@ export function LoginForm({
               <input type="hidden" name="userType" value="TENANT" />
 
               <Field>
-                <FieldLabel htmlFor="email" className="text-sm font-medium text-[var(--warm-700)]">Email</FieldLabel>
+                <FieldLabel
+                  htmlFor="email"
+                  className="text-sm font-medium text-[var(--warm-700)]"
+                >
+                  Email
+                </FieldLabel>
                 <Input
                   id="email"
                   type="email"
@@ -182,12 +191,13 @@ export function LoginForm({
                   className={cn(
                     "h-11 rounded-[var(--radius-md)] border-[var(--warm-300)] bg-white transition-all duration-[var(--transition-fast)]",
                     "focus-visible:border-[var(--sage-500)] focus-visible:ring-[var(--sage-500)]/20",
-                    errors.email && "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-500/20"
+                    errors.email &&
+                      "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-500/20",
                   )}
                   disabled={isLoading}
                 />
                 {errors.email && (
-                  <FieldDescription className="text-red-600 text-sm">
+                  <FieldDescription className="text-sm text-red-600">
                     {errors.email}
                   </FieldDescription>
                 )}
@@ -195,10 +205,15 @@ export function LoginForm({
 
               <Field>
                 <div className="flex items-center">
-                  <FieldLabel htmlFor="password" className="text-sm font-medium text-[var(--warm-700)]">Password</FieldLabel>
+                  <FieldLabel
+                    htmlFor="password"
+                    className="text-sm font-medium text-[var(--warm-700)]"
+                  >
+                    Password
+                  </FieldLabel>
                   <a
                     href="#"
-                    className="ml-auto text-sm text-[var(--sage-600)] underline-offset-4 hover:underline hover:text-[var(--sage-700)] transition-colors duration-[var(--transition-fast)]"
+                    className="ml-auto text-sm text-[var(--sage-600)] underline-offset-4 transition-colors duration-[var(--transition-fast)] hover:text-[var(--sage-700)] hover:underline"
                   >
                     Forgot your password?
                   </a>
@@ -213,28 +228,32 @@ export function LoginForm({
                   className={cn(
                     "h-11 rounded-[var(--radius-md)] border-[var(--warm-300)] bg-white transition-all duration-[var(--transition-fast)]",
                     "focus-visible:border-[var(--sage-500)] focus-visible:ring-[var(--sage-500)]/20",
-                    errors.password && "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-500/20"
+                    errors.password &&
+                      "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-500/20",
                   )}
                   disabled={isLoading}
                 />
                 {errors.password && (
-                  <FieldDescription className="text-red-600 text-sm">
+                  <FieldDescription className="text-sm text-red-600">
                     {errors.password}
                   </FieldDescription>
                 )}
               </Field>
 
               <Field>
-                <Button 
-                  type="submit" 
-                  disabled={isLoading} 
-                  className="w-full min-h-[44px] bg-[var(--sage-600)] hover:bg-[var(--sage-700)] text-white rounded-[var(--radius-md)] transition-all duration-[var(--transition-base)]"
+                <Button
+                  type="submit"
+                  disabled={isLoading}
+                  className="min-h-[44px] w-full rounded-[var(--radius-md)] bg-[var(--sage-600)] text-white transition-all duration-[var(--transition-base)] hover:bg-[var(--sage-700)]"
                 >
                   {isLoading ? "Signing In..." : "Login"}
                 </Button>
                 <FieldDescription className="text-center text-[var(--warm-600)]">
                   Don&apos;t have an account?{" "}
-                  <a href="/signup" className="text-[var(--sage-600)] hover:text-[var(--sage-700)] hover:underline transition-colors duration-[var(--transition-fast)]">
+                  <a
+                    href="/signup"
+                    className="text-[var(--sage-600)] transition-colors duration-[var(--transition-fast)] hover:text-[var(--sage-700)] hover:underline"
+                  >
                     Sign up
                   </a>
                 </FieldDescription>
@@ -245,11 +264,17 @@ export function LoginForm({
       </Card>
       <FieldDescription className="px-6 text-center text-[var(--warm-500)]">
         By clicking continue, you agree to our{" "}
-        <a href="#" className="text-[var(--sage-600)] hover:text-[var(--sage-700)] hover:underline transition-colors duration-[var(--transition-fast)]">
+        <a
+          href="#"
+          className="text-[var(--sage-600)] transition-colors duration-[var(--transition-fast)] hover:text-[var(--sage-700)] hover:underline"
+        >
           Terms of Service
         </a>{" "}
         and{" "}
-        <a href="#" className="text-[var(--sage-600)] hover:text-[var(--sage-700)] hover:underline transition-colors duration-[var(--transition-fast)]">
+        <a
+          href="#"
+          className="text-[var(--sage-600)] transition-colors duration-[var(--transition-fast)] hover:text-[var(--sage-700)] hover:underline"
+        >
           Privacy Policy
         </a>
         .

@@ -7,7 +7,7 @@ import { env } from "~/env";
 const createPrismaClient = () => {
   const pool = new pg.Pool({ connectionString: env.DATABASE_URL });
   const adapter = new PrismaPg(pool);
-  
+
   return new PrismaClient({
     adapter,
     log:

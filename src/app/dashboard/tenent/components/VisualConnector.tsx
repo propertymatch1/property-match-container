@@ -5,9 +5,9 @@ import { ChevronDown, ArrowDown, Dot } from "lucide-react";
 import { cn } from "~/lib/utils";
 
 interface VisualConnectorProps {
-  type?: 'divider' | 'flow' | 'connector';
+  type?: "divider" | "flow" | "connector";
   className?: string;
-  icon?: 'chevron' | 'arrow' | 'dot' | 'none';
+  icon?: "chevron" | "arrow" | "dot" | "none";
   label?: string;
 }
 
@@ -16,38 +16,40 @@ interface VisualConnectorProps {
  * subtle lines, gradients, and optional icons.
  */
 export default function VisualConnector({
-  type = 'divider',
+  type = "divider",
   className,
-  icon = 'none',
+  icon = "none",
   label,
 }: VisualConnectorProps) {
   const renderIcon = () => {
-    if (icon === 'none') return null;
-    
+    if (icon === "none") return null;
+
     const iconProps = {
       size: 16,
-      className: "flow-indicator-icon"
+      className: "flow-indicator-icon",
     };
-    
+
     switch (icon) {
-      case 'chevron':
+      case "chevron":
         return <ChevronDown {...iconProps} />;
-      case 'arrow':
+      case "arrow":
         return <ArrowDown {...iconProps} />;
-      case 'dot':
+      case "dot":
         return <Dot {...iconProps} />;
       default:
         return null;
     }
   };
 
-  if (type === 'divider') {
+  if (type === "divider") {
     return (
-      <div className={cn("section-divider decorative-desktop-only", className)} />
+      <div
+        className={cn("section-divider decorative-desktop-only", className)}
+      />
     );
   }
 
-  if (type === 'flow') {
+  if (type === "flow") {
     return (
       <div className={cn("flow-indicator decorative-desktop-only", className)}>
         {renderIcon()}
@@ -60,9 +62,11 @@ export default function VisualConnector({
     );
   }
 
-  if (type === 'connector') {
+  if (type === "connector") {
     return (
-      <div className={cn("visual-connector decorative-desktop-only", className)} />
+      <div
+        className={cn("visual-connector decorative-desktop-only", className)}
+      />
     );
   }
 

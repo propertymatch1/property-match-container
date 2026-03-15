@@ -10,7 +10,7 @@ interface ExpansionIntentCardProps {
   cityNext: string[];
   whenNextOpen: string | null;
   spaceNeed: number | null;
-  variant?: 'standard' | 'featured';
+  variant?: "standard" | "featured";
   sectionId?: string;
 }
 
@@ -25,8 +25,8 @@ export function ExpansionIntentCard({
   cityNext,
   whenNextOpen,
   spaceNeed,
-  variant = 'standard',
-  sectionId = 'expansion',
+  variant = "standard",
+  sectionId = "expansion",
 }: ExpansionIntentCardProps) {
   // Generate preview text
   const getPreview = () => {
@@ -65,7 +65,7 @@ export function ExpansionIntentCard({
           <div className="space-y-[var(--space-3,0.75rem)]">
             <div className="flex items-center gap-[var(--space-2,0.5rem)]">
               <MapPin size={ICON_SIZE.standard} className="text-purple-500" />
-              <h4 className="text-sm font-semibold text-[var(--warm-500,#78716c)] uppercase tracking-wide">
+              <h4 className="text-sm font-semibold tracking-wide text-[var(--warm-500,#78716c)] uppercase">
                 Target Cities
               </h4>
             </div>
@@ -73,8 +73,10 @@ export function ExpansionIntentCard({
               {cityNext.map((city, index) => (
                 <Badge
                   key={index}
-                  className="bg-purple-50 text-purple-700 hover:bg-purple-100 px-4 py-2 text-sm rounded-full flex items-center gap-1 transition-colors"
-                  style={{ transitionDuration: "var(--transition-fast, 150ms)" }}
+                  className="flex items-center gap-1 rounded-full bg-purple-50 px-4 py-2 text-sm text-purple-700 transition-colors hover:bg-purple-100"
+                  style={{
+                    transitionDuration: "var(--transition-fast, 150ms)",
+                  }}
                 >
                   <MapPin size={ICON_SIZE.small} />
                   {city}
@@ -92,18 +94,18 @@ export function ExpansionIntentCard({
           <div className="space-y-[var(--space-3,0.75rem)]">
             <div className="flex items-center gap-[var(--space-2,0.5rem)]">
               <Calendar size={ICON_SIZE.standard} className="text-purple-500" />
-              <h4 className="text-sm font-semibold text-[var(--warm-500,#78716c)] uppercase tracking-wide">
+              <h4 className="text-sm font-semibold tracking-wide text-[var(--warm-500,#78716c)] uppercase">
                 Opening Timeline
               </h4>
             </div>
-            <div 
+            <div
               className="bg-gradient-to-br from-purple-50 to-purple-50/50 p-[var(--space-4,1rem)]"
               style={{ borderRadius: "var(--radius-xl, 1rem)" }}
             >
               <p className="text-2xl font-bold text-[var(--warm-800,#292524)]">
                 {whenNextOpen}
               </p>
-              <p className="text-sm text-[var(--warm-500,#78716c)] mt-1">
+              <p className="mt-1 text-sm text-[var(--warm-500,#78716c)]">
                 Expected timeframe for next location
               </p>
             </div>
@@ -114,20 +116,25 @@ export function ExpansionIntentCard({
         {spaceNeed && (
           <div className="space-y-[var(--space-3,0.75rem)]">
             <div className="flex items-center gap-[var(--space-2,0.5rem)]">
-              <Maximize2 size={ICON_SIZE.standard} className="text-purple-500" />
-              <h4 className="text-sm font-semibold text-[var(--warm-500,#78716c)] uppercase tracking-wide">
+              <Maximize2
+                size={ICON_SIZE.standard}
+                className="text-purple-500"
+              />
+              <h4 className="text-sm font-semibold tracking-wide text-[var(--warm-500,#78716c)] uppercase">
                 Desired Space Size
               </h4>
             </div>
-            <div 
-              className="bg-gradient-to-br from-purple-50 to-purple-50/50 p-[var(--space-4,1rem)] space-y-[var(--space-3,0.75rem)]"
+            <div
+              className="space-y-[var(--space-3,0.75rem)] bg-gradient-to-br from-purple-50 to-purple-50/50 p-[var(--space-4,1rem)]"
               style={{ borderRadius: "var(--radius-xl, 1rem)" }}
             >
               <div className="flex items-baseline gap-[var(--space-2,0.5rem)]">
                 <span className="text-3xl font-bold text-[var(--warm-800,#292524)]">
                   {spaceNeed.toLocaleString()}
                 </span>
-                <span className="text-sm text-[var(--warm-500,#78716c)]">square feet</span>
+                <span className="text-sm text-[var(--warm-500,#78716c)]">
+                  square feet
+                </span>
               </div>
               <Progress
                 value={getSpaceProgress(spaceNeed)}
@@ -142,7 +149,7 @@ export function ExpansionIntentCard({
 
         {/* Empty State */}
         {cityNext.length === 0 && !whenNextOpen && !spaceNeed && (
-          <p className="text-[var(--warm-500,#78716c)] text-center py-[var(--space-4,1rem)]">
+          <p className="py-[var(--space-4,1rem)] text-center text-[var(--warm-500,#78716c)]">
             No expansion plans specified yet.
           </p>
         )}

@@ -22,7 +22,7 @@ interface UseActiveSectionOptions {
 /**
  * Custom hook that uses Intersection Observer to track which section is currently active
  * in the viewport. This is used by the NavigationSidebar to highlight the current section.
- * 
+ *
  * @param options Configuration options for the hook
  * @returns The ID of the currently active section, or null if none are active
  */
@@ -49,8 +49,10 @@ export function useActiveSection({
     observerRef.current = new IntersectionObserver(
       (entries) => {
         // Find all currently intersecting entries
-        const intersectingEntries = entries.filter(entry => entry.isIntersecting);
-        
+        const intersectingEntries = entries.filter(
+          (entry) => entry.isIntersecting,
+        );
+
         if (intersectingEntries.length === 0) {
           // No sections are intersecting, keep the current active section
           return;
@@ -76,7 +78,7 @@ export function useActiveSection({
       {
         rootMargin,
         threshold,
-      }
+      },
     );
 
     // Observe all sections

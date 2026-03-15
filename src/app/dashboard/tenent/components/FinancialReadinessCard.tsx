@@ -8,7 +8,7 @@ import { Progress } from "~/components/ui/progress";
 
 interface FinancialReadinessCardProps {
   rentRangeDesire: number | null;
-  variant?: 'standard' | 'featured';
+  variant?: "standard" | "featured";
   sectionId?: string;
 }
 
@@ -21,8 +21,8 @@ const ICON_SIZE = {
 
 export function FinancialReadinessCard({
   rentRangeDesire,
-  variant = 'standard',
-  sectionId = 'financial',
+  variant = "standard",
+  sectionId = "financial",
 }: FinancialReadinessCardProps) {
   // Generate preview text
   const getPreview = () => {
@@ -62,8 +62,11 @@ export function FinancialReadinessCard({
         {/* Readiness Status */}
         <div className="space-y-[var(--space-3,0.75rem)]">
           <div className="flex items-center gap-[var(--space-2,0.5rem)]">
-            <CheckCircle2 size={ICON_SIZE.standard} className="text-[var(--gold-500,#c4956a)]" />
-            <h4 className="text-sm font-semibold text-[var(--warm-500,#78716c)] uppercase tracking-wide">
+            <CheckCircle2
+              size={ICON_SIZE.standard}
+              className="text-[var(--gold-500,#c4956a)]"
+            />
+            <h4 className="text-sm font-semibold tracking-wide text-[var(--warm-500,#78716c)] uppercase">
               Readiness Status
             </h4>
           </div>
@@ -72,7 +75,7 @@ export function FinancialReadinessCard({
               rentRangeDesire
                 ? "bg-[var(--gold-300,#e4c5a4)]/30 text-[var(--gold-600,#b4855a)]"
                 : "bg-[var(--warm-100,#f5f5f4)] text-[var(--warm-500,#78716c)]"
-            } hover:opacity-90 px-4 py-2 text-sm rounded-full transition-opacity`}
+            } rounded-full px-4 py-2 text-sm transition-opacity hover:opacity-90`}
             style={{ transitionDuration: "var(--transition-fast, 150ms)" }}
           >
             {rentRangeDesire ? "Budget Defined" : "Pending"}
@@ -83,20 +86,25 @@ export function FinancialReadinessCard({
         {rentRangeDesire && (
           <div className="space-y-[var(--space-3,0.75rem)]">
             <div className="flex items-center gap-[var(--space-2,0.5rem)]">
-              <DollarSign size={ICON_SIZE.standard} className="text-[var(--gold-500,#c4956a)]" />
-              <h4 className="text-sm font-semibold text-[var(--warm-500,#78716c)] uppercase tracking-wide">
+              <DollarSign
+                size={ICON_SIZE.standard}
+                className="text-[var(--gold-500,#c4956a)]"
+              />
+              <h4 className="text-sm font-semibold tracking-wide text-[var(--warm-500,#78716c)] uppercase">
                 Monthly Rent Budget
               </h4>
             </div>
-            <div 
-              className="bg-gradient-to-br from-[var(--gold-300,#e4c5a4)]/20 to-[var(--gold-300,#e4c5a4)]/10 p-[var(--space-4,1rem)] space-y-[var(--space-3,0.75rem)]"
+            <div
+              className="space-y-[var(--space-3,0.75rem)] bg-gradient-to-br from-[var(--gold-300,#e4c5a4)]/20 to-[var(--gold-300,#e4c5a4)]/10 p-[var(--space-4,1rem)]"
               style={{ borderRadius: "var(--radius-xl, 1rem)" }}
             >
               <div className="flex items-baseline justify-between">
                 <span className="text-3xl font-bold text-[var(--warm-800,#292524)]">
                   {formatCurrency(rentRangeDesire)}
                 </span>
-                <span className="text-sm text-[var(--warm-500,#78716c)]">/month</span>
+                <span className="text-sm text-[var(--warm-500,#78716c)]">
+                  /month
+                </span>
               </div>
               <Progress
                 value={getBudgetProgress(rentRangeDesire)}
@@ -110,7 +118,7 @@ export function FinancialReadinessCard({
         )}
 
         {/* Placeholder for future features */}
-        <div 
+        <div
           className="bg-[var(--warm-50,#fafaf9)] p-[var(--space-4,1rem)] text-center"
           style={{ borderRadius: "var(--radius-xl, 1rem)" }}
         >
@@ -121,7 +129,7 @@ export function FinancialReadinessCard({
 
         {/* Empty State */}
         {!rentRangeDesire && (
-          <p className="text-[var(--warm-500,#78716c)] text-center py-[var(--space-4,1rem)]">
+          <p className="py-[var(--space-4,1rem)] text-center text-[var(--warm-500,#78716c)]">
             No financial information available yet.
           </p>
         )}

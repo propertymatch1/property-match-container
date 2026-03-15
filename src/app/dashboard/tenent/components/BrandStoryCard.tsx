@@ -10,7 +10,7 @@ interface BrandStoryCardProps {
   personalityTags: string[];
   toneTags: string[];
   notes: string | null;
-  variant?: 'standard' | 'featured';
+  variant?: "standard" | "featured";
   sectionId?: string;
 }
 
@@ -19,31 +19,31 @@ export function BrandStoryCard({
   personalityTags,
   toneTags,
   notes,
-  variant = 'standard',
-  sectionId = 'brand-story',
+  variant = "standard",
+  sectionId = "brand-story",
 }: BrandStoryCardProps) {
   // Create a story text from available data
   const getStoryText = () => {
     const parts: string[] = [];
-    
+
     if (notes) {
       parts.push(notes);
     }
-    
+
     if (brandKeywords.length > 0) {
       parts.push(`Key brand elements: ${brandKeywords.join(", ")}`);
     }
-    
+
     if (personalityTags.length > 0) {
       parts.push(`Brand personality: ${personalityTags.join(", ")}`);
     }
-    
+
     if (toneTags.length > 0) {
       parts.push(`Communication tone: ${toneTags.join(", ")}`);
     }
-    
-    return parts.length > 0 
-      ? parts.join(". ") 
+
+    return parts.length > 0
+      ? parts.join(". ")
       : "No brand story available yet. Complete your profile to add your brand story.";
   };
 
@@ -62,25 +62,29 @@ export function BrandStoryCard({
     >
       <div className="space-y-[var(--space-6,1.5rem)]">
         {/* Main Story Text */}
-        <p className="text-[var(--warm-700,#44403c)] leading-relaxed text-base sm:text-lg">
+        <p className="text-base leading-relaxed text-[var(--warm-700,#44403c)] sm:text-lg">
           {story}
         </p>
 
         {/* Brand Attributes Grid */}
-        {(brandKeywords.length > 0 || personalityTags.length > 0 || toneTags.length > 0) && (
+        {(brandKeywords.length > 0 ||
+          personalityTags.length > 0 ||
+          toneTags.length > 0) && (
           <div className="space-y-[var(--space-5,1.25rem)]">
             {/* Brand Keywords */}
             {brandKeywords.length > 0 && (
               <div className="space-y-[var(--space-3,0.75rem)]">
-                <h4 className="text-sm font-semibold text-[var(--warm-500,#78716c)] uppercase tracking-wide">
+                <h4 className="text-sm font-semibold tracking-wide text-[var(--warm-500,#78716c)] uppercase">
                   Brand Keywords
                 </h4>
                 <div className="flex flex-wrap gap-[var(--space-2,0.5rem)]">
                   {brandKeywords.map((keyword, index) => (
                     <Badge
                       key={index}
-                      className="bg-[var(--sage-100,#e3e7e4)] text-[var(--sage-700,#454f47)] hover:bg-[var(--sage-200,#c7d0c9)] px-3 py-1.5 rounded-full transition-colors"
-                      style={{ transitionDuration: "var(--transition-fast, 150ms)" }}
+                      className="rounded-full bg-[var(--sage-100,#e3e7e4)] px-3 py-1.5 text-[var(--sage-700,#454f47)] transition-colors hover:bg-[var(--sage-200,#c7d0c9)]"
+                      style={{
+                        transitionDuration: "var(--transition-fast, 150ms)",
+                      }}
                     >
                       {keyword}
                     </Badge>
@@ -92,15 +96,17 @@ export function BrandStoryCard({
             {/* Personality Tags */}
             {personalityTags.length > 0 && (
               <div className="space-y-[var(--space-3,0.75rem)]">
-                <h4 className="text-sm font-semibold text-[var(--warm-500,#78716c)] uppercase tracking-wide">
+                <h4 className="text-sm font-semibold tracking-wide text-[var(--warm-500,#78716c)] uppercase">
                   Brand Personality
                 </h4>
                 <div className="flex flex-wrap gap-[var(--space-2,0.5rem)]">
                   {personalityTags.map((tag, index) => (
                     <Badge
                       key={index}
-                      className="bg-purple-50 text-purple-700 hover:bg-purple-100 px-3 py-1.5 rounded-full transition-colors"
-                      style={{ transitionDuration: "var(--transition-fast, 150ms)" }}
+                      className="rounded-full bg-purple-50 px-3 py-1.5 text-purple-700 transition-colors hover:bg-purple-100"
+                      style={{
+                        transitionDuration: "var(--transition-fast, 150ms)",
+                      }}
                     >
                       {tag}
                     </Badge>
@@ -112,15 +118,17 @@ export function BrandStoryCard({
             {/* Tone Tags */}
             {toneTags.length > 0 && (
               <div className="space-y-[var(--space-3,0.75rem)]">
-                <h4 className="text-sm font-semibold text-[var(--warm-500,#78716c)] uppercase tracking-wide">
+                <h4 className="text-sm font-semibold tracking-wide text-[var(--warm-500,#78716c)] uppercase">
                   Communication Tone
                 </h4>
                 <div className="flex flex-wrap gap-[var(--space-2,0.5rem)]">
                   {toneTags.map((tag, index) => (
                     <Badge
                       key={index}
-                      className="bg-blue-50 text-blue-700 hover:bg-blue-100 px-3 py-1.5 rounded-full transition-colors"
-                      style={{ transitionDuration: "var(--transition-fast, 150ms)" }}
+                      className="rounded-full bg-blue-50 px-3 py-1.5 text-blue-700 transition-colors hover:bg-blue-100"
+                      style={{
+                        transitionDuration: "var(--transition-fast, 150ms)",
+                      }}
                     >
                       {tag}
                     </Badge>

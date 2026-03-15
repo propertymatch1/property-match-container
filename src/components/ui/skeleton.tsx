@@ -1,10 +1,14 @@
-import { cn } from "~/lib/utils"
+import { cn } from "~/lib/utils";
 
 interface SkeletonProps extends React.ComponentProps<"div"> {
-  variant?: "text" | "circular" | "rectangular"
+  variant?: "text" | "circular" | "rectangular";
 }
 
-function Skeleton({ className, variant = "rectangular", ...props }: SkeletonProps) {
+function Skeleton({
+  className,
+  variant = "rectangular",
+  ...props
+}: SkeletonProps) {
   return (
     <div
       data-slot="skeleton"
@@ -16,13 +20,13 @@ function Skeleton({ className, variant = "rectangular", ...props }: SkeletonProp
           "rounded-[var(--radius-sm)]": variant === "text",
           "rounded-[var(--radius-md)]": variant === "rectangular",
         },
-        className
+        className,
       )}
       aria-busy="true"
       aria-live="polite"
       {...props}
     />
-  )
+  );
 }
 
-export { Skeleton }
+export { Skeleton };

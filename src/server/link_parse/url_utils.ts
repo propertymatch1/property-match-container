@@ -24,4 +24,3 @@ export async function fetchImageBuffer(url: string): Promise<Buffer | null> {
     return null;
   }
 }
-

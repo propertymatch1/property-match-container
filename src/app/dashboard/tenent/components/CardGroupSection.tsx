@@ -8,7 +8,7 @@ interface CardGroupSectionProps {
   className?: string;
   title?: string;
   subtitle?: string;
-  variant?: 'default' | 'highlighted' | 'subtle';
+  variant?: "default" | "highlighted" | "subtle";
 }
 
 /**
@@ -20,26 +20,26 @@ export default function CardGroupSection({
   className,
   title,
   subtitle,
-  variant = 'default',
+  variant = "default",
 }: CardGroupSectionProps) {
   return (
-    <section 
+    <section
       className={cn(
         "card-group-section",
-        variant === 'highlighted' && "card-group-highlighted",
-        variant === 'subtle' && "card-group-subtle",
-        className
+        variant === "highlighted" && "card-group-highlighted",
+        variant === "subtle" && "card-group-subtle",
+        className,
       )}
     >
       {(title || subtitle) && (
         <div className="mb-6">
           {title && (
-            <h2 className="text-xl font-semibold text-[var(--warm-800)] mb-2">
+            <h2 className="mb-2 text-xl font-semibold text-[var(--warm-800)]">
               {title}
             </h2>
           )}
           {subtitle && (
-            <p className="text-sm text-[var(--warm-600)] leading-relaxed">
+            <p className="text-sm leading-relaxed text-[var(--warm-600)]">
               {subtitle}
             </p>
           )}

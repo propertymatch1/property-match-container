@@ -1,24 +1,24 @@
-import * as React from "react"
-import { cn } from "~/lib/utils"
+import * as React from "react";
+import { cn } from "~/lib/utils";
 
 interface SplitScreenLayoutProps {
-  leftContent: React.ReactNode
-  rightContent: React.ReactNode
-  leftRatio?: number
-  rightRatio?: number
-  mobileStackOrder?: "left-first" | "right-first"
-  className?: string
+  leftContent: React.ReactNode;
+  rightContent: React.ReactNode;
+  leftRatio?: number;
+  rightRatio?: number;
+  mobileStackOrder?: "left-first" | "right-first";
+  className?: string;
 }
 
 /**
  * SplitScreenLayout provides a two-column layout pattern with responsive stacking.
- * 
+ *
  * Features:
  * - Configurable width ratios for left and right sections
  * - Responsive stacking on mobile (below tablet breakpoint)
  * - Configurable mobile stack order
  * - Consistent padding using design tokens
- * 
+ *
  * @example
  * <SplitScreenLayout
  *   leftContent={<IllustrationContainer src="/onboarding-1.svg" />}
@@ -43,7 +43,7 @@ function SplitScreenLayout({
         "flex-col",
         // Tablet and up: horizontal layout
         "md:flex-row",
-        className
+        className,
       )}
     >
       {/* Left Section */}
@@ -55,7 +55,7 @@ function SplitScreenLayout({
           // Mobile stack order
           mobileStackOrder === "left-first" ? "order-1" : "order-2",
           // Desktop: use flex-basis for width ratio
-          "md:order-1"
+          "md:order-1",
         )}
         style={{
           flexBasis: `${leftRatio}%`,
@@ -73,7 +73,7 @@ function SplitScreenLayout({
           // Mobile stack order
           mobileStackOrder === "left-first" ? "order-2" : "order-1",
           // Desktop: use flex-basis for width ratio
-          "md:order-2"
+          "md:order-2",
         )}
         style={{
           flexBasis: `${rightRatio}%`,
@@ -82,8 +82,8 @@ function SplitScreenLayout({
         {rightContent}
       </section>
     </div>
-  )
+  );
 }
 
-export { SplitScreenLayout }
-export type { SplitScreenLayoutProps }
+export { SplitScreenLayout };
+export type { SplitScreenLayoutProps };

@@ -4,7 +4,7 @@ import { AuthProvider } from "~/lib/auth-context";
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
   return (
     <html lang="en">
@@ -12,10 +12,8 @@ export default function RootLayout({
         <link rel="stylesheet" href="https://use.typekit.net/icz4uev.css" />
       </head>
       <body>
-        <AuthProvider>
-          {children}
-        </AuthProvider>
+        <AuthProvider>{children}</AuthProvider>
       </body>
     </html>
-  )
+  );
 }

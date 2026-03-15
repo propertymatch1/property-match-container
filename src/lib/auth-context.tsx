@@ -44,7 +44,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const canAccessLandlordRoutes = isAuthenticated && isLandlord;
 
   const refreshSession = () => {
-    setRefreshKey(prev => prev + 1);
+    setRefreshKey((prev) => prev + 1);
   };
 
   const contextValue: AuthContextType = {
@@ -62,9 +62,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   };
 
   return (
-    <AuthContext.Provider value={contextValue}>
-      {children}
-    </AuthContext.Provider>
+    <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
   );
 }
 
@@ -79,25 +77,29 @@ export function useAuthContext(): AuthContextType {
 // Higher-order component for protecting routes
 export function withAuth<P extends object>(
   Component: React.ComponentType<P>,
-  requiredRole?: "TENANT" | "LANDLORD"
+  requiredRole?: "TENANT" | "LANDLORD",
 ) {
   return function AuthenticatedComponent(props: P) {
     const { isAuthenticated, isLoading, hasRole } = useAuthContext();
 
     if (isLoading) {
       return (
-        <div className="flex items-center justify-center min-h-screen">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+        <div className="flex min-h-screen items-center justify-center">
+          <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-gray-900"></div>
         </div>
       );
     }
 
     if (!isAuthenticated) {
       return (
-        <div className="flex items-center justify-center min-h-screen bg-[var(--warm-50)]">
+        <div className="flex min-h-screen items-center justify-center bg-[var(--warm-50)]">
           <div className="text-center">
-            <h2 className="text-xl font-semibold mb-2 text-[var(--warm-900)]">Authentication Required</h2>
-            <p className="text-[var(--warm-600)] mb-6">Please sign in to access this page.</p>
+            <h2 className="mb-2 text-xl font-semibold text-[var(--warm-900)]">
+              Authentication Required
+            </h2>
+            <p className="mb-6 text-[var(--warm-600)]">
+              Please sign in to access this page.
+            </p>
             <Button variant="outline" asChild className="min-h-[44px]">
               <Link href="/signin">Sign In</Link>
             </Button>
@@ -108,10 +110,12 @@ export function withAuth<P extends object>(
 
     if (requiredRole && !hasRole(requiredRole)) {
       return (
-        <div className="flex items-center justify-center min-h-screen bg-[var(--warm-50)]">
+        <div className="flex min-h-screen items-center justify-center bg-[var(--warm-50)]">
           <div className="text-center">
-            <h2 className="text-xl font-semibold mb-2 text-[var(--warm-900)]">Access Denied</h2>
-            <p className="text-[var(--warm-600)] mb-6">
+            <h2 className="mb-2 text-xl font-semibold text-[var(--warm-900)]">
+              Access Denied
+            </h2>
+            <p className="mb-6 text-[var(--warm-600)]">
               You don&apos;t have permission to access this page.
             </p>
             <Button variant="outline" asChild className="min-h-[44px]">

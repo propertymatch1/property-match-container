@@ -20,10 +20,7 @@ export function IllustrationContainer({
 }: IllustrationContainerProps) {
   return (
     <div
-      className={cn(
-        "flex items-center justify-center w-full",
-        className
-      )}
+      className={cn("flex w-full items-center justify-center", className)}
       style={{
         maxWidth,
         aspectRatio,
@@ -34,7 +31,7 @@ export function IllustrationContainer({
       <img
         src={src}
         alt={alt}
-        className="w-full h-full object-contain [&_svg]:w-full [&_svg]:h-full"
+        className="h-full w-full object-contain [&_svg]:h-full [&_svg]:w-full"
         style={{
           color: "var(--color-primary)",
         }}

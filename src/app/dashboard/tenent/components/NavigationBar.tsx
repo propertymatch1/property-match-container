@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "~/components/ui/button";
 import {
   DropdownMenu,
@@ -19,47 +19,50 @@ export default function NavigationBar() {
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const handleSignOut = async () => {
     await signOut();
-    router.push('/signin');
+    router.push("/signin");
   };
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-[var(--transition-base)] ${
-        scrolled 
-          ? 'bg-white/95 backdrop-blur-md shadow-[var(--shadow-subtle)]' 
-          : 'bg-[rgba(250,250,249,0.8)] backdrop-blur-[12px]'
-      } ${scrolled ? 'border-b border-[rgba(0,0,0,0.08)]' : 'border-b border-transparent'}`}
+      className={`fixed top-0 right-0 left-0 z-50 transition-all duration-[var(--transition-base)] ${
+        scrolled
+          ? "bg-white/95 shadow-[var(--shadow-subtle)] backdrop-blur-md"
+          : "bg-[rgba(250,250,249,0.8)] backdrop-blur-[12px]"
+      } ${scrolled ? "border-b border-[rgba(0,0,0,0.08)]" : "border-b border-transparent"}`}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <div className="flex items-center justify-between py-3 sm:py-4">
           {/* Brand name - matching landing page exactly */}
-          <a href="/" className="font-[var(--font-playfair)] text-xl font-semibold tracking-tight text-[var(--warm-900)] sm:text-2xl hover:opacity-80 transition-opacity">
+          <a
+            href="/"
+            className="text-xl font-[var(--font-playfair)] font-semibold tracking-tight text-[var(--warm-900)] transition-opacity hover:opacity-80 sm:text-2xl"
+          >
             Identia
           </a>
 
           {/* Desktop Navigation - consistent with landing page nav-link styling */}
-          <div className="hidden md:flex items-center gap-8">
+          <div className="hidden items-center gap-8 md:flex">
             <a
               href="/"
-              className="nav-link relative text-sm text-[var(--warm-600)] hover:text-[var(--warm-900)] transition-colors font-medium"
+              className="nav-link relative text-sm font-medium text-[var(--warm-600)] transition-colors hover:text-[var(--warm-900)]"
             >
               Home
             </a>
             <a
               href="/#brands"
-              className="nav-link relative text-sm text-[var(--warm-600)] hover:text-[var(--warm-900)] transition-colors font-medium"
+              className="nav-link relative text-sm font-medium text-[var(--warm-600)] transition-colors hover:text-[var(--warm-900)]"
             >
               For Brands
             </a>
             <a
               href="/#landlords"
-              className="nav-link relative text-sm text-[var(--warm-600)] hover:text-[var(--warm-900)] transition-colors font-medium"
+              className="nav-link relative text-sm font-medium text-[var(--warm-600)] transition-colors hover:text-[var(--warm-900)]"
             >
               For Landlords
             </a>
@@ -69,9 +72,9 @@ export default function NavigationBar() {
           <div className="hidden md:block">
             <DropdownMenu modal={false}>
               <DropdownMenuTrigger asChild>
-                <Button 
-                  variant="outline" 
-                  className="min-h-[44px] rounded-full px-4 border-[var(--warm-300)] text-[var(--warm-700)] hover:bg-[var(--warm-100)] hover:border-[var(--warm-400)] gap-2"
+                <Button
+                  variant="outline"
+                  className="min-h-[44px] gap-2 rounded-full border-[var(--warm-300)] px-4 text-[var(--warm-700)] hover:border-[var(--warm-400)] hover:bg-[var(--warm-100)]"
                 >
                   <User size={18} />
                   Account
@@ -79,9 +82,9 @@ export default function NavigationBar() {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" sideOffset={8}>
-                <DropdownMenuItem 
+                <DropdownMenuItem
                   onClick={handleSignOut}
-                  className="cursor-pointer text-red-600 focus:text-red-600 focus:bg-red-50"
+                  className="cursor-pointer text-red-600 focus:bg-red-50 focus:text-red-600"
                 >
                   <LogOut size={16} className="mr-2" />
                   Sign Out
@@ -92,7 +95,7 @@ export default function NavigationBar() {
 
           {/* Mobile Menu Button - Touch-friendly with min-h-[44px] */}
           <button
-            className="md:hidden min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg hover:bg-[var(--warm-100)] transition-colors duration-[var(--transition-fast)]"
+            className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg transition-colors duration-[var(--transition-fast)] hover:bg-[var(--warm-100)] md:hidden"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
             aria-expanded={mobileMenuOpen}
@@ -103,32 +106,32 @@ export default function NavigationBar() {
 
         {/* Mobile Menu - Touch-friendly navigation items */}
         {mobileMenuOpen && (
-          <div className="md:hidden absolute top-full left-0 right-0 bg-white/95 backdrop-blur-md border-t border-[var(--warm-200)] shadow-[var(--shadow-elevated)]">
-            <div className="flex flex-col p-4 gap-2">
+          <div className="absolute top-full right-0 left-0 border-t border-[var(--warm-200)] bg-white/95 shadow-[var(--shadow-elevated)] backdrop-blur-md md:hidden">
+            <div className="flex flex-col gap-2 p-4">
               <a
                 href="/"
-                className="min-h-[44px] flex items-center px-4 rounded-lg text-[var(--warm-700)] hover:text-[var(--warm-900)] hover:bg-[var(--warm-100)] transition-colors duration-[var(--transition-fast)] text-sm font-medium"
+                className="flex min-h-[44px] items-center rounded-lg px-4 text-sm font-medium text-[var(--warm-700)] transition-colors duration-[var(--transition-fast)] hover:bg-[var(--warm-100)] hover:text-[var(--warm-900)]"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Home
               </a>
               <a
                 href="/#brands"
-                className="min-h-[44px] flex items-center px-4 rounded-lg text-[var(--warm-700)] hover:text-[var(--warm-900)] hover:bg-[var(--warm-100)] transition-colors duration-[var(--transition-fast)] text-sm font-medium"
+                className="flex min-h-[44px] items-center rounded-lg px-4 text-sm font-medium text-[var(--warm-700)] transition-colors duration-[var(--transition-fast)] hover:bg-[var(--warm-100)] hover:text-[var(--warm-900)]"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 For Brands
               </a>
               <a
                 href="/#landlords"
-                className="min-h-[44px] flex items-center px-4 rounded-lg text-[var(--warm-700)] hover:text-[var(--warm-900)] hover:bg-[var(--warm-100)] transition-colors duration-[var(--transition-fast)] text-sm font-medium"
+                className="flex min-h-[44px] items-center rounded-lg px-4 text-sm font-medium text-[var(--warm-700)] transition-colors duration-[var(--transition-fast)] hover:bg-[var(--warm-100)] hover:text-[var(--warm-900)]"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 For Landlords
               </a>
-              <div className="border-t border-[var(--warm-200)] my-2" />
-              <button 
-                className="min-h-[44px] flex items-center px-4 rounded-lg text-red-600 hover:bg-red-50 transition-colors duration-[var(--transition-fast)] text-sm font-medium gap-2"
+              <div className="my-2 border-t border-[var(--warm-200)]" />
+              <button
+                className="flex min-h-[44px] items-center gap-2 rounded-lg px-4 text-sm font-medium text-red-600 transition-colors duration-[var(--transition-fast)] hover:bg-red-50"
                 onClick={() => {
                   setMobileMenuOpen(false);
                   handleSignOut();

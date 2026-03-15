@@ -17,7 +17,7 @@ interface CollapsibleSectionProps {
   accentColor?: string;
   children: React.ReactNode;
   sectionId?: string; // For scroll-to navigation
-  variant?: 'standard' | 'featured'; // For bento grid layout
+  variant?: "standard" | "featured"; // For bento grid layout
 }
 
 export default function CollapsibleSection({
@@ -28,17 +28,19 @@ export default function CollapsibleSection({
   accentColor = "var(--sage-500, #6B7B6B)",
   children,
   sectionId,
-  variant = 'standard',
+  variant = "standard",
 }: CollapsibleSectionProps) {
   const [isOpen, setIsOpen] = React.useState(defaultOpen);
 
   return (
     <Collapsible open={isOpen} onOpenChange={setIsOpen}>
-      <div 
+      <div
         id={sectionId}
         className={cn(
           "card-elevated overflow-hidden",
-          variant === 'featured' ? 'bento-card-featured' : 'bento-card-standard'
+          variant === "featured"
+            ? "bento-card-featured"
+            : "bento-card-standard",
         )}
         style={{ borderRadius: "var(--radius-2xl, 1.5rem)" }}
         data-state={isOpen ? "open" : "closed"}
@@ -46,24 +48,25 @@ export default function CollapsibleSection({
         <CollapsibleTrigger asChild>
           <button
             className={cn(
-              "w-full px-6 py-5 flex items-center justify-between cursor-pointer",
+              "flex w-full cursor-pointer items-center justify-between px-6 py-5",
               "hover:bg-[var(--warm-50)]/50 active:bg-[var(--warm-100)]/50",
-              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--sage-500)] focus-visible:ring-inset",
-              "transition-colors"
+              "focus-visible:ring-2 focus-visible:ring-[var(--sage-500)] focus-visible:outline-none focus-visible:ring-inset",
+              "transition-colors",
             )}
             style={{
               borderLeft: `4px solid ${accentColor}`,
               transitionDuration: "var(--transition-fast, 150ms)",
             }}
           >
-            <div className="flex items-center gap-3 flex-1 text-left">
+            <div className="flex flex-1 items-center gap-3 text-left">
               <div
                 className="p-2"
                 style={{
                   backgroundColor: `color-mix(in srgb, ${accentColor} 15%, transparent)`,
                   color: accentColor,
                   borderRadius: "var(--radius-lg, 0.75rem)",
-                  transition: "background-color var(--transition-base, 300ms ease)",
+                  transition:
+                    "background-color var(--transition-base, 300ms ease)",
                 }}
               >
                 <Icon size={20} />
@@ -73,9 +76,11 @@ export default function CollapsibleSection({
                   {title}
                 </h3>
                 {!isOpen && preview && (
-                  <p 
-                    className="text-sm text-[var(--warm-500,#78716c)] mt-1 line-clamp-1"
-                    style={{ transition: "opacity var(--transition-base, 300ms ease)" }}
+                  <p
+                    className="mt-1 line-clamp-1 text-sm text-[var(--warm-500,#78716c)]"
+                    style={{
+                      transition: "opacity var(--transition-base, 300ms ease)",
+                    }}
                   >
                     {preview}
                   </p>
@@ -85,24 +90,28 @@ export default function CollapsibleSection({
             <ChevronDown
               size={20}
               className={cn(
-                "text-[var(--warm-400,#a8a29e)] flex-shrink-0",
-                isOpen && "rotate-180"
+                "flex-shrink-0 text-[var(--warm-400,#a8a29e)]",
+                isOpen && "rotate-180",
               )}
-              style={{ transition: "transform var(--transition-base, 300ms ease)" }}
+              style={{
+                transition: "transform var(--transition-base, 300ms ease)",
+              }}
             />
           </button>
         </CollapsibleTrigger>
 
-        <CollapsibleContent 
+        <CollapsibleContent
           className="data-[state=open]:animate-collapsible-down data-[state=closed]:animate-collapsible-up"
-          style={{ 
+          style={{
             transition: "height var(--transition-base, 300ms ease)",
           }}
         >
-          <div className={cn(
-            "px-6 pb-6 pt-2",
-            variant === 'featured' && "collapsible-content"
-          )}>
+          <div
+            className={cn(
+              "px-6 pt-2 pb-6",
+              variant === "featured" && "collapsible-content",
+            )}
+          >
             {children}
           </div>
         </CollapsibleContent>

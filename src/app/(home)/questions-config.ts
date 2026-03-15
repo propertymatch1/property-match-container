@@ -1,17 +1,18 @@
-import type { QuestionConfig } from "./steps/question-step"
+import type { QuestionConfig } from "./steps/question-step";
 
 // URL validation helper
 const validateUrl = (url: string): string | null => {
-  const urlPattern = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/i
+  const urlPattern =
+    /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/i;
   if (!urlPattern.test(url)) {
-    return "Please enter a valid URL (e.g., https://example.com)"
+    return "Please enter a valid URL (e.g., https://example.com)";
   }
-  return null
-}
+  return null;
+};
 
 /**
  * Onboarding Questions Configuration
- * 
+ *
  * Add or modify questions here. Each question will be rendered as a separate step.
  * The order in this array determines the order of questions in the flow.
  */
@@ -19,7 +20,8 @@ export const ONBOARDING_QUESTIONS: QuestionConfig[] = [
   {
     id: "websiteUrl",
     title: "Where does your brand live online?",
-    description: "Paste your link and our AI will instantly pull your logo, primary color palette, and brand bio. It's the fastest way to seed your Passport.",
+    description:
+      "Paste your link and our AI will instantly pull your logo, primary color palette, and brand bio. It's the fastest way to seed your Passport.",
     type: "url",
     placeholder: "www.url.com",
     required: false,
@@ -39,7 +41,11 @@ export const ONBOARDING_QUESTIONS: QuestionConfig[] = [
     allowMultiple: false, // Single choice only
     options: [
       { value: "chooseIndustry", label: "INDUSTRY", nextScreen: "industry" },
-      { value: "chooseTargetAudience", label: "TARGET AUDIENCE", nextScreen: "targetAudience" },
+      {
+        value: "chooseTargetAudience",
+        label: "TARGET AUDIENCE",
+        nextScreen: "targetAudience",
+      },
     ],
   },
   {
@@ -56,7 +62,8 @@ export const ONBOARDING_QUESTIONS: QuestionConfig[] = [
   {
     id: "industry",
     title: "Where do you primarily operate today?",
-    description: "you can let us know your operating address or simply tell us the zipcode where your business is at",
+    description:
+      "you can let us know your operating address or simply tell us the zipcode where your business is at",
     type: "select",
     placeholder: "Select your location",
     required: true,
@@ -91,18 +98,20 @@ export const ONBOARDING_QUESTIONS: QuestionConfig[] = [
   {
     id: "brandDescription",
     title: "Tell us about your brand",
-    description: "Describe your brand's mission, values, and what makes you unique.",
+    description:
+      "Describe your brand's mission, values, and what makes you unique.",
     type: "textarea",
-    placeholder: "Share your brand story, core values, and what sets you apart from competitors...",
+    placeholder:
+      "Share your brand story, core values, and what sets you apart from competitors...",
     required: true,
     minLength: 20,
     maxLength: 1000,
     // No nextScreen - will go to completion
   },
-  
+
   // Add more questions below as needed
   // Example additional questions:
-  
+
   // {
   //   id: "foundedYear",
   //   title: "When was your company founded?",
@@ -128,10 +137,9 @@ export const ONBOARDING_QUESTIONS: QuestionConfig[] = [
   //   required: false,
   //   minLength: 10,
   // },
-
-]
+];
 
 /**
  * Calculate total number of steps including landing, welcome, and completion
  */
-export const TOTAL_STEPS = 2 + ONBOARDING_QUESTIONS.length + 1 // landing + welcome + questions + completion
+export const TOTAL_STEPS = 2 + ONBOARDING_QUESTIONS.length + 1; // landing + welcome + questions + completion

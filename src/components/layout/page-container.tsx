@@ -3,8 +3,8 @@ import { cn } from "~/lib/utils";
 
 const variantStyles = {
   default: "max-w-7xl", // 1280px - content pages
-  narrow: "max-w-sm",   // 384px - auth forms
-  wide: "max-w-full",   // full-width sections
+  narrow: "max-w-sm", // 384px - auth forms
+  wide: "max-w-full", // full-width sections
 } as const;
 
 interface PageContainerProps {
@@ -15,7 +15,7 @@ interface PageContainerProps {
 
 /**
  * PageContainer provides consistent page-level layout with responsive padding and max-width.
- * 
+ *
  * Variants:
  * - default: max-w-7xl (1280px) - for content pages
  * - narrow: max-w-sm (384px) - for auth forms
@@ -31,7 +31,7 @@ function PageContainer({
       className={cn(
         "mx-auto w-full px-4 sm:px-6",
         variantStyles[variant],
-        className
+        className,
       )}
     >
       {children}

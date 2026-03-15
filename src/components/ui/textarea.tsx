@@ -1,20 +1,23 @@
-import * as React from "react"
+import * as React from "react";
 
-import { cn } from "~/lib/utils"
+import { cn } from "~/lib/utils";
 
 interface TextareaProps extends React.ComponentProps<"textarea"> {
-  label?: string
-  error?: string
-  helperText?: string
-  rows?: number
+  label?: string;
+  error?: string;
+  helperText?: string;
+  rows?: number;
 }
 
 const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
-  ({ className, label, error, helperText, id: providedId, rows = 4, ...props }, ref) => {
-    const generatedId = React.useId()
-    const textareaId = providedId || generatedId
-    const errorId = `${textareaId}-error`
-    const helperTextId = `${textareaId}-helper`
+  (
+    { className, label, error, helperText, id: providedId, rows = 4, ...props },
+    ref,
+  ) => {
+    const generatedId = React.useId();
+    const textareaId = providedId || generatedId;
+    const errorId = `${textareaId}-error`;
+    const helperTextId = `${textareaId}-helper`;
 
     return (
       <div className="w-full">
@@ -38,7 +41,7 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
           className={cn(
             // Base styles with design tokens
             "min-h-16 w-full bg-transparent px-3 py-2 text-base outline-none md:text-sm",
-            "border border-[var(--color-border)] rounded-[var(--radius-md)]",
+            "rounded-[var(--radius-md)] border border-[var(--color-border)]",
             "shadow-[var(--shadow-sm)]",
             "transition-[border-color,box-shadow] duration-[var(--duration-fast)] ease-[var(--easing-default)]",
             // Placeholder with WCAG AA contrast
@@ -49,12 +52,12 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
             error &&
               "border-[var(--color-error)] focus:border-[var(--color-error)] focus:ring-[var(--color-error)]/20",
             // Disabled state with reduced opacity
-            "disabled:cursor-not-allowed disabled:opacity-50 disabled:pointer-events-none",
+            "disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50",
             // Selection styles
             "selection:bg-[var(--color-primary)] selection:text-white",
             // Resize behavior
             "resize-y",
-            className
+            className,
           )}
           {...props}
         />
@@ -74,10 +77,10 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
           </p>
         )}
       </div>
-    )
-  }
-)
+    );
+  },
+);
 
-Textarea.displayName = "Textarea"
+Textarea.displayName = "Textarea";
 
-export { Textarea }
+export { Textarea };

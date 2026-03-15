@@ -11,14 +11,16 @@ export function GSAPLoader({ children }: { children: React.ReactNode }) {
       if (typeof window !== "undefined") {
         try {
           // Try to import GSAP
-          import("gsap").then(() => {
-            setGsapLoaded(true);
-            document.documentElement.classList.add("gsap-loaded");
-          }).catch(() => {
-            // Fallback to CSS animations
-            document.documentElement.classList.add("no-gsap");
-            setGsapLoaded(false);
-          });
+          import("gsap")
+            .then(() => {
+              setGsapLoaded(true);
+              document.documentElement.classList.add("gsap-loaded");
+            })
+            .catch(() => {
+              // Fallback to CSS animations
+              document.documentElement.classList.add("no-gsap");
+              setGsapLoaded(false);
+            });
         } catch (error) {
           document.documentElement.classList.add("no-gsap");
           setGsapLoaded(false);
@@ -30,8 +32,6 @@ export function GSAPLoader({ children }: { children: React.ReactNode }) {
   }, []);
 
   return (
-    <div className={gsapLoaded ? "gsap-ready" : "gsap-loading"}>
-      {children}
-    </div>
+    <div className={gsapLoaded ? "gsap-ready" : "gsap-loading"}>{children}</div>
   );
 }

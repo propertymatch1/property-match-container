@@ -50,7 +50,9 @@ export const getRedirectPath = (
 
   // If userType is undefined, we can't determine the correct path
   if (!userType) {
-    console.warn("getRedirectPath - userType is undefined, cannot determine redirect path");
+    console.warn(
+      "getRedirectPath - userType is undefined, cannot determine redirect path",
+    );
     return "/signin"; // Fallback to signin if we can't determine user type
   }
 

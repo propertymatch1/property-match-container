@@ -27,12 +27,12 @@ interface BrandHeaderProps {
 
 /**
  * BrandHeader displays the Identia brand logo/name with consistent Playfair Display typography.
- * 
+ *
  * Size variants:
  * - sm: Compact size for navigation bars
  * - md: Standard size for page headers
  * - lg: Large size for hero sections
- * 
+ *
  * The optional icon displays a decorative sage-colored circle accent.
  */
 function BrandHeader({
@@ -48,11 +48,11 @@ function BrandHeader({
         <div
           className={cn(
             "flex items-center justify-center rounded-full bg-gradient-to-br from-[var(--sage-500)] to-[var(--sage-600)] shadow-md",
-            styles.icon
+            styles.icon,
           )}
           aria-hidden="true"
         >
-          <span className="font-[var(--font-playfair)] text-xs font-semibold text-white sm:text-sm">
+          <span className="text-xs font-[var(--font-playfair)] font-semibold text-white sm:text-sm">
             I
           </span>
         </div>
@@ -60,7 +60,7 @@ function BrandHeader({
       <h1
         className={cn(
           "font-[var(--font-playfair)] font-semibold tracking-tight text-[var(--warm-900)]",
-          styles.text
+          styles.text,
         )}
       >
         Identia

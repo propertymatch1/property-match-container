@@ -9,7 +9,7 @@ interface CustomerPricingCardProps {
   typcialCustomer: string[];
   typcialCustomerSpend: string | null;
   rentRangeDesire: number | null;
-  variant?: 'standard' | 'featured';
+  variant?: "standard" | "featured";
   sectionId?: string;
 }
 
@@ -41,7 +41,7 @@ const motivationIcons: Record<string, React.ElementType> = {
 // Infer motivations from customer types (this is a simple heuristic)
 const inferMotivations = (customers: string[]): string[] => {
   const motivations = new Set<string>();
-  
+
   customers.forEach((customer) => {
     if (customer.includes("Professional") || customer.includes("Remote")) {
       motivations.add("Convenience");
@@ -57,12 +57,12 @@ const inferMotivations = (customers: string[]): string[] => {
       motivations.add("Community");
     }
   });
-  
+
   // Default motivations if none inferred
   if (motivations.size === 0) {
     return ["Quality", "Convenience"];
   }
-  
+
   return Array.from(motivations);
 };
 
@@ -70,8 +70,8 @@ export function CustomerPricingCard({
   typcialCustomer,
   typcialCustomerSpend,
   rentRangeDesire,
-  variant = 'standard',
-  sectionId = 'customer-pricing',
+  variant = "standard",
+  sectionId = "customer-pricing",
 }: CustomerPricingCardProps) {
   // Generate preview text
   const getPreview = () => {
@@ -111,7 +111,7 @@ export function CustomerPricingCard({
         {/* Target Customers */}
         {typcialCustomer.length > 0 && (
           <div>
-            <h4 className="text-sm font-semibold text-[var(--warm-500,#78716c)] uppercase tracking-wide mb-[var(--space-3,0.75rem)]">
+            <h4 className="mb-[var(--space-3,0.75rem)] text-sm font-semibold tracking-wide text-[var(--warm-500,#78716c)] uppercase">
               Target Customers
             </h4>
             <div className="flex flex-wrap gap-[var(--space-2,0.5rem)]">
@@ -121,9 +121,11 @@ export function CustomerPricingCard({
                   variant="outline"
                   className={`${
                     customerTypeColors[customer] ||
-                    "bg-gray-50 text-gray-700 border-gray-200"
-                  } px-3 py-1.5 text-sm font-medium rounded-full cursor-default transition-colors`}
-                  style={{ transitionDuration: "var(--transition-fast, 150ms)" }}
+                    "border-gray-200 bg-gray-50 text-gray-700"
+                  } cursor-default rounded-full px-3 py-1.5 text-sm font-medium transition-colors`}
+                  style={{
+                    transitionDuration: "var(--transition-fast, 150ms)",
+                  }}
                 >
                   {customer}
                 </Badge>
@@ -134,16 +136,19 @@ export function CustomerPricingCard({
 
         {/* Spend Range - Gold variant for financial info */}
         {typcialCustomerSpend && (
-          <div 
+          <div
             className="bg-[var(--gold-300,#e4c5a4)]/20 p-[var(--space-4,1rem)] sm:p-[var(--space-5,1.25rem)]"
             style={{ borderRadius: "var(--radius-xl, 1rem)" }}
           >
             <div className="flex items-center gap-[var(--space-3,0.75rem)]">
-              <div 
-                className="w-10 h-10 flex items-center justify-center bg-[var(--gold-400,#d4a574)]/30"
+              <div
+                className="flex h-10 w-10 items-center justify-center bg-[var(--gold-400,#d4a574)]/30"
                 style={{ borderRadius: "var(--radius-full, 9999px)" }}
               >
-                <DollarSign size={ICON_SIZE.standard} className="text-[var(--gold-600,#b4855a)]" />
+                <DollarSign
+                  size={ICON_SIZE.standard}
+                  className="text-[var(--gold-600,#b4855a)]"
+                />
               </div>
               <div>
                 <p className="text-sm text-[var(--warm-500,#78716c)]">
@@ -159,19 +164,24 @@ export function CustomerPricingCard({
 
         {/* Rent Budget (if available) - Gold variant */}
         {rentRangeDesire && (
-          <div 
+          <div
             className="bg-[var(--gold-300,#e4c5a4)]/20 p-[var(--space-4,1rem)] sm:p-[var(--space-5,1.25rem)]"
             style={{ borderRadius: "var(--radius-xl, 1rem)" }}
           >
             <div className="flex items-center gap-[var(--space-3,0.75rem)]">
-              <div 
-                className="w-10 h-10 flex items-center justify-center bg-[var(--gold-400,#d4a574)]/30"
+              <div
+                className="flex h-10 w-10 items-center justify-center bg-[var(--gold-400,#d4a574)]/30"
                 style={{ borderRadius: "var(--radius-full, 9999px)" }}
               >
-                <DollarSign size={ICON_SIZE.standard} className="text-[var(--gold-600,#b4855a)]" />
+                <DollarSign
+                  size={ICON_SIZE.standard}
+                  className="text-[var(--gold-600,#b4855a)]"
+                />
               </div>
               <div>
-                <p className="text-sm text-[var(--warm-500,#78716c)]">Monthly Rent Budget</p>
+                <p className="text-sm text-[var(--warm-500,#78716c)]">
+                  Monthly Rent Budget
+                </p>
                 <p className="text-xl font-semibold text-[var(--warm-800,#292524)]">
                   {formatCurrency(rentRangeDesire)}
                 </p>
@@ -183,7 +193,7 @@ export function CustomerPricingCard({
         {/* Motivations */}
         {motivations.length > 0 && (
           <div>
-            <h4 className="text-sm font-semibold text-[var(--warm-500,#78716c)] uppercase tracking-wide mb-[var(--space-3,0.75rem)]">
+            <h4 className="mb-[var(--space-3,0.75rem)] text-sm font-semibold tracking-wide text-[var(--warm-500,#78716c)] uppercase">
               What Draws Customers
             </h4>
             <div className="grid grid-cols-2 gap-[var(--space-3,0.75rem)]">
@@ -192,10 +202,13 @@ export function CustomerPricingCard({
                 return (
                   <div
                     key={index}
-                    className="flex items-center gap-[var(--space-3,0.75rem)] p-[var(--space-3,0.75rem)] bg-[var(--sage-50,#f6f7f6)] border border-[var(--sage-200,#c7d0c9)]"
+                    className="flex items-center gap-[var(--space-3,0.75rem)] border border-[var(--sage-200,#c7d0c9)] bg-[var(--sage-50,#f6f7f6)] p-[var(--space-3,0.75rem)]"
                     style={{ borderRadius: "var(--radius-xl, 1rem)" }}
                   >
-                    <Icon size={ICON_SIZE.standard} className="text-[var(--sage-500,#6b7c6e)]" />
+                    <Icon
+                      size={ICON_SIZE.standard}
+                      className="text-[var(--sage-500,#6b7c6e)]"
+                    />
                     <span className="text-sm font-medium text-[var(--warm-800,#292524)]">
                       {motivation}
                     </span>
@@ -210,7 +223,7 @@ export function CustomerPricingCard({
         {typcialCustomer.length === 0 &&
           !typcialCustomerSpend &&
           !rentRangeDesire && (
-            <p className="text-[var(--warm-500,#78716c)] text-center py-[var(--space-4,1rem)]">
+            <p className="py-[var(--space-4,1rem)] text-center text-[var(--warm-500,#78716c)]">
               No customer or pricing information available yet.
             </p>
           )}

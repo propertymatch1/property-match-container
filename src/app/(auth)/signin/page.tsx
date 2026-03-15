@@ -1,21 +1,21 @@
 "use client";
 
-import { ArrowLeft } from "lucide-react"
-import { useRouter } from "next/navigation"
-import { Button } from "~/components/ui/button"
-import { LoginForm } from "~/components/login-form"
-import { PageContainer, BrandHeader } from "~/components/layout"
+import { ArrowLeft } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { Button } from "~/components/ui/button";
+import { LoginForm } from "~/components/login-form";
+import { PageContainer, BrandHeader } from "~/components/layout";
 
 export default function LoginPage() {
   const router = useRouter();
 
   return (
-    <div className="bg-[var(--warm-50)] flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">
+    <div className="flex min-h-svh flex-col items-center justify-center gap-6 bg-[var(--warm-50)] p-6 md:p-10">
       <PageContainer variant="narrow" className="flex flex-col gap-6">
         <Button
           variant="ghost"
           size="sm"
-          className="self-start min-h-[44px]"
+          className="min-h-[44px] self-start"
           onClick={() => router.push("/")}
         >
           <ArrowLeft className="mr-2 h-4 w-4" />
@@ -27,5 +27,5 @@ export default function LoginPage() {
         <LoginForm />
       </PageContainer>
     </div>
-  )
+  );
 }

@@ -17,7 +17,10 @@ import { MediaSocialCard } from "./components/MediaSocialCard";
 import Footer from "./components/Footer";
 import MobileCTA from "./components/MobileCTA";
 import DashboardLayout from "./components/DashboardLayout";
-import { NavigationSidebar, DASHBOARD_SECTIONS } from "./components/NavigationSidebar";
+import {
+  NavigationSidebar,
+  DASHBOARD_SECTIONS,
+} from "./components/NavigationSidebar";
 import BentoGrid from "./components/BentoGrid";
 import QuickStatsSection from "./components/QuickStatsSection";
 import ProfileCompletenessBar from "./components/ProfileCompletenessBar";
@@ -28,15 +31,15 @@ function TenantDashboard() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-[var(--warm-50)] flex items-center justify-center">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8">
+      <div className="flex min-h-screen items-center justify-center bg-[var(--warm-50)]">
+        <div className="mx-auto max-w-4xl px-4 py-8 sm:px-6">
           <div className="space-y-4">
-            <div className="bg-white/50 rounded-lg p-6 animate-pulse">
-              <div className="h-4 bg-gray-200 rounded w-1/4 mb-2"></div>
-              <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+            <div className="animate-pulse rounded-lg bg-white/50 p-6">
+              <div className="mb-2 h-4 w-1/4 rounded bg-gray-200"></div>
+              <div className="h-4 w-1/2 rounded bg-gray-200"></div>
             </div>
-            <div className="bg-white/50 rounded-lg p-6 animate-pulse">
-              <div className="h-4 bg-gray-200 rounded w-1/3"></div>
+            <div className="animate-pulse rounded-lg bg-white/50 p-6">
+              <div className="h-4 w-1/3 rounded bg-gray-200"></div>
             </div>
           </div>
         </div>
@@ -46,17 +49,17 @@ function TenantDashboard() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-[var(--warm-50)] flex items-center justify-center">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8">
+      <div className="flex min-h-screen items-center justify-center bg-[var(--warm-50)]">
+        <div className="mx-auto max-w-4xl px-4 py-8 sm:px-6">
           <Alert variant="destructive">
             <AlertCircle className="h-4 w-4" />
-            <AlertDescription className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+            <AlertDescription className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <span>{error}</span>
               <Button
                 onClick={retry}
                 variant="outline"
                 size="sm"
-                className="min-h-[44px] w-full sm:w-auto sm:ml-4"
+                className="min-h-[44px] w-full sm:ml-4 sm:w-auto"
               >
                 Retry
               </Button>
@@ -69,19 +72,23 @@ function TenantDashboard() {
 
   if (!profile) {
     return (
-      <div className="min-h-screen bg-[var(--warm-50)] flex items-center justify-center">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8">
+      <div className="flex min-h-screen items-center justify-center bg-[var(--warm-50)]">
+        <div className="mx-auto max-w-4xl px-4 py-8 sm:px-6">
           <Alert>
             <Building className="h-4 w-4" />
-            <AlertDescription className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+            <AlertDescription className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <div>
-                <p className="font-semibold mb-1">Complete Your Profile</p>
+                <p className="mb-1 font-semibold">Complete Your Profile</p>
                 <p className="text-sm">
                   Get started by completing your tenant onboarding to create
                   your business profile.
                 </p>
               </div>
-              <Button asChild size="sm" className="min-h-[44px] w-full sm:w-auto sm:ml-4">
+              <Button
+                asChild
+                size="sm"
+                className="min-h-[44px] w-full sm:ml-4 sm:w-auto"
+              >
                 <Link href="/onboarding/tenent">Start Onboarding</Link>
               </Button>
             </AlertDescription>
@@ -95,11 +102,7 @@ function TenantDashboard() {
     <TooltipProvider>
       <div className="min-h-screen bg-[var(--warm-50)]">
         <DashboardLayout
-          sidebar={
-            <NavigationSidebar
-              sections={DASHBOARD_SECTIONS}
-            />
-          }
+          sidebar={<NavigationSidebar sections={DASHBOARD_SECTIONS} />}
         >
           <main className="pb-24 md:pb-8">
             {/* Hero Section */}
@@ -116,7 +119,7 @@ function TenantDashboard() {
             />
 
             {/* Profile Completeness and Quick Stats */}
-            <div className="max-w-6xl mx-auto px-4 sm:px-6 space-y-4 sm:space-y-6 mt-4 sm:mt-6">
+            <div className="mx-auto mt-4 max-w-6xl space-y-4 px-4 sm:mt-6 sm:space-y-6 sm:px-6">
               {/* Profile Completeness Bar */}
               <ProfileCompletenessBar profile={profile} />
 
@@ -125,7 +128,7 @@ function TenantDashboard() {
             </div>
 
             {/* Dashboard Cards in Bento Grid Layout */}
-            <div className="max-w-6xl mx-auto px-4 sm:px-6 mt-4 sm:mt-6">
+            <div className="mx-auto mt-4 max-w-6xl px-4 sm:mt-6 sm:px-6">
               <BentoGrid>
                 {/* Featured Cards - 2 column span on desktop */}
                 <BrandStoryCard

@@ -8,21 +8,26 @@ interface StatCardProps {
   label: string;
   value: string | number | null;
   icon: LucideIcon;
-  color: 'sage' | 'gold' | 'purple' | 'blue';
+  color: "sage" | "gold" | "purple" | "blue";
 }
 
 /**
  * StatCard component displays a compact metric with icon, label, and value.
- * 
+ *
  * Features:
  * - Renders icon, label, and value with color variants
  * - Displays "Not set" placeholder for null values
  * - Supports sage, gold, purple, and blue color themes
  * - Responsive design with consistent spacing
- * 
+ *
  * Requirements: 3.3, 3.5
  */
-export default function StatCard({ label, value, icon: Icon, color }: StatCardProps) {
+export default function StatCard({
+  label,
+  value,
+  icon: Icon,
+  color,
+}: StatCardProps) {
   // Color variant configurations
   const colorVariants = {
     sage: {
@@ -56,16 +61,17 @@ export default function StatCard({ label, value, icon: Icon, color }: StatCardPr
   };
 
   const variant = colorVariants[color];
-  const displayValue = value === null || value === undefined ? "Not set" : value;
+  const displayValue =
+    value === null || value === undefined ? "Not set" : value;
   const isPlaceholder = value === null || value === undefined;
 
   return (
     <div
       className={cn(
-        "flex items-center gap-3 p-4 rounded-xl",
+        "flex items-center gap-3 rounded-xl p-4",
         "transition-all duration-200",
-        "hover:shadow-sm hover:scale-[1.02]",
-        "min-w-0 flex-shrink-0" // For horizontal scroll support
+        "hover:scale-[1.02] hover:shadow-sm",
+        "min-w-0 flex-shrink-0", // For horizontal scroll support
       )}
       style={{
         backgroundColor: variant.background,
@@ -74,7 +80,7 @@ export default function StatCard({ label, value, icon: Icon, color }: StatCardPr
     >
       {/* Icon */}
       <div
-        className="p-2 rounded-lg flex-shrink-0"
+        className="flex-shrink-0 rounded-lg p-2"
         style={{
           backgroundColor: variant.iconBackground,
           color: variant.iconColor,
@@ -85,19 +91,19 @@ export default function StatCard({ label, value, icon: Icon, color }: StatCardPr
       </div>
 
       {/* Content */}
-      <div className="flex-1 min-w-0">
+      <div className="min-w-0 flex-1">
         <p
-          className="text-sm font-medium truncate"
+          className="truncate text-sm font-medium"
           style={{ color: variant.textColor }}
         >
           {label}
         </p>
         <p
           className={cn(
-            "text-lg font-semibold truncate",
-            isPlaceholder && "text-opacity-60 italic"
+            "truncate text-lg font-semibold",
+            isPlaceholder && "text-opacity-60 italic",
           )}
-          style={{ 
+          style={{
             color: isPlaceholder ? variant.textColor : variant.valueColor,
             fontSize: "var(--text-lg, 1.125rem)",
             lineHeight: "var(--leading-tight, 1.25)",

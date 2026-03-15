@@ -5,7 +5,8 @@ const backgroundStyles = {
   white: "bg-white",
   muted: "bg-[var(--warm-100)]",
   sage: "bg-[var(--sage-50)]",
-  gradient: "bg-gradient-to-br from-[var(--warm-50)] via-[var(--sage-50)] to-[var(--warm-100)]",
+  gradient:
+    "bg-gradient-to-br from-[var(--warm-50)] via-[var(--sage-50)] to-[var(--warm-100)]",
 } as const;
 
 const spacingStyles = {
@@ -24,13 +25,13 @@ interface SectionContainerProps {
 
 /**
  * SectionContainer provides consistent section spacing and optional background styling.
- * 
+ *
  * Background variants:
  * - white: Pure white background
  * - muted: Warm neutral background (warm-100)
  * - sage: Sage green tinted background (sage-50)
  * - gradient: Gradient from warm-50 through sage-50 to warm-100
- * 
+ *
  * Spacing variants:
  * - sm: Compact spacing for smaller sections
  * - md: Standard spacing for most sections
@@ -48,7 +49,7 @@ function SectionContainer({
       className={cn(
         backgroundStyles[background],
         spacingStyles[spacing],
-        className
+        className,
       )}
     >
       {children}

@@ -3,7 +3,10 @@
 import * as React from "react";
 import { CheckCircle, AlertCircle, TrendingUp } from "lucide-react";
 import { cn } from "~/lib/utils";
-import { calculateCompleteness, type ProfileCompleteness } from "../utils/profile-utils";
+import {
+  calculateCompleteness,
+  type ProfileCompleteness,
+} from "../utils/profile-utils";
 import type { TenantProfile } from "../hooks/use-tenant-profile";
 
 interface ProfileCompletenessBarProps {
@@ -13,65 +16,59 @@ interface ProfileCompletenessBarProps {
 
 /**
  * ProfileCompletenessBar component displays profile completion progress.
- * 
+ *
  * Features:
  * - Renders progress bar with percentage
  * - Displays missing field suggestions when incomplete
  * - Shows "Complete" badge when 100%
  * - Uses calculateCompleteness function for weighted scoring
  * - Responsive design with consistent styling
- * 
+ *
  * Requirements: 7.1, 7.4, 7.5
  */
-export default function ProfileCompletenessBar({ 
-  profile, 
-  className 
+export default function ProfileCompletenessBar({
+  profile,
+  className,
 }: ProfileCompletenessBarProps) {
-  const completeness = React.useMemo(() => 
-    calculateCompleteness(profile), 
-    [profile]
+  const completeness = React.useMemo(
+    () => calculateCompleteness(profile),
+    [profile],
   );
 
   const isComplete = completeness.percentage === 100;
-  const progressColor = isComplete 
-    ? "var(--sage-500, #6b7c6e)" 
-    : completeness.percentage >= 75 
-      ? "var(--gold-500, #d4a574)" 
+  const progressColor = isComplete
+    ? "var(--sage-500, #6b7c6e)"
+    : completeness.percentage >= 75
+      ? "var(--gold-500, #d4a574)"
       : "var(--warm-400, #a8a29e)";
 
   return (
     <div
-      className={cn(
-        "card-elevated p-6",
-        className
-      )}
+      className={cn("card-elevated p-6", className)}
       style={{ borderRadius: "var(--radius-2xl, 1.5rem)" }}
     >
       {/* Header */}
-      <div className="flex items-center justify-between mb-4">
+      <div className="mb-4 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div
-            className="p-2 rounded-lg"
+            className="rounded-lg p-2"
             style={{
-              backgroundColor: isComplete 
+              backgroundColor: isComplete
                 ? "color-mix(in srgb, var(--sage-500) 15%, transparent)"
                 : "color-mix(in srgb, var(--gold-500) 15%, transparent)",
               color: isComplete ? "var(--sage-500)" : "var(--gold-500)",
               borderRadius: "var(--radius-lg, 0.75rem)",
             }}
           >
-            {isComplete ? (
-              <CheckCircle size={20} />
-            ) : (
-              <TrendingUp size={20} />
-            )}
+            {isComplete ? <CheckCircle size={20} /> : <TrendingUp size={20} />}
           </div>
           <div>
             <h3 className="text-lg font-semibold text-[var(--warm-800,#2D2D2D)]">
               Profile Completeness
             </h3>
             <p className="text-sm text-[var(--warm-500,#78716c)]">
-              {completeness.completedFields} of {completeness.totalFields} fields completed
+              {completeness.completedFields} of {completeness.totalFields}{" "}
+              fields completed
             </p>
           </div>
         </div>
@@ -79,7 +76,7 @@ export default function ProfileCompletenessBar({
         {/* Percentage Badge */}
         {isComplete ? (
           <div
-            className="px-3 py-1 rounded-full text-sm font-medium"
+            className="rounded-full px-3 py-1 text-sm font-medium"
             style={{
               backgroundColor: "var(--sage-100, #e3e7e4)",
               color: "var(--sage-700, #454f47)",
@@ -90,7 +87,7 @@ export default function ProfileCompletenessBar({
           </div>
         ) : (
           <div
-            className="px-3 py-1 rounded-full text-sm font-medium"
+            className="rounded-full px-3 py-1 text-sm font-medium"
             style={{
               backgroundColor: "var(--gold-100, #f5f1eb)",
               color: "var(--gold-700, #9c6d3a)",
@@ -105,7 +102,7 @@ export default function ProfileCompletenessBar({
       {/* Progress Bar */}
       <div className="mb-4">
         <div
-          className="w-full h-3 rounded-full overflow-hidden"
+          className="h-3 w-full overflow-hidden rounded-full"
           style={{
             backgroundColor: "var(--warm-100, #f5f4f0)",
             borderRadius: "var(--radius-full, 9999px)",
@@ -126,20 +123,20 @@ export default function ProfileCompletenessBar({
       {!isComplete && completeness.missingFields.length > 0 && (
         <div className="space-y-3">
           <div className="flex items-center gap-2">
-            <AlertCircle 
-              size={16} 
-              className="text-[var(--gold-500,#d4a574)] flex-shrink-0" 
+            <AlertCircle
+              size={16}
+              className="flex-shrink-0 text-[var(--gold-500,#d4a574)]"
             />
             <p className="text-sm font-medium text-[var(--warm-700,#44403c)]">
               Complete these fields to improve your profile:
             </p>
           </div>
-          
+
           <div className="flex flex-wrap gap-2">
             {completeness.missingFields.slice(0, 6).map((field) => (
               <span
                 key={field}
-                className="px-2 py-1 text-xs font-medium rounded-md"
+                className="rounded-md px-2 py-1 text-xs font-medium"
                 style={{
                   backgroundColor: "var(--warm-100, #f5f4f0)",
                   color: "var(--warm-600, #57534e)",
@@ -151,7 +148,7 @@ export default function ProfileCompletenessBar({
             ))}
             {completeness.missingFields.length > 6 && (
               <span
-                className="px-2 py-1 text-xs font-medium rounded-md"
+                className="rounded-md px-2 py-1 text-xs font-medium"
                 style={{
                   backgroundColor: "var(--warm-200, #e7e5e4)",
                   color: "var(--warm-600, #57534e)",
@@ -168,12 +165,13 @@ export default function ProfileCompletenessBar({
       {/* Complete State Message */}
       {isComplete && (
         <div className="flex items-center gap-2 pt-2">
-          <CheckCircle 
-            size={16} 
-            className="text-[var(--sage-500,#6b7c6e)] flex-shrink-0" 
+          <CheckCircle
+            size={16}
+            className="flex-shrink-0 text-[var(--sage-500,#6b7c6e)]"
           />
           <p className="text-sm text-[var(--sage-700,#454f47)]">
-            Your profile is complete! This helps landlords understand your business better.
+            Your profile is complete! This helps landlords understand your
+            business better.
           </p>
         </div>
       )}

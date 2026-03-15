@@ -6,7 +6,7 @@ interface ChatLoadingProps {
 
 export function ChatLoading({ message }: ChatLoadingProps) {
   return (
-    <div className="flex items-center gap-2 text-muted-foreground">
+    <div className="text-muted-foreground flex items-center gap-2">
       <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
       <span className="text-sm">{message}</span>
     </div>
@@ -26,9 +26,7 @@ export function SaveError({ message, onRetry, details }: SaveErrorProps) {
         <div className="text-red-600">⚠️</div>
         <div className="flex-1">
           <p className="text-sm font-medium text-red-800">{message}</p>
-          {details && (
-            <p className="mt-1 text-xs text-red-600">{details}</p>
-          )}
+          {details && <p className="mt-1 text-xs text-red-600">{details}</p>}
           <Button
             onClick={onRetry}
             variant="outline"

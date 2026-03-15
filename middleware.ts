@@ -6,44 +6,39 @@ const PROTECTED_ROUTES = {
   "/dashboard/tenent": "TENANT",
   "/onboarding/tenent": "TENANT",
   // Landlord-only routes
-  "/dashboard/landlord": "LANDLORD", 
+  "/dashboard/landlord": "LANDLORD",
   "/onboarding/landlord": "LANDLORD",
 } as const;
 
 // Routes that require authentication but no specific role
-const AUTH_REQUIRED_ROUTES = [
-  "/dashboard",
-  "/onboarding",
-];
+const AUTH_REQUIRED_ROUTES = ["/dashboard", "/onboarding"];
 
 // Public routes that don't require authentication
-const PUBLIC_ROUTES = [
-  "/",
-  "/signin",
-  "/signup",
-  "/api/auth",
-];
+const PUBLIC_ROUTES = ["/", "/signin", "/signup", "/api/auth"];
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  
+
   // Skip middleware for public routes, static files, and API routes (except auth)
   if (
     pathname.startsWith("/_next") ||
     pathname.startsWith("/favicon.ico") ||
-    pathname.startsWith("/api") && !pathname.startsWith("/api/auth") ||
-    PUBLIC_ROUTES.some(route => pathname === route || pathname.startsWith(route + "/"))
+    (pathname.startsWith("/api") && !pathname.startsWith("/api/auth")) ||
+    PUBLIC_ROUTES.some(
+      (route) => pathname === route || pathname.startsWith(route + "/"),
+    )
   ) {
     return NextResponse.next();
   }
 
   // Check if route requires authentication
-  const requiresAuth = AUTH_REQUIRED_ROUTES.some(route => 
-    pathname.startsWith(route)
+  const requiresAuth = AUTH_REQUIRED_ROUTES.some((route) =>
+    pathname.startsWith(route),
   );
 
   // Check if route has specific role requirements
-  const requiredRole = PROTECTED_ROUTES[pathname as keyof typeof PROTECTED_ROUTES];
+  const requiredRole =
+    PROTECTED_ROUTES[pathname as keyof typeof PROTECTED_ROUTES];
 
   // Simple auth check using Better Auth session cookie
   const sessionCookie = request.cookies.get("better-auth.session_token");

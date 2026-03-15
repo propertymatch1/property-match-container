@@ -43,13 +43,13 @@ interface UseTenantProfileReturn {
 
 /**
  * Custom hook for fetching tenant profile data
- * 
+ *
  * Handles:
  * - Data fetching with loading states
  * - Authentication errors (401, 403)
  * - Network and server errors
  * - Retry functionality
- * 
+ *
  * Requirements: 1.2, 1.3, 1.4
  */
 export function useTenantProfile(): UseTenantProfileReturn {
@@ -88,7 +88,8 @@ export function useTenantProfile(): UseTenantProfileReturn {
       // Handle other HTTP errors
       if (!response.ok) {
         const data = await response.json().catch(() => ({}));
-        const errorMessage = data.error || `Failed to fetch profile (${response.status})`;
+        const errorMessage =
+          data.error || `Failed to fetch profile (${response.status})`;
         setError(errorMessage);
         setProfile(null);
         setIsLoading(false);
@@ -108,7 +109,9 @@ export function useTenantProfile(): UseTenantProfileReturn {
     } catch (err) {
       // Handle network errors
       if (err instanceof TypeError && err.message.includes("fetch")) {
-        setError("Network connection failed. Please check your internet connection.");
+        setError(
+          "Network connection failed. Please check your internet connection.",
+        );
       } else if (err instanceof Error) {
         setError(err.message);
       } else {

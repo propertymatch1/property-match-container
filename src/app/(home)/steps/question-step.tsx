@@ -1,123 +1,142 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import { ArrowRight } from "lucide-react"
-import { Button } from "~/components/ui/button"
-import { Input } from "~/components/ui/input"
-import { Textarea } from "~/components/ui/textarea"
+import * as React from "react";
+import { ArrowRight } from "lucide-react";
+import { Button } from "~/components/ui/button";
+import { Input } from "~/components/ui/input";
+import { Textarea } from "~/components/ui/textarea";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "~/components/ui/select"
-import { SplitScreenLayout } from "~/components/layout/split-screen-layout"
-import { IllustrationContainer } from "~/components/layout/illustration-container"
-import { useOnboarding } from "../onboarding-context"
+} from "~/components/ui/select";
+import { SplitScreenLayout } from "~/components/layout/split-screen-layout";
+import { IllustrationContainer } from "~/components/layout/illustration-container";
+import { useOnboarding } from "../onboarding-context";
 
 export interface QuestionConfig {
-  id: string
-  title: string
-  description: string
-  type: "text" | "textarea" | "url" | "email" | "number" | "select" | "multiple-choice"
-  placeholder: string
-  required?: boolean
-  minLength?: number
-  maxLength?: number
-  validation?: (value: string) => string | null // Returns error message or null
-  helperText?: string
-  options?: Array<{ 
-    value: string
-    label: string
-    nextScreen?: string // For single-choice: navigate to this screen when this option is selected
-  }>
-  allowMultiple?: boolean // For multiple-choice type
-  useSplitScreen?: boolean // Use split-screen layout
-  nextScreen?: string // Next screen ID when continuing (if value provided)
-  nextScreenOnSkip?: string // Next screen ID when skipping (if different from nextScreen)
+  id: string;
+  title: string;
+  description: string;
+  type:
+    | "text"
+    | "textarea"
+    | "url"
+    | "email"
+    | "number"
+    | "select"
+    | "multiple-choice";
+  placeholder: string;
+  required?: boolean;
+  minLength?: number;
+  maxLength?: number;
+  validation?: (value: string) => string | null; // Returns error message or null
+  helperText?: string;
+  options?: Array<{
+    value: string;
+    label: string;
+    nextScreen?: string; // For single-choice: navigate to this screen when this option is selected
+  }>;
+  allowMultiple?: boolean; // For multiple-choice type
+  useSplitScreen?: boolean; // Use split-screen layout
+  nextScreen?: string; // Next screen ID when continuing (if value provided)
+  nextScreenOnSkip?: string; // Next screen ID when skipping (if different from nextScreen)
 }
 
 interface QuestionStepProps {
-  question: QuestionConfig
+  question: QuestionConfig;
 }
 
 export function QuestionStep({ question }: QuestionStepProps) {
-  const { responses, updateResponse, skipToQuestion, pushToHistory, goToNextStep } = useOnboarding()
+  const {
+    responses,
+    updateResponse,
+    skipToQuestion,
+    pushToHistory,
+    goToNextStep,
+  } = useOnboarding();
 
-  const [value, setValue] = React.useState(responses[question.id] || "")
-  const [error, setError] = React.useState("")
+  const [value, setValue] = React.useState(responses[question.id] || "");
+  const [error, setError] = React.useState("");
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setValue(e.target.value)
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
+    setValue(e.target.value);
     if (error) {
-      setError("")
+      setError("");
     }
-  }
+  };
 
   const validate = (): boolean => {
     // Required field check
     if (question.required && !value.trim()) {
-      setError(`${question.title} is required`)
-      return false
+      setError(`${question.title} is required`);
+      return false;
     }
 
     // Min length check
     if (question.minLength && value.trim().length < question.minLength) {
-      setError(`${question.title} must be at least ${question.minLength} characters`)
-      return false
+      setError(
+        `${question.title} must be at least ${question.minLength} characters`,
+      );
+      return false;
     }
 
     // Max length check
     if (question.maxLength && value.trim().length > question.maxLength) {
-      setError(`${question.title} must be no more than ${question.maxLength} characters`)
-      return false
+      setError(
+        `${question.title} must be no more than ${question.maxLength} characters`,
+      );
+      return false;
     }
 
     // Custom validation
     if (question.validation) {
-      const validationError = question.validation(value)
+      const validationError = question.validation(value);
       if (validationError) {
-        setError(validationError)
-        return false
+        setError(validationError);
+        return false;
       }
     }
 
-    return true
-  }
+    return true;
+  };
 
   const handleContinue = () => {
     if (validate()) {
-      updateResponse(question.id, value)
-      pushToHistory(question.id)
-      
+      updateResponse(question.id, value);
+      pushToHistory(question.id);
+
       // Navigate based on nextScreen if specified, otherwise go to next step (completion)
       if (question.nextScreen) {
-        skipToQuestion(question.nextScreen)
+        skipToQuestion(question.nextScreen);
       } else {
-        goToNextStep()
+        goToNextStep();
       }
     }
-  }
+  };
 
   const handleSkip = () => {
-    updateResponse(question.id, "")
-    pushToHistory(question.id)
-    
+    updateResponse(question.id, "");
+    pushToHistory(question.id);
+
     // Navigate based on nextScreenOnSkip or nextScreen
-    const targetScreen = question.nextScreenOnSkip || question.nextScreen
+    const targetScreen = question.nextScreenOnSkip || question.nextScreen;
     if (targetScreen) {
-      skipToQuestion(targetScreen)
+      skipToQuestion(targetScreen);
     } else {
-      goToNextStep()
+      goToNextStep();
     }
-  }
+  };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter" && question.type !== "textarea") {
-      handleContinue()
+      handleContinue();
     }
-  }
+  };
 
   // Render input field
   const renderInput = () => {
@@ -126,9 +145,9 @@ export function QuestionStep({ question }: QuestionStepProps) {
         <Select
           value={value}
           onValueChange={(newValue) => {
-            setValue(newValue)
+            setValue(newValue);
             if (error) {
-              setError("")
+              setError("");
             }
           }}
         >
@@ -143,7 +162,7 @@ export function QuestionStep({ question }: QuestionStepProps) {
             ))}
           </SelectContent>
         </Select>
-      )
+      );
     }
 
     if (question.type === "textarea") {
@@ -157,11 +176,11 @@ export function QuestionStep({ question }: QuestionStepProps) {
           required={question.required}
           rows={6}
         />
-      )
+      );
     }
 
     return (
-      <div className="flex gap-3 items-start">
+      <div className="flex items-start gap-3">
         <Input
           label=""
           placeholder={question.placeholder}
@@ -177,21 +196,21 @@ export function QuestionStep({ question }: QuestionStepProps) {
           variant="secondary"
           size="md"
           onClick={handleContinue}
-          className="min-w-[44px] px-3 bg-[var(--color-teal-100)] border-[var(--color-teal-300)] hover:bg-[var(--color-teal-200)] mt-0"
+          className="mt-0 min-w-[44px] border-[var(--color-teal-300)] bg-[var(--color-teal-100)] px-3 hover:bg-[var(--color-teal-200)]"
           aria-label="Continue"
         >
-          <ArrowRight className="w-5 h-5 text-[var(--color-teal-700)]" />
+          <ArrowRight className="h-5 w-5 text-[var(--color-teal-700)]" />
         </Button>
       </div>
-    )
-  }
+    );
+  };
 
   // Split-screen layout for websiteUrl and other specified questions
   if (question.useSplitScreen) {
     return (
       <SplitScreenLayout
         leftContent={
-          <div className="flex items-center justify-center h-full">
+          <div className="flex h-full items-center justify-center">
             <IllustrationContainer
               src="/illustrations/welcome.svg"
               alt={question.title}
@@ -201,7 +220,7 @@ export function QuestionStep({ question }: QuestionStepProps) {
           </div>
         }
         rightContent={
-          <div className="flex flex-col justify-center h-full max-w-2xl mx-auto">
+          <div className="mx-auto flex h-full max-w-2xl flex-col justify-center">
             {/* Heading */}
             <div className="mb-[var(--spacing-8)]">
               <h1 className="heading-1 mb-[var(--spacing-4)] text-[var(--color-text)]">
@@ -218,7 +237,7 @@ export function QuestionStep({ question }: QuestionStepProps) {
             <div className="mb-[var(--spacing-8)]">
               {renderInput()}
               {!error && question.helperText && (
-                <p className="body-small text-[var(--color-text-muted)] mt-[var(--spacing-2)]">
+                <p className="body-small mt-[var(--spacing-2)] text-[var(--color-text-muted)]">
                   {question.helperText}
                 </p>
               )}
@@ -243,17 +262,17 @@ export function QuestionStep({ question }: QuestionStepProps) {
         rightRatio={55}
         mobileStackOrder="right-first"
       />
-    )
+    );
   }
 
   // Centered layout for other questions
   return (
-    <div className="h-[calc(100vh-105px)] flex flex-col items-center justify-center px-4 bg-[var(--color-background)] overflow-hidden">
-      <div className="w-full max-w-2xl mx-auto">
+    <div className="flex h-[calc(100vh-105px)] flex-col items-center justify-center overflow-hidden bg-[var(--color-background)] px-4">
+      <div className="mx-auto w-full max-w-2xl">
         {/* Placeholder Image/Map */}
         {question.id === "industry" && (
           <div className="mb-6 flex justify-center">
-            <div className="w-40 h-24 bg-[var(--color-neutral-300)] rounded-[var(--radius-md)]" />
+            <div className="h-24 w-40 rounded-[var(--radius-md)] bg-[var(--color-neutral-300)]" />
           </div>
         )}
 
@@ -263,17 +282,17 @@ export function QuestionStep({ question }: QuestionStepProps) {
             {question.title}
           </h1>
           {question.description && (
-            <p className="body-text text-[var(--color-text-muted)] max-w-xl mx-auto">
+            <p className="body-text mx-auto max-w-xl text-[var(--color-text-muted)]">
               {question.description}
             </p>
           )}
         </div>
 
         {/* Input */}
-        <div className="max-w-md mx-auto">
+        <div className="mx-auto max-w-md">
           {renderInput()}
           {!error && question.helperText && (
-            <p className="body-small text-[var(--color-text-muted)] mt-2 text-center">
+            <p className="body-small mt-2 text-center text-[var(--color-text-muted)]">
               {question.helperText}
             </p>
           )}
@@ -281,18 +300,20 @@ export function QuestionStep({ question }: QuestionStepProps) {
       </div>
 
       {/* Floating Complete/Continue Button */}
-      {(!question.nextScreen || question.type === "select" || question.type === "textarea") && (
-        <div className="fixed bottom-8 right-8">
+      {(!question.nextScreen ||
+        question.type === "select" ||
+        question.type === "textarea") && (
+        <div className="fixed right-8 bottom-8">
           <Button
             variant="primary"
             size="lg"
             onClick={handleContinue}
-            className="rounded-full px-8 py-4 uppercase tracking-wide shadow-lg"
+            className="rounded-full px-8 py-4 tracking-wide uppercase shadow-lg"
           >
             {question.nextScreen ? "Continue" : "Complete"}
           </Button>
         </div>
       )}
     </div>
-  )
+  );
 }
