@@ -152,6 +152,10 @@ model PropertySpace {
 model TenantProfile {
   id                   String     @id
   mode                 TenantMode
+
+  onboarded            Boolean  @default(false)
+  sessionKey           String?
+
   brandName            String?
   logoUrl              String?
   industry             String?
