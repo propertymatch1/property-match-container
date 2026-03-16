@@ -1,81 +1,47 @@
-import { NextResponse } from "next/server";
-import { auth } from "~/lib/auth";
+import { NextResponse, NextRequest } from "next/server";
 import { db } from "~/server/db";
+import { handleAPIError } from "~/lib/api/api_common_utils";
+import { auth } from "~/lib/auth";
 
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
   try {
-    // Get session from Better Auth
     const session = await auth.api.getSession({
       headers: request.headers,
     });
+    const user = session?.user;
 
-    // Check if user is authenticated
-    if (!session?.user) {
-      return NextResponse.json(
-        { success: false, error: "Unauthorized" },
-        { status: 401 },
-      );
+    // profile from user
+    if (user) {
+      const profile = await db.tenantProfile.findUnique({
+        where: { userId: user.id },
+      });
+      return NextResponse.json({
+        success: true,
+        profile: profile ?? null,
+      });
     }
 
-    const user = session.user;
-
-    // Check if user has TENANT role
-    if (user.userType !== "TENANT") {
-      return NextResponse.json(
-        {
-          success: false,
-          error: "Forbidden - Only tenant users can access this resource",
-        },
-        { status: 403 },
-      );
+    // parse cookies to support session_key lookup when no authenticated user
+    const sessionKey = request.cookies.get("session_key")?.value;
+    if (sessionKey) {
+      const profile = await db.tenantProfile.findFirst({
+        where: { sessionKey },
+      });
+      if (profile) {
+        return NextResponse.json({
+          success: true,
+          profile,
+        });
+      }
     }
 
-    // Query TenantProfile from database using Prisma
-    const profile = await db.tenantProfile.findUnique({
-      where: { userId: user.id },
-    });
-
-    // Return profile data (can be null if user hasn't completed onboarding)
+    // No user and no session_key -> explicit null profile
     return NextResponse.json({
       success: true,
-      profile,
+      profile: null,
     });
   } catch (error) {
     console.error("Error fetching tenant profile:", error);
-
-    // Handle specific database errors
-    if (error instanceof Error) {
-      // Handle database connection errors
-      if (
-        error.message.includes("Can't reach database server") ||
-        error.message.includes("Connection refused") ||
-        error.message.includes("ECONNREFUSED")
-      ) {
-        return NextResponse.json(
-          {
-            success: false,
-            error: "Database connection failed. Please try again later.",
-          },
-          { status: 503 },
-        );
-      }
-
-      // Handle timeout errors
-      if (
-        error.message.includes("timeout") ||
-        error.message.includes("ETIMEDOUT")
-      ) {
-        return NextResponse.json(
-          { success: false, error: "Request timeout. Please try again." },
-          { status: 408 },
-        );
-      }
-    }
-
-    // Generic server error
-    return NextResponse.json(
-      { success: false, error: "Failed to fetch profile" },
-      { status: 500 },
-    );
+    return handleAPIError(error);
   }
 }
