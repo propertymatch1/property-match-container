@@ -4,15 +4,12 @@ import { Vibrant } from "@vibrant/core";
 
 export type URLExtractedData = {
   name?: string;
-  logo_url?: string;
+  logo_candidates?: string[];
   primary_colors?: string[];
   category?: string;
 };
 
-export async function extractURL(url: string): Promise<URLExtractedData> {
-  const { html, finalUrl } = await fetchHTML(url);
-  const $ = cheerio.load(html);
-
+export async function extractURL($: cheerio.CheerioAPI, finalUrl: string): Promise<URLExtractedData> {
   // parse JSON-LD structured data
   let structuredData: any = null;
   const jsonLd: any[] = [];
@@ -31,7 +28,8 @@ export async function extractURL(url: string): Promise<URLExtractedData> {
   // brand name
   const brandName = extractBrandName($);
   // logo candidates
-  const logoCandidates = extractLogoCandidates($, finalUrl);
+  const logoCandidates = await extractLogoCandidates($, finalUrl);
+  console.log("Logo candidates:", logoCandidates);
 
   // primary colors
   const { primaryColors, chosenLogoUrl } = await getPalette($, logoCandidates);
@@ -45,9 +43,7 @@ export async function extractURL(url: string): Promise<URLExtractedData> {
 
   return {
     name: brandName,
-    logo_url:
-      chosenLogoUrl ||
-      (logoCandidates.length > 0 ? logoCandidates[0] : undefined),
+    logo_candidates: logoCandidates ?? [],
     primary_colors: primaryColors.length > 0 ? primaryColors : undefined,
     category: category || undefined,
   };
@@ -74,10 +70,10 @@ function extractBrandName($: cheerio.CheerioAPI): string | undefined {
   );
 }
 
-function extractLogoCandidates(
+async function extractLogoCandidates(
   $: cheerio.CheerioAPI,
   baseUrl: string,
-): string[] {
+): Promise<string[]> {
   const candidates = new Set<string>();
 
   // Common meta tags
@@ -155,7 +151,15 @@ function extractLogoCandidates(
     }
   }
 
-  return Array.from(candidates);
+  const final = [];
+  for (const c of candidates) {
+    const buf = await fetchImageBuffer(c);
+    if (buf) {
+      final.push(c);
+    }
+  }
+
+  return final;
 }
 
 async function getPalette(

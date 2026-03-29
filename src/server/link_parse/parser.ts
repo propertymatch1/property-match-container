@@ -1,5 +1,7 @@
 import { parseExtractedURLWithLLM } from "./llm_extract";
 import { extractURL } from "./url_extract";
+import { fetchHTML } from "./url_utils";
+import * as cheerio from "cheerio";
 
 export type LinkParserOutput = {
   url: string;
@@ -15,6 +17,8 @@ export type LinkParserOutput = {
 };
 
 export async function parseURL(url: string): Promise<LinkParserOutput> {
-  const extractedURL = await extractURL(url);
-  return await parseExtractedURLWithLLM(url, extractedURL);
+  const { html, finalUrl } = await fetchHTML(url);
+  const $ = cheerio.load(html);
+  const extractedURL = await extractURL($, finalUrl);
+  return await parseExtractedURLWithLLM($, extractedURL);
 }
