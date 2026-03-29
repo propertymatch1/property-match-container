@@ -1,15 +1,16 @@
 import { absoluteUrl, fetchHTML, fetchImageBuffer } from "./url_utils";
 import * as cheerio from "cheerio";
-import { Vibrant } from "@vibrant/core";
 
 export type URLExtractedData = {
   name?: string;
   logo_candidates?: string[];
-  primary_colors?: string[];
   category?: string;
 };
 
-export async function extractURL($: cheerio.CheerioAPI, finalUrl: string): Promise<URLExtractedData> {
+export async function extractURL(
+  $: cheerio.CheerioAPI,
+  finalUrl: string,
+): Promise<URLExtractedData> {
   // parse JSON-LD structured data
   let structuredData: any = null;
   const jsonLd: any[] = [];
@@ -29,10 +30,6 @@ export async function extractURL($: cheerio.CheerioAPI, finalUrl: string): Promi
   const brandName = extractBrandName($);
   // logo candidates
   const logoCandidates = await extractLogoCandidates($, finalUrl);
-  console.log("Logo candidates:", logoCandidates);
-
-  // primary colors
-  const { primaryColors, chosenLogoUrl } = await getPalette($, logoCandidates);
 
   // category heuristics
   let category = extractCategoryFromStructuredData(structuredData);
@@ -44,7 +41,6 @@ export async function extractURL($: cheerio.CheerioAPI, finalUrl: string): Promi
   return {
     name: brandName,
     logo_candidates: logoCandidates ?? [],
-    primary_colors: primaryColors.length > 0 ? primaryColors : undefined,
     category: category || undefined,
   };
 }
@@ -162,76 +158,76 @@ async function extractLogoCandidates(
   return final;
 }
 
-async function getPalette(
-  $: cheerio.CheerioAPI,
-  logoCandidates: string[],
-): Promise<{
-  primaryColors: string[];
-  chosenLogoUrl: string | undefined;
-}> {
-  // fetch palette by trying candidates in order
-  let primaryColors: string[] = [];
-  let chosenLogoUrl: string | undefined;
-  for (const c of logoCandidates) {
-    const buf = await fetchImageBuffer(c);
-    if (!buf) continue;
-    const colors = await extractPaletteFromImageBuffer(buf, 6);
-    if (colors.length > 0) {
-      primaryColors = colors;
-      chosenLogoUrl = c;
-      break;
-    }
-  }
+// async function getPalette(
+//   $: cheerio.CheerioAPI,
+//   logoCandidates: string[],
+// ): Promise<{
+//   primaryColors: string[];
+//   chosenLogoUrl: string | undefined;
+// }> {
+//   // fetch palette by trying candidates in order
+//   let primaryColors: string[] = [];
+//   let chosenLogoUrl: string | undefined;
+//   for (const c of logoCandidates) {
+//     const buf = await fetchImageBuffer(c);
+//     if (!buf) continue;
+//     const colors = await extractPaletteFromImageBuffer(buf, 6);
+//     if (colors.length > 0) {
+//       primaryColors = colors;
+//       chosenLogoUrl = c;
+//       break;
+//     }
+//   }
 
-  // fallback: try to sample CSS variables / inline style colors
-  if (primaryColors.length === 0) {
-    // very rough heuristic: look for CSS color hex codes in style tags or inline CSS
-    const cssText =
-      $("style")
-        .map((i, el) => $(el).html())
-        .get()
-        .join("\n") +
-      "\n" +
-      $("[style]")
-        .map((i, el) => $(el).attr("style"))
-        .get()
-        .join("\n");
-    const hexes = Array.from(
-      new Set(
-        (cssText.match(/#([0-9a-f]{3,6})\b/gi) || []).map((s) => {
-          const h = s.startsWith("#") ? s : `#${s}`;
-          // normalize 3-digit hex to 6-digit
-          if (h.length === 4)
-            return "#" + h[1] + h[1] + h[2] + h[2] + h[3] + h[3];
-          return h;
-        }),
-      ),
-    );
-    if (hexes.length) primaryColors = hexes.slice(0, 6);
-  }
+//   // fallback: try to sample CSS variables / inline style colors
+//   if (primaryColors.length === 0) {
+//     // very rough heuristic: look for CSS color hex codes in style tags or inline CSS
+//     const cssText =
+//       $("style")
+//         .map((i, el) => $(el).html())
+//         .get()
+//         .join("\n") +
+//       "\n" +
+//       $("[style]")
+//         .map((i, el) => $(el).attr("style"))
+//         .get()
+//         .join("\n");
+//     const hexes = Array.from(
+//       new Set(
+//         (cssText.match(/#([0-9a-f]{3,6})\b/gi) || []).map((s) => {
+//           const h = s.startsWith("#") ? s : `#${s}`;
+//           // normalize 3-digit hex to 6-digit
+//           if (h.length === 4)
+//             return "#" + h[1] + h[1] + h[2] + h[2] + h[3] + h[3];
+//           return h;
+//         }),
+//       ),
+//     );
+//     if (hexes.length) primaryColors = hexes.slice(0, 6);
+//   }
 
-  return { primaryColors, chosenLogoUrl };
-}
+//   return { primaryColors, chosenLogoUrl };
+// }
 
-async function extractPaletteFromImageBuffer(
-  buf: Buffer,
-  maxColors = 6,
-): Promise<string[]> {
-  try {
-    const vi = Vibrant.from(buf);
-    const palette = await vi.getPalette();
-    const colors: string[] = [];
-    // palette.swatches() returns swatches; map them to hex
-    for (const swatch of Object.values(palette)) {
-      if (swatch && swatch.hex) colors.push(swatch.hex);
-    }
-    // unique & filter
-    return Array.from(new Set(colors)).slice(0, maxColors);
-  } catch (e) {
-    // fallback: return empty
-    return [];
-  }
-}
+// async function extractPaletteFromImageBuffer(
+//   buf: Buffer,
+//   maxColors = 6,
+// ): Promise<string[]> {
+//   try {
+//     const vi = Vibrant.from(buf);
+//     const palette = await vi.getPalette();
+//     const colors: string[] = [];
+//     // palette.swatches() returns swatches; map them to hex
+//     for (const swatch of Object.values(palette)) {
+//       if (swatch && swatch.hex) colors.push(swatch.hex);
+//     }
+//     // unique & filter
+//     return Array.from(new Set(colors)).slice(0, maxColors);
+//   } catch (e) {
+//     // fallback: return empty
+//     return [];
+//   }
+// }
 
 function extractCategoryFromStructuredData(structuredData: any): string | null {
   // Look for schema.org/Organization or LocalBusiness and use @type or sameAs keywords

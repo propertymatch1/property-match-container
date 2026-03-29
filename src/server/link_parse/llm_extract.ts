@@ -1,13 +1,18 @@
 import { nullthrows } from "~/lib/utils";
 import * as cheerio from "cheerio";
 import { getClient, GPT_4O_MINI } from "../external_api/openai";
-import type { LinkParserOutput } from "./parser";
+import type {
+  LinkParserOutput,
+  LinkParserOutputWithConfidence,
+} from "./parser";
 import type { URLExtractedData } from "./url_extract";
 import { SYSTEM_PROMPT, URL_PARSE_PROMPT } from "./prompt";
+import url from "url";
 
 export async function parseExtractedURLWithLLM(
   $: cheerio.CheerioAPI,
   extractedData: URLExtractedData,
+  finalUrl: string,
 ): Promise<LinkParserOutput> {
   const openAI = getClient();
 
@@ -15,14 +20,13 @@ export async function parseExtractedURLWithLLM(
   const text = $("body").text();
   const content = text.replace(/\s+/g, " ").trim();
 
-  const inputPrompt = `
-Input data:
-Pre-Extracted Name: ${extractedData.name || "N/A"}
-Pre-Extracted Logo URL candidates: ${extractedData.logo_candidates?.join(", ") || "N/A"}
-Pre-Extracted High-level Category: ${extractedData.category || "N/A"}
-Website Content:\n ${content}`;
+  const logoUrls = getFilteredLogoUrls(extractedData);
 
-  console.log(inputPrompt);
+  const inputPrompt = `
+*Input data*:
+- Pre-Extracted Name: ${extractedData.name || "N/A"}
+- Pre-Extracted High-level Category: ${extractedData.category || "N/A"}
+- Website Content:\n ${content}`;
 
   const result = await openAI.chat.completions.create({
     model: GPT_4O_MINI,
@@ -43,13 +47,26 @@ Website Content:\n ${content}`;
             type: "text",
             text: URL_PARSE_PROMPT + "\n\n" + inputPrompt,
           },
+          ...logoUrls.map((url) => {
+            return {
+              type: "image_url",
+              image_url: { url },
+            };
+          }),
         ],
       },
     ],
   });
 
   const llmContent = nullthrows(result.choices[0]?.message?.content);
+  return parseLLMOutput(llmContent, logoUrls, finalUrl);
+}
 
+function parseLLMOutput(
+  llmContent: string,
+  logoUrls: string[],
+  finalUrl: string,
+): LinkParserOutput {
   let parsed: any = null;
   const jsonMatch = llmContent && llmContent.match(/\{[\s\S]*\}/);
   if (jsonMatch) parsed = JSON.parse(jsonMatch[0]);
@@ -57,20 +74,85 @@ Website Content:\n ${content}`;
 
   console.log(parsed);
 
+  const logoIndex = parseLLMOutputNumberWithTypeGuard(parsed?.logo_index);
+  let logoUrl = null;
+  if (logoIndex) {
+    const logoValue = logoUrls[logoIndex.value];
+    if (logoValue) {
+      logoUrl = {
+        value: logoValue,
+        confidence: logoIndex.confidence,
+      };
+    }
+  }
+
   return {
-    url: "",
-    name: parsed?.name || extractedData.name || undefined,
-    // logo_url: extractedData.logo_url,
-    primary_colors: extractedData.primary_colors,
-    category: parsed?.category || extractedData.category || undefined,
-    summary: parsed?.summary || parsed?.description || undefined,
-    vibe: parsed?.vibe || undefined,
-    ethos: parsed?.ethos || undefined,
-    target_customers: Array.isArray(parsed?.target_customers)
-      ? parsed.target_customers
-      : parsed?.target_customers
-        ? [parsed.target_customers]
-        : undefined,
-    hero_product: parsed?.hero_product || undefined,
+    url: finalUrl,
+    name: parseLLMOutputStringWithTypeGuard(parsed?.name),
+    category: parseLLMOutputStringArrayWithTypeGuard(parsed?.category),
+    positioning: parseLLMOutputStringWithTypeGuard(parsed?.positioning),
+    target_customers: parseLLMOutputStringArrayWithTypeGuard(
+      parsed?.target_customers,
+    ),
+    strengths: parseLLMOutputStringArrayWithTypeGuard(parsed?.strengths),
+    logo_url: logoUrl,
   };
+}
+
+function parseLLMOutputNumberWithTypeGuard(
+  parsed: any,
+): LinkParserOutputWithConfidence<number> {
+  function isValue(obj: any): obj is LinkParserOutputWithConfidence<number> {
+    return (
+      typeof obj === "object" &&
+      obj !== null &&
+      typeof obj.value === "number" &&
+      typeof obj.confidence === "number"
+    );
+  }
+  return isValue(parsed) ? parsed : null;
+}
+
+function parseLLMOutputStringWithTypeGuard(
+  parsed: any,
+): LinkParserOutputWithConfidence<string> {
+  function isValue(obj: any): obj is LinkParserOutputWithConfidence<string> {
+    return (
+      typeof obj === "object" &&
+      obj !== null &&
+      typeof obj.value === "string" &&
+      typeof obj.confidence === "number"
+    );
+  }
+  return isValue(parsed) ? parsed : null;
+}
+
+function parseLLMOutputStringArrayWithTypeGuard(
+  parsed: any,
+): LinkParserOutputWithConfidence<string[]> {
+  function isValue(obj: any): obj is LinkParserOutputWithConfidence<string[]> {
+    return (
+      typeof obj === "object" &&
+      obj !== null &&
+      Array.isArray(obj.value) &&
+      obj.value.every((v) => typeof v === "string") &&
+      typeof obj.confidence === "number"
+    );
+  }
+  return isValue(parsed) ? parsed : null;
+}
+
+function getFilteredLogoUrls(extractedData: URLExtractedData): string[] {
+  const logoUrls = extractedData.logo_candidates || [];
+  return logoUrls.filter((logoUrl) => {
+    const pathname = url.parse(logoUrl).pathname ?? "";
+    console.log(pathname);
+    return (
+      pathname.endsWith(".png") ||
+      pathname.endsWith(".jpg") ||
+      pathname.endsWith(".jpeg") ||
+      pathname.endsWith(".gif") ||
+      pathname.endsWith(".webp")
+    );
+  });
 }
