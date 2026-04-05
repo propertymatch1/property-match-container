@@ -8,6 +8,7 @@ import type {
 import type { URLExtractedData } from "./url_extract";
 import { SYSTEM_PROMPT, URL_PARSE_PROMPT } from "./prompt";
 import url from "url";
+import type { ChatCompletionContentPartImage } from "openai/resources/index.mjs";
 
 export async function parseExtractedURLWithLLM(
   $: cheerio.CheerioAPI,
@@ -51,7 +52,7 @@ export async function parseExtractedURLWithLLM(
             return {
               type: "image_url",
               image_url: { url },
-            };
+            } as ChatCompletionContentPartImage;
           }),
         ],
       },
@@ -135,7 +136,7 @@ function parseLLMOutputStringArrayWithTypeGuard(
       typeof obj === "object" &&
       obj !== null &&
       Array.isArray(obj.value) &&
-      obj.value.every((v) => typeof v === "string") &&
+      obj.value.every((v: any) => typeof v === "string") &&
       typeof obj.confidence === "number"
     );
   }
